@@ -55,7 +55,7 @@ jobs:
         with:
           name: json-ld-cli-${{ needs.get-version.outputs.BUILD_VERSION }}-${{ matrix.os }}
           path: |
-            json-ld-cli/target/jsonld
+            target/jsonld
           if-no-files-found: error
 
   get-version:
