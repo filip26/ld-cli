@@ -27,7 +27,7 @@
         <titanium.version>1.2.0</titanium.version>
         <jakarta.json-p.version>2.0.1</jakarta.json-p.version>
 
-        <graal.version>21.2.0</graal.version>
+        <graal.version>22.0.0.2</graal.version>
         <picocli.version>4.6.3</picocli.version>
         <picocli-jansi-graalvm.version>1.2.0</picocli-jansi-graalvm.version>
         <jansi.version>1.18</jansi.version>
@@ -165,11 +165,14 @@
                     <plugin>
                         <groupId>org.graalvm.nativeimage</groupId>
                         <artifactId>native-image-maven-plugin</artifactId>
-                        <version>${graal.version}</version>
+                        <version>21.2.0</version>
                         <configuration>
                             <imageName>${command.name}</imageName>
                             <mainClass>${mainClass}</mainClass>
                             <buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets &#45;H:IncludeResourceBundles=org.glassfish.json.messages</buildArgs>
+  <enableHttpUrlHandler>true</enableHttpUrlHandler>
+                                    <enableJni>true</enableJni>
+                                    <enableAllSecurityServices>true</enableAllSecurityServices>                            
                         </configuration>
                         <executions>
                             <execution>
