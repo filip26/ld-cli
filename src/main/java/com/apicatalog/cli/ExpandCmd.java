@@ -1,7 +1,5 @@
 package com.apicatalog.cli;
 
-import java.io.File;
-import java.net.URL;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.jsonld.JsonLd;
@@ -36,7 +34,7 @@ final class ExpandCmd implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-   
+        
         System.out.println("Fetching " + input);
         System.out.println(JsonLd.expand(input).get().toString());
         

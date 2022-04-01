@@ -1,5 +1,8 @@
 package com.apicatalog.cli;
 
+import com.apicatalog.jsonld.http.media.MediaType;
+import com.apicatalog.jsonld.loader.HttpLoader;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -20,6 +23,10 @@ public final class App {
     @Option(names = { "-h", "--help" }, usageHelp = true, description = "display a help message")
     boolean help = false;
 
+    static {
+        ((HttpLoader) HttpLoader.defaultInstance()).setFallbackContentType(MediaType.JSON);
+    }
+    
     public static void main(String[] args) {
 
         final CommandLine cli = new CommandLine(new App());
