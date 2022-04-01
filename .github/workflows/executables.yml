@@ -1,0 +1,64 @@
+# This is a basic workflow that is manually triggered
+
+name: Create Executables
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build-image:
+    name: 'Build Native Image'
+    needs: get-version
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-20.04', 'macos-latest']
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Setup Java 11'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: 'Setup GraalVM Environment'
+        uses: DeLaGuardo/setup-graalvm@3.0
+        with:
+          graalvm-version: '21.0.0.java11'
+
+      - name: 'Install Native Image Plugin'
+        run: |
+          gu install native-image    
+
+      - name: 'Build Native Image'
+        run: ./mvnw package -P native-image
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Upload'
+        uses: actions/upload-artifact@v2
+        with:
+          name: json-ld-cli-${{ needs.get-version.outputs.BUILD_VERSION }}-${{ matrix.os }}
+          path: |
+            cli/target/jsonld
+          if-no-files-found: error
+
+  get-version:
+    name: 'Get Build Version'
+    runs-on: ubuntu-latest
+    outputs:
+      BUILD_VERSION: ${{ steps.extraction.outputs.BUILD_VERSION }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+        id: checkout
+
+      - id: extraction
+        name: 'Extract Version'
+        run: |
+          echo "::set-output name=BUILD_VERSION::$( grep '<revision>' pom.xml | sed 's/[[:alpha:]|<|>|/|[:space:]]//g' | awk -F- '{print $1}')"
