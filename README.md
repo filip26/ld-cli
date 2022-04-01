@@ -1,5 +1,8 @@
 # JSON-LD 1.1 Command Line Interface
 
+A simple command line utility allowing to process JSON-LD 1.1 documents. 
+
+WORK IN PROGRESS
 
 # Sponsors
 
