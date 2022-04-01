@@ -1,0 +1,12 @@
+[
+  {
+    "name": "org.glassfish.json.JsonProviderImpl",
+        "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ],
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true
+  }
+]
