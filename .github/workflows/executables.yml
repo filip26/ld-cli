@@ -34,7 +34,7 @@ jobs:
           java-version: 11
 
       - name: 'Setup GraalVM Environment'
-        uses: DeLaGuardo/setup-graalvm@3.0
+        uses: DeLaGuardo/setup-graalvm@master
         with:
           graalvm: '22.0.0.2'
           java: 'java11'
