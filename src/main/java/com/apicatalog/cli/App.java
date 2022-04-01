@@ -8,7 +8,7 @@ import picocli.CommandLine.ParseResult;
 @Command(
     name = "jsonld",
     description = "JSON-LD 1.1 Command Line Interface",
-//    subcommands = { Transformer.class, Validator.class },
+    subcommands = { ExpandCmd.class },
     mixinStandardHelpOptions = false,
     descriptionHeading = "%n",
     parameterListHeading = "%nParameters:%n",
