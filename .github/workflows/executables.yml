@@ -45,7 +45,7 @@ jobs:
           ${{ matrix.gu-binary }} install native-image    
 
       - name: 'Build Native Image'
-        run: ./mvnw package -P native-image
+        run: mvn package -P native-image
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
