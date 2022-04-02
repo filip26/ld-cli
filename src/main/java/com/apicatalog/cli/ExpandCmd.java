@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.jsonld.JsonLd;
+import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.ExpansionApi;
 import com.apicatalog.jsonld.document.JsonDocument;
 
@@ -27,10 +28,23 @@ final class ExpandCmd implements Callable<Integer> {
 
     @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
     boolean pretty = false;
-    
+
     @Parameters(index = "0", arity = "0..1", description = "input URL")
-    String input;
-    
+    String input = null;
+
+    @Option(names = { "-c", "--context" }, description = "context URL")
+    String context = null;
+
+    @Option(names = { "-b", "--base" }, description = "base URL")
+    String base = null;
+
+    @Option(names = { "-m", "--mode" }, description = "processing mode, e.g. --mode=1.1", paramLabel = "1.0|1.1")
+    String mode = "1.1";
+
+    @Option(names = { "-o",
+            "--ordered" }, description = "certain algorithm processing steps are ordered lexicographically")
+    boolean ordered = false;
+
     @Spec
     CommandSpec spec;
 
@@ -40,41 +54,46 @@ final class ExpandCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        ExpansionApi api;
-        
-        if (input != null) {
-            System.out.println("Fetching " + input);
-            api = JsonLd.expand(input);
-
-        } else {
-            api = JsonLd.expand(JsonDocument.of(System.in));
-        }
-        
-        JsonArray output = null;
-        
         try {
-            output = api.get();
-        
-        } catch (Throwable e) {
-            System.err.println(e.getMessage());
-            return spec.exitCodeOnExecutionException();            
-        }
-        
-        if (pretty) {
-            final JsonWriterFactory writerFactory = Json.createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true));
+            ExpansionApi api;
 
-            StringWriter stringWriter = new StringWriter();
+            if (input != null) {
+                api = JsonLd.expand(input);
 
-            try (final JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
-                jsonWriter.writeArray(output);
+            } else {
+                api = JsonLd.expand(JsonDocument.of(System.in));
             }
-            
-            System.out.println(stringWriter.toString());
-            
-        } else {
-            System.out.println(output.toString());            
+
+            api.mode(JsonLdVersion.of("json-ld-" + mode));
+            api.context(context);
+            api.base(base);
+            api.ordered(ordered);
+
+            JsonArray output = null;
+
+            output = api.get();
+
+            if (pretty) {
+                final JsonWriterFactory writerFactory = Json
+                        .createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true));
+
+                StringWriter stringWriter = new StringWriter();
+
+                try (final JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
+                    jsonWriter.writeArray(output);
+                }
+
+                System.out.println(stringWriter.toString());
+
+            } else {
+                System.out.println(output.toString());
+            }
+
+        } catch (Throwable e) {
+            System.err.println("ERROR: " + e.getMessage());
+            return spec.exitCodeOnExecutionException();
         }
-                
+
         return spec.exitCodeOnSuccess();
     }
 }
