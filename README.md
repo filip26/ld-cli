@@ -2,7 +2,7 @@
 
 A simple command line utility allowing to process JSON-LD 1.1 documents. The goal is to provide native executables  compiled for Ubuntu, Mac and Windows.
 
-WORK IN PROGRESS
+WORK IN PROGRESS - FEEDBACK IS WELCOME
 
 ## Proof of Concept
 
