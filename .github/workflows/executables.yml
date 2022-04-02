@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         gu-binary: [gu, gu.cmd]
         exclude:
           - os: ubuntu-latest
@@ -34,7 +34,7 @@ jobs:
           java-version: 11
 
       - name: 'Setup GraalVM Environment'
-        uses: DeLaGuardo/setup-graalvm@3.0
+        uses: DeLaGuardo/setup-graalvm@master
         with:
           graalvm: '22.0.0.2'
           java: 'java11'
@@ -45,7 +45,7 @@ jobs:
           ${{ matrix.gu-binary }} install native-image    
 
       - name: 'Build Native Image'
-        run: ./mvnw package -P native-image
+        run: mvn package -P native-image
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,7 +55,7 @@ jobs:
         with:
           name: json-ld-cli-${{ needs.get-version.outputs.BUILD_VERSION }}-${{ matrix.os }}
           path: |
-            cli/target/jsonld
+            target/jsonld
           if-no-files-found: error
 
   get-version:
