@@ -6,7 +6,7 @@ WORK IN PROGRESS - FEEDBACK IS WELCOME
 
 ## Proof of Concept
 
-[Downloads](https://github.com/filip26/json-ld-cli/actions/runs/2080060366)
+[Downloads](https://github.com/filip26/json-ld-cli/actions/runs/2083267593)
 
 ```bash
 $ unzip json-ld-cli-....zip
