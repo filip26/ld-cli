@@ -20,7 +20,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-@Command(name = "expand", mixinStandardHelpOptions = false, description = "Expand JSON-LD 1.1 document", sortOptions = false, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "expand", mixinStandardHelpOptions = false, description = "Expand JSON-LD 1.1 document", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 final class ExpandCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
@@ -55,7 +55,7 @@ final class ExpandCmd implements Callable<Integer> {
     public Integer call() throws Exception {
 
         try {
-            ExpansionApi api;
+            final ExpansionApi api;
 
             if (input != null) {
                 api = JsonLd.expand(input);
@@ -72,9 +72,7 @@ final class ExpandCmd implements Callable<Integer> {
             api.base(base);
             api.ordered(ordered);
 
-            JsonArray output = null;
-
-            output = api.get();
+            final JsonArray output = api.get();
 
             if (pretty) {
                 final JsonWriterFactory writerFactory = Json

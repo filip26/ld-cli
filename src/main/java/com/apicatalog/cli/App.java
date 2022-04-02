@@ -10,7 +10,7 @@ import picocli.CommandLine.ParseResult;
 
 @Command(
     name = "jsonld",
-    description = "JSON-LD 1.1 Command Line Interface",
+    description = "JSON-LD 1.1 Command Line Processor",
     subcommands = { ExpandCmd.class },
     mixinStandardHelpOptions = false,
     descriptionHeading = "%n",
