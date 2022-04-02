@@ -38,7 +38,7 @@ final class ExpandCmd implements Callable<Integer> {
     @Option(names = { "-b", "--base" }, description = "base URL")
     String base = null;
 
-    @Option(names = { "-m", "--mode" }, description = "processing mode, e.g. --mode=1.1", paramLabel = "1.0|1.1")
+    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "1.0|1.1")
     String mode = "1.1";
 
     @Option(names = { "-o",
@@ -64,7 +64,10 @@ final class ExpandCmd implements Callable<Integer> {
                 api = JsonLd.expand(JsonDocument.of(System.in));
             }
 
-            api.mode(JsonLdVersion.of("json-ld-" + mode));
+            if (mode.equals("1.0") || mode.equals("1.1")) {
+                api.mode(JsonLdVersion.of("json-ld-" + mode));
+            }
+            
             api.context(context);
             api.base(base);
             api.ordered(ordered);
