@@ -31,6 +31,12 @@ $ ./jsonld  expand -op https://raw.githubusercontent.com/filip26/titanium-json-l
 
 ```
 
+# Building
+
+1. [Install GraalVM and Native Image](https://www.graalvm.org/java/quickstart/)
+2. ```mvn clean package -P native-image```
+3. ```./target/jsonld```
+
 # Sponsors
 
 <a href="https://github.com/thadguidry">
