@@ -16,12 +16,19 @@ import picocli.CommandLine.ParseResult;
     descriptionHeading = "%n",
     parameterListHeading = "%nParameters:%n",
     optionListHeading = "%nOptions:%n",
-    commandListHeading = "%nCommands:%n"
+    commandListHeading = "%nCommands:%n",
+    version = {
+            "json-ld-cli       0.0.1  https://github.com/filip26/json-ld-cli",
+            "titanium-json-ld  1.2.0  https://github.com/filip26/titanium-json-ld"
+            }
     )
 public final class App {
 
     @Option(names = { "-h", "--help" }, usageHelp = true, description = "display a help message")
     boolean help = false;
+
+    @Option(names = {"-v", "--version"}, versionHelp = true, description = "display a version")
+    boolean version;    
 
     static {
         ((HttpLoader) HttpLoader.defaultInstance()).setFallbackContentType(MediaType.JSON);
@@ -45,6 +52,12 @@ public final class App {
 
                 cli.usage(cli.getOut());
                 System.exit(cli.getCommandSpec().exitCodeOnUsageHelp());
+                return;
+            }
+
+            if (cli.isVersionHelpRequested()) {
+                cli.printVersionHelp(cli.getOut());
+                System.exit(cli.getCommandSpec().exitCodeOnVersionHelp());
                 return;
             }
 
