@@ -4,13 +4,18 @@ A simple command line utility allowing to process JSON-LD 1.1 documents. The goa
 
 WORK IN PROGRESS - FEEDBACK IS WELCOME
 
-[Download](https://github.com/filip26/json-ld-cli/actions/runs/2097529341)
+# Installation
 
-# Usage
+[Download](https://github.com/filip26/json-ld-cli/actions/runs/2097834570)
 
 ```bash
 $ unzip json-ld-cli-....zip
 $ chmod +x jsonld
+```
+
+# Usage
+
+```bash
 $ ./jsonld -h
 Usage: jsonld [-hv] [COMMAND]
 
@@ -23,7 +28,11 @@ Options:
 Commands:
   expand  Expands JSON-LD document
   tordf   Transforms JSON-LD document into RDF dataset
+```
 
+## Expansion
+
+```bash
 $ ./jsonld expand -h
 Usage: jsonld expand [-op] [-b=<base>] [-c=<context>] [-m=1.0|1.1] [<input>]
 
@@ -39,7 +48,11 @@ Options:
   -m, --mode=1.0|1.1        processing mode
   -o, --ordered             certain algorithm processing steps are ordered
                               lexicographically
+```
 
+## To RDF
+
+```bash
 $ ./jsonld tordf -h
 Usage: jsonld tordf [-go] [-b=<base>] [-c=<context>]
                     [-d=I18N_DATATYPE|COMPOUND_LITERAL] [-m=1.0|1.1] [<input>]
