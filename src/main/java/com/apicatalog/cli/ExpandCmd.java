@@ -20,7 +20,15 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-@Command(name = "expand", mixinStandardHelpOptions = false, description = "Expand JSON-LD 1.1 document", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(
+        name = "expand", 
+        mixinStandardHelpOptions = false, 
+        description = "Expands JSON-LD document",
+        sortOptions = true,
+        descriptionHeading = "%n",
+        parameterListHeading = "%nParameters:%n",
+        optionListHeading = "%nOptions:%n"
+        )
 final class ExpandCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
@@ -48,51 +56,44 @@ final class ExpandCmd implements Callable<Integer> {
     @Spec
     CommandSpec spec;
 
-    private ExpandCmd() {
-    }
+    private ExpandCmd() {}
 
     @Override
     public Integer call() throws Exception {
 
-        try {
-            final ExpansionApi api;
+        final ExpansionApi api;
 
-            if (input != null) {
-                api = JsonLd.expand(input);
+        if (input != null) {
+            api = JsonLd.expand(input);
 
-            } else {
-                api = JsonLd.expand(JsonDocument.of(System.in));
+        } else {
+            api = JsonLd.expand(JsonDocument.of(System.in));
+        }
+
+        if (mode != null) {
+            api.mode(JsonLdVersion.of("json-ld-" + mode));
+        }
+
+        api.context(context);
+        api.base(base);
+        api.ordered(ordered);
+
+        final JsonArray output = api.get();
+
+        if (pretty) {
+            final JsonWriterFactory writerFactory = Json
+                    .createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true));
+
+            StringWriter stringWriter = new StringWriter();
+
+            try (final JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
+                jsonWriter.writeArray(output);
             }
 
-            if (mode.equals("1.0") || mode.equals("1.1")) {
-                api.mode(JsonLdVersion.of("json-ld-" + mode));
-            }
-            
-            api.context(context);
-            api.base(base);
-            api.ordered(ordered);
+            System.out.println(stringWriter.toString());
 
-            final JsonArray output = api.get();
-
-            if (pretty) {
-                final JsonWriterFactory writerFactory = Json
-                        .createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true));
-
-                StringWriter stringWriter = new StringWriter();
-
-                try (final JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
-                    jsonWriter.writeArray(output);
-                }
-
-                System.out.println(stringWriter.toString());
-
-            } else {
-                System.out.println(output.toString());
-            }
-
-        } catch (Throwable e) {
-            System.err.println("ERROR: " + e.getMessage());
-            return spec.exitCodeOnExecutionException();
+        } else {
+            System.out.println(output.toString());
         }
 
         return spec.exitCodeOnSuccess();
