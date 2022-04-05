@@ -4,13 +4,26 @@ A simple command line utility allowing to process JSON-LD 1.1 documents. The goa
 
 WORK IN PROGRESS - FEEDBACK IS WELCOME
 
-[Downloads](https://github.com/filip26/json-ld-cli/actions/runs/2083267593)
+[Download](https://github.com/filip26/json-ld-cli/actions/runs/2097529341)
 
 # Usage
 
 ```bash
 $ unzip json-ld-cli-....zip
 $ chmod +x jsonld
+$ ./jsonld -h
+Usage: jsonld [-hv] [COMMAND]
+
+JSON-LD 1.1 Command Line Processor
+
+Options:
+  -h, --help      display a help message
+  -v, --version   display a version
+
+Commands:
+  expand  Expands JSON-LD document
+  tordf   Transforms JSON-LD document into RDF dataset
+
 $ ./jsonld expand -h
 Usage: jsonld expand [-op] [-b=<base>] [-c=<context>] [-m=1.0|1.1] [<input>]
 
@@ -27,7 +40,25 @@ Options:
   -o, --ordered             certain algorithm processing steps are ordered
                               lexicographically
 
-$ ./jsonld  expand -op https://raw.githubusercontent.com/filip26/titanium-json-ld/main/src/test/resources/com/apicatalog/jsonld/test/issue112-in.json
+$ ./jsonld tordf -h
+Usage: jsonld tordf [-go] [-b=<base>] [-c=<context>]
+                    [-d=I18N_DATATYPE|COMPOUND_LITERAL] [-m=1.0|1.1] [<input>]
+
+Transforms JSON-LD document into RDF dataset
+
+Parameters:
+      [<input>]             input URL
+
+Options:
+  -b, --base=<base>         base URL
+  -c, --context=<context>   context URL
+  -d, --direction=I18N_DATATYPE|COMPOUND_LITERAL
+                            determines how value objects containing a base
+                              direction are transformed
+  -g, --generalized         emit blank nodes for triple predicates
+  -m, --mode=1.0|1.1        processing mode
+  -o, --ordered             certain algorithm processing steps are ordered
+                              lexicographically
 
 ```
 
