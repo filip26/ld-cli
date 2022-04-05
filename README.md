@@ -17,7 +17,7 @@ Usage: jsonld [-hv] [COMMAND]
 JSON-LD 1.1 Command Line Processor
 
 Options:
-  -h, --help      display a help message
+  -h, --help      display help message
   -v, --version   display a version
 
 Commands:
