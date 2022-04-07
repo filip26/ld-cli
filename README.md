@@ -6,7 +6,7 @@ WORK IN PROGRESS - FEEDBACK IS WELCOME
 
 # Installation
 
-[Download](https://github.com/filip26/json-ld-cli/actions/runs/2097834570)
+[Download](https://github.com/filip26/json-ld-cli/actions/runs/2111255917)
 
 ```bash
 $ unzip json-ld-cli-....zip
