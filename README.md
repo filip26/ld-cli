@@ -26,8 +26,9 @@ Options:
   -v, --version   display a version
 
 Commands:
-  expand  Expands JSON-LD document
-  tordf   Transforms JSON-LD document into RDF dataset
+  expand   Expands JSON-LD document
+  compact  Compacts JSON-LD document using the context
+  tordf    Transforms JSON-LD document into RDF dataset
 ```
 
 ## Expansion
@@ -54,7 +55,7 @@ Options:
 
 ```bash
 $ ./jsonld tordf -h
-Usage: jsonld tordf [-go] [-b=<base>] [-c=<context>]
+Usage: jsonld tordf [-no] [-b=<base>] [-c=<context>]
                     [-d=I18N_DATATYPE|COMPOUND_LITERAL] [-m=1.0|1.1] [<input>]
 
 Transforms JSON-LD document into RDF dataset
@@ -68,11 +69,10 @@ Options:
   -d, --direction=I18N_DATATYPE|COMPOUND_LITERAL
                             determines how value objects containing a base
                               direction are transformed
-  -g, --generalized         emit blank nodes for triple predicates
   -m, --mode=1.0|1.1        processing mode
+  -n, --no-blanks           omit blank nodes for triple predicates
   -o, --ordered             certain algorithm processing steps are ordered
                               lexicographically
-
 ```
 
 # Building

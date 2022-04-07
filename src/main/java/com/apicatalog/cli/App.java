@@ -11,14 +11,18 @@ import picocli.CommandLine.ParseResult;
 @Command(
     name = "jsonld",
     description = "JSON-LD 1.1 Command Line Processor",
-    subcommands = { ExpandCmd.class, ToRdfCmd.class },
+    subcommands = { 
+            ExpandCmd.class,
+            CompactCmd.class,
+            ToRdfCmd.class
+            },
     mixinStandardHelpOptions = false,
     descriptionHeading = "%n",
     parameterListHeading = "%nParameters:%n",
     optionListHeading = "%nOptions:%n",
     commandListHeading = "%nCommands:%n",
     version = {
-            "json-ld-cli       0.2.0  https://github.com/filip26/json-ld-cli",
+            "json-ld-cli       0.3.0  https://github.com/filip26/json-ld-cli",
             "titanium-json-ld  1.2.0  https://github.com/filip26/titanium-json-ld"
             }
     )
