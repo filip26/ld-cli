@@ -7,10 +7,11 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
-import com.apicatalog.jsonld.api.CompactionApi;
+import com.apicatalog.jsonld.api.FlatteningApi;
+import com.apicatalog.jsonld.document.JsonDocument;
 
 import jakarta.json.Json;
-import jakarta.json.JsonObject;
+import jakarta.json.JsonStructure;
 import jakarta.json.JsonWriter;
 import jakarta.json.JsonWriterFactory;
 import jakarta.json.stream.JsonGenerator;
@@ -21,15 +22,15 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 @Command(
-        name = "compact", 
+        name = "flatten", 
         mixinStandardHelpOptions = false, 
-        description = "Compacts JSON-LD document using the context",
+        description = "Flattens JSON-LD document and optionally compacts it using a context",
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
         optionListHeading = "%nOptions:%n"
         )
-final class CompactCmd implements Callable<Integer> {
+final class FlattenCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
@@ -37,10 +38,10 @@ final class CompactCmd implements Callable<Integer> {
     @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
     boolean pretty = false;
 
-    @Parameters(index = "0", arity = "1", description = "document URL")
+    @Parameters(index = "0", arity = "0..1", description = "document URL")
     URI input = null;
 
-    @Parameters(index = "1", arity = "1", description = "context URL")
+    @Option(names = { "-c", "--context" }, description = "context URL")
     URI context = null;
 
     @Option(names = { "-b", "--base" }, description = "base URL")
@@ -55,39 +56,34 @@ final class CompactCmd implements Callable<Integer> {
 
     @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
     boolean compactArrays = true;
-    
-    @Option(names = { "-r", "--keep-iris" }, description = "keep absolute IRIs")
-    boolean compactToRelative = true;
-    
+
     @Spec
     CommandSpec spec;
 
-    private CompactCmd() {}
+    private FlattenCmd() {}
 
     @Override
     public Integer call() throws Exception {
 
-        final CompactionApi api;
+        final FlatteningApi api;
 
         if (input != null) {
-            api = JsonLd.compact(input, context);
+            api = JsonLd.flatten(input);
 
         } else {
-            //TODO https://github.com/filip26/titanium-json-ld/issues/217
-            //api = JsonLd.compact(JsonDocument.of(System.in), context);
-            throw new IllegalStateException();
+            api = JsonLd.flatten(JsonDocument.of(System.in));
         }
 
         if (mode != null) {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
         }
 
+        api.context(context);
         api.base(base);
         api.ordered(ordered);
         api.compactArrays(compactArrays);
-        api.compactToRelative(compactToRelative);
 
-        final JsonObject output = api.get();
+        final JsonStructure output = api.get();
 
         if (pretty) {
             final JsonWriterFactory writerFactory = Json
@@ -96,7 +92,7 @@ final class CompactCmd implements Callable<Integer> {
             StringWriter stringWriter = new StringWriter();
 
             try (final JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
-                jsonWriter.writeObject(output);
+                jsonWriter.write(output);
             }
 
             System.out.println(stringWriter.toString());

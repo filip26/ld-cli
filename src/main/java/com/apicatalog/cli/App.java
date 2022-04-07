@@ -14,6 +14,7 @@ import picocli.CommandLine.ParseResult;
     subcommands = { 
             ExpandCmd.class,
             CompactCmd.class,
+            FlattenCmd.class,
             ToRdfCmd.class
             },
     mixinStandardHelpOptions = false,
@@ -22,7 +23,7 @@ import picocli.CommandLine.ParseResult;
     optionListHeading = "%nOptions:%n",
     commandListHeading = "%nCommands:%n",
     version = {
-            "json-ld-cli       0.3.0  https://github.com/filip26/json-ld-cli",
+            "json-ld-cli       0.4.0  https://github.com/filip26/json-ld-cli",
             "titanium-json-ld  1.2.0  https://github.com/filip26/titanium-json-ld"
             }
     )

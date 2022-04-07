@@ -28,6 +28,7 @@ Options:
 Commands:
   expand   Expands JSON-LD document
   compact  Compacts JSON-LD document using the context
+  flatten  Flattens JSON-LD document and optionally compacts it using a context
   tordf    Transforms JSON-LD document into RDF dataset
 ```
 
@@ -40,7 +41,7 @@ Usage: jsonld expand [-op] [-b=<base>] [-c=<context>] [-m=1.0|1.1] [<input>]
 Expand JSON-LD 1.1 document
 
 Parameters:
-      [<input>]             input URL
+      [<input>]             document URL
 
 Options:
   -p, --pretty              pretty print output JSON
@@ -61,7 +62,7 @@ Usage: jsonld tordf [-no] [-b=<base>] [-c=<context>]
 Transforms JSON-LD document into RDF dataset
 
 Parameters:
-      [<input>]             input URL
+      [<input>]             document URL
 
 Options:
   -b, --base=<base>         base URL

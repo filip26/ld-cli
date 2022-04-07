@@ -33,7 +33,7 @@ final class ToRdfCmd implements Callable<Integer> {
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Parameters(index = "0", arity = "0..1", description = "input URL")
+    @Parameters(index = "0", arity = "0..1", description = "document URL")
     String input = null;
 
     @Option(names = { "-c", "--context" }, description = "context URL")

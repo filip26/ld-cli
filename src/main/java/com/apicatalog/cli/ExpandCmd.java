@@ -37,7 +37,7 @@ final class ExpandCmd implements Callable<Integer> {
     @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
     boolean pretty = false;
 
-    @Parameters(index = "0", arity = "0..1", description = "input URL")
+    @Parameters(index = "0", arity = "0..1", description = "document URL")
     String input = null;
 
     @Option(names = { "-c", "--context" }, description = "context URL")
