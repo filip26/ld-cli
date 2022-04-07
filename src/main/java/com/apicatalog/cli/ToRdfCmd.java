@@ -54,11 +54,11 @@ final class ToRdfCmd implements Callable<Integer> {
             paramLabel = "I18N_DATATYPE|COMPOUND_LITERAL")
     String rdfDirection;
 
-    @Option(names = { "-g", "--generalized" }, 
-            description = "emit blank nodes for triple predicates"
+    @Option(names = { "-n", "--no-blanks" }, 
+            description = "omit blank nodes for triple predicates"
             )
     boolean generalizedRdf = true;  
-    
+
     @Spec
     CommandSpec spec;
 
@@ -79,7 +79,7 @@ final class ToRdfCmd implements Callable<Integer> {
         if (mode != null) {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
         }
-        
+
         api.context(context);
         api.base(base);
         api.ordered(ordered);
