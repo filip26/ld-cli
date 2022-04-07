@@ -29,6 +29,7 @@ Commands:
   expand   Expands JSON-LD document
   compact  Compacts JSON-LD document using the context
   flatten  Flattens JSON-LD document and optionally compacts it using a context
+  frame    Frames JSON-LD document using the frame
   fromrdf  Transforms N-Quads document into a JSON-LD document in expanded form
   tordf    Transforms JSON-LD document into N-Quads document
 ```
