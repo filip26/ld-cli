@@ -1,18 +1,19 @@
 package com.apicatalog.cli;
 
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.jsonld.JsonLd;
-import com.apicatalog.jsonld.JsonLdOptions.RdfDirection;
 import com.apicatalog.jsonld.JsonLdVersion;
-import com.apicatalog.jsonld.api.ToRdfApi;
+import com.apicatalog.jsonld.api.FromRdfApi;
 import com.apicatalog.jsonld.document.JsonDocument;
-import com.apicatalog.jsonld.http.media.MediaType;
-import com.apicatalog.rdf.Rdf;
-import com.apicatalog.rdf.RdfDataset;
-import com.apicatalog.rdf.io.RdfWriter;
 
+import jakarta.json.Json;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonWriter;
+import jakarta.json.JsonWriterFactory;
+import jakarta.json.stream.JsonGenerator;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -20,18 +21,21 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 @Command(
-        name = "tordf", 
+        name = "fromrdf", 
         mixinStandardHelpOptions = false, 
-        description = "Transforms JSON-LD document into N-Quads document", 
+        description = "Transforms N-Quads document into a JSON-LD document in expanded form", 
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
         optionListHeading = "%nOptions:%n"
         )
-final class ToRdfCmd implements Callable<Integer> {
+final class FromRdf implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
+
+    @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
+    boolean pretty = false;
 
     @Parameters(index = "0", arity = "0..1", description = "document URL")
     String input = null;
@@ -49,54 +53,53 @@ final class ToRdfCmd implements Callable<Integer> {
             description = "certain algorithm processing steps are ordered lexicographically")
     boolean ordered = false;
 
-    @Option(names = { "-d", "--direction" }, 
-            description = "determines how value objects containing a base direction are transformed",
-            paramLabel = "I18N_DATATYPE|COMPOUND_LITERAL")
-    String rdfDirection;
-
-    @Option(names = { "-n", "--no-blanks" }, 
-            description = "omit blank nodes for triple predicates"
+    @Option(names = { "-n", "--native-types" }, 
+            description = "use native types"
             )
-    boolean generalizedRdf = true;  
+    boolean nativeTypes = false;  
 
     @Spec
     CommandSpec spec;
 
-    private ToRdfCmd() {}
+    private FromRdf() {}
 
     @Override
     public Integer call() throws Exception {
 
-        final ToRdfApi api;
+        final FromRdfApi api;
 
         if (input != null) {
-            api = JsonLd.toRdf(input);
+            api = JsonLd.fromRdf(input);
 
         } else {
-            api = JsonLd.toRdf(JsonDocument.of(System.in));
+            api = JsonLd.fromRdf(JsonDocument.of(System.in));
         }
 
         if (mode != null) {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
         }
 
-        api.context(context);
         api.base(base);
         api.ordered(ordered);
-        api.produceGeneralizedRdf(generalizedRdf);
+        api.nativeTypes(nativeTypes);
         
-        if (rdfDirection != null) {
-            api.rdfDirection(RdfDirection.valueOf(rdfDirection.toUpperCase()));
+        final JsonStructure output = api.get();
+
+        if (pretty) {
+            final JsonWriterFactory writerFactory = Json
+                    .createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true));
+
+            StringWriter stringWriter = new StringWriter();
+
+            try (final JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
+                jsonWriter.write(output);
+            }
+
+            System.out.println(stringWriter.toString());
+
+        } else {
+            System.out.println(output.toString());
         }
-
-        final RdfDataset output = api.get();
-        
-        final StringWriter stringWriter = new StringWriter();
-        
-        final  RdfWriter writer = Rdf.createWriter(MediaType.N_QUADS, stringWriter);
-        writer.write(output);
-
-        System.out.println(stringWriter.toString());
 
         return spec.exitCodeOnSuccess();
     }

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.apicatalog</groupId>
     <artifactId>json-ld-cli</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>JSON-LD 1.1 Command Line Processor</name>
@@ -169,10 +169,7 @@
                         <configuration>
                             <imageName>${command.name}</imageName>
                             <mainClass>${mainClass}</mainClass>
-                            <buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets &#45;H:IncludeResourceBundles=org.glassfish.json.messages</buildArgs>
-  <enableHttpUrlHandler>true</enableHttpUrlHandler>
-                                    <enableJni>true</enableJni>
-                                    <enableAllSecurityServices>true</enableAllSecurityServices>                            
+                            <buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets &#45;H:IncludeResourceBundles=org.glassfish.json.messages</buildArgs>                            
                         </configuration>
                         <executions>
                             <execution>

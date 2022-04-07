@@ -29,7 +29,8 @@ Commands:
   expand   Expands JSON-LD document
   compact  Compacts JSON-LD document using the context
   flatten  Flattens JSON-LD document and optionally compacts it using a context
-  tordf    Transforms JSON-LD document into RDF dataset
+  fromrdf  Transforms N-Quads document into a JSON-LD document in expanded form
+  tordf    Transforms JSON-LD document into N-Quads document
 ```
 
 ## Expansion
@@ -59,7 +60,7 @@ $ ./jsonld tordf -h
 Usage: jsonld tordf [-no] [-b=<base>] [-c=<context>]
                     [-d=I18N_DATATYPE|COMPOUND_LITERAL] [-m=1.0|1.1] [<input>]
 
-Transforms JSON-LD document into RDF dataset
+Transforms JSON-LD document into N-Quads document
 
 Parameters:
       [<input>]             document URL
