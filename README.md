@@ -34,6 +34,11 @@ Commands:
   tordf    Transforms JSON-LD document into N-Quads document
 ```
 
+## Pipeline
+```bash
+cat document.json | ./jsonld expand -op > expanded.jsonld
+```
+
 ## Expansion
 
 ```bash
