@@ -1,19 +1,15 @@
-package com.apicatalog.cli;
+package com.apicatalog.cli.command;
 
-import java.io.StringWriter;
 import java.net.URI;
-import java.util.Collections;
 import java.util.concurrent.Callable;
 
+import com.apicatalog.cli.Output;
 import com.apicatalog.jsonld.JsonLd;
+import com.apicatalog.jsonld.JsonLdEmbed;
 import com.apicatalog.jsonld.JsonLdVersion;
-import com.apicatalog.jsonld.api.CompactionApi;
+import com.apicatalog.jsonld.api.FramingApi;
 
-import jakarta.json.Json;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonWriter;
-import jakarta.json.JsonWriterFactory;
-import jakarta.json.stream.JsonGenerator;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -21,15 +17,15 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 @Command(
-        name = "compact", 
+        name = "frame", 
         mixinStandardHelpOptions = false, 
-        description = "Compacts JSON-LD document using the context",
+        description = "Frames JSON-LD document using the frame",
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
         optionListHeading = "%nOptions:%n"
         )
-final class CompactCmd implements Callable<Integer> {
+public final class FrameCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
@@ -40,9 +36,12 @@ final class CompactCmd implements Callable<Integer> {
     @Parameters(index = "0", arity = "1", description = "document URL")
     URI input = null;
 
-    @Parameters(index = "1", arity = "1", description = "context URL")
-    URI context = null;
+    @Parameters(index = "1", arity = "1", description = "frame URL")
+    URI frame = null;
 
+    @Option(names = { "-c", "--context" }, description = "context URL")
+    String context = null;
+    
     @Option(names = { "-b", "--base" }, description = "base URL")
     String base = null;
 
@@ -53,24 +52,33 @@ final class CompactCmd implements Callable<Integer> {
             "--ordered" }, description = "certain algorithm processing steps are ordered lexicographically")
     boolean ordered = false;
 
-    @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
-    boolean compactArrays = true;
+    @Option(names = { "-d", "--omit-default" }, description = "")
+    boolean omitDefault = false;
     
-    @Option(names = { "-r", "--keep-iris" }, description = "keep absolute IRIs")
-    boolean compactToRelative = true;
+    @Option(names = { "-x", "--explicit" }, description = "")
+    boolean explicit = false;
     
+    @Option(names = { "-g", "--omit-graph" }, description = "")
+    boolean omitGraph = false;
+    
+    @Option(names = { "-a", "--require-all" }, description = "")
+    boolean requiredAll = false;
+    
+    @Option(names = { "-e", "--embed" }, description = "", paramLabel = "ALWAYS|NEVER|ONCE")
+    String embed = "ONCE";
+
     @Spec
     CommandSpec spec;
 
-    private CompactCmd() {}
+    private FrameCmd() {}
 
     @Override
     public Integer call() throws Exception {
 
-        final CompactionApi api;
+        final FramingApi api;
 
         if (input != null) {
-            api = JsonLd.compact(input, context);
+            api = JsonLd.frame(input, frame);
 
         } else {
             //TODO https://github.com/filip26/titanium-json-ld/issues/217
@@ -82,28 +90,18 @@ final class CompactCmd implements Callable<Integer> {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
         }
 
+        api.context(context);
         api.base(base);
         api.ordered(ordered);
-        api.compactArrays(compactArrays);
-        api.compactToRelative(compactToRelative);
+        api.explicit(explicit);
+        api.omitDefault(omitDefault);
+        api.omitGraph(omitGraph);
+        api.requiredAll(requiredAll);
+        api.embed(JsonLdEmbed.valueOf(embed.toUpperCase()));
 
         final JsonObject output = api.get();
 
-        if (pretty) {
-            final JsonWriterFactory writerFactory = Json
-                    .createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true));
-
-            StringWriter stringWriter = new StringWriter();
-
-            try (final JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
-                jsonWriter.writeObject(output);
-            }
-
-            System.out.println(stringWriter.toString());
-
-        } else {
-            System.out.println(output.toString());
-        }
+        Output.print(output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

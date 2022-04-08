@@ -1,19 +1,14 @@
-package com.apicatalog.cli;
+package com.apicatalog.cli.command;
 
-import java.io.StringWriter;
-import java.util.Collections;
 import java.util.concurrent.Callable;
 
+import com.apicatalog.cli.Output;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FromRdfApi;
 import com.apicatalog.jsonld.document.JsonDocument;
 
-import jakarta.json.Json;
 import jakarta.json.JsonStructure;
-import jakarta.json.JsonWriter;
-import jakarta.json.JsonWriterFactory;
-import jakarta.json.stream.JsonGenerator;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -29,7 +24,7 @@ import picocli.CommandLine.Spec;
         parameterListHeading = "%nParameters:%n",
         optionListHeading = "%nOptions:%n"
         )
-final class FromRdf implements Callable<Integer> {
+public final class FromRdfCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
@@ -61,7 +56,7 @@ final class FromRdf implements Callable<Integer> {
     @Spec
     CommandSpec spec;
 
-    private FromRdf() {}
+    private FromRdfCmd() {}
 
     @Override
     public Integer call() throws Exception {
@@ -85,21 +80,7 @@ final class FromRdf implements Callable<Integer> {
         
         final JsonStructure output = api.get();
 
-        if (pretty) {
-            final JsonWriterFactory writerFactory = Json
-                    .createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true));
-
-            StringWriter stringWriter = new StringWriter();
-
-            try (final JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
-                jsonWriter.write(output);
-            }
-
-            System.out.println(stringWriter.toString());
-
-        } else {
-            System.out.println(output.toString());
-        }
+        Output.print(output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

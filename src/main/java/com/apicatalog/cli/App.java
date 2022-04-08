@@ -1,5 +1,11 @@
 package com.apicatalog.cli;
 
+import com.apicatalog.cli.command.CompactCmd;
+import com.apicatalog.cli.command.ExpandCmd;
+import com.apicatalog.cli.command.FlattenCmd;
+import com.apicatalog.cli.command.FrameCmd;
+import com.apicatalog.cli.command.FromRdfCmd;
+import com.apicatalog.cli.command.ToRdfCmd;
 import com.apicatalog.jsonld.http.media.MediaType;
 import com.apicatalog.jsonld.loader.HttpLoader;
 
@@ -16,7 +22,7 @@ import picocli.CommandLine.ParseResult;
             CompactCmd.class,
             FlattenCmd.class,
             FrameCmd.class,
-            FromRdf.class,
+            FromRdfCmd.class,
             ToRdfCmd.class
             },
     mixinStandardHelpOptions = false,
@@ -25,8 +31,8 @@ import picocli.CommandLine.ParseResult;
     optionListHeading = "%nOptions:%n",
     commandListHeading = "%nCommands:%n",
     version = {
-            "json-ld-cli       0.6.0  https://github.com/filip26/json-ld-cli",
-            "titanium-json-ld  1.2.0  https://github.com/filip26/titanium-json-ld"
+            "json-ld-cli       0.7.0  https://github.com/filip26/json-ld-cli",
+            "titanium-json-ld  1.3.0  https://github.com/filip26/titanium-json-ld"
             }
     )
 public final class App {

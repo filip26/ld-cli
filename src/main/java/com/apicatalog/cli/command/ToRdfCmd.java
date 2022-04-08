@@ -1,4 +1,4 @@
-package com.apicatalog.cli;
+package com.apicatalog.cli.command;
 
 import java.io.StringWriter;
 import java.util.concurrent.Callable;
@@ -28,7 +28,7 @@ import picocli.CommandLine.Spec;
         parameterListHeading = "%nParameters:%n",
         optionListHeading = "%nOptions:%n"
         )
-final class ToRdfCmd implements Callable<Integer> {
+public final class ToRdfCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
