@@ -4,7 +4,7 @@ A simple command line utility allowing to process JSON-LD 1.1 documents. The goa
 
 # Installation
 
-[Download](https://github.com/filip26/json-ld-cli/actions/runs/2116394745)
+[Download](https://github.com/filip26/json-ld-cli/releases/tag/v0.7.0)
 
 ```bash
 $ unzip json-ld-cli-....zip
