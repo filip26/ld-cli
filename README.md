@@ -2,11 +2,9 @@
 
 A simple command line utility allowing to process JSON-LD 1.1 documents. The goal is to provide native executables  compiled for Ubuntu, Mac and Windows.
 
-WORK IN PROGRESS - FEEDBACK IS WELCOME
-
 # Installation
 
-[Download](https://github.com/filip26/json-ld-cli/actions/runs/2111255917)
+[Download](https://github.com/filip26/json-ld-cli/actions/runs/2116394745)
 
 ```bash
 $ unzip json-ld-cli-....zip
