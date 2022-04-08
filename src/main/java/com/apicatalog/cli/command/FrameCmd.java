@@ -8,6 +8,7 @@ import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdEmbed;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FramingApi;
+import com.apicatalog.jsonld.document.JsonDocument;
 
 import jakarta.json.JsonObject;
 import picocli.CommandLine.Command;
@@ -81,9 +82,7 @@ public final class FrameCmd implements Callable<Integer> {
             api = JsonLd.frame(input, frame);
 
         } else {
-            //TODO https://github.com/filip26/titanium-json-ld/issues/217
-            //api = JsonLd.compact(JsonDocument.of(System.in), context);
-            throw new IllegalStateException();
+            api = JsonLd.frame(JsonDocument.of(System.in), frame);
         }
 
         if (mode != null) {
