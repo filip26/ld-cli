@@ -2,9 +2,7 @@
 
 A simple command line utility allowing to process JSON-LD 1.1 documents. The goal is to provide native executables  compiled for Ubuntu, Mac and Windows.
 
-WORK IN PROGRESS - FEEDBACK IS WELCOME
-
-# Installation
+## Installation
 
 [Download](https://github.com/filip26/json-ld-cli/actions/runs/2111255917)
 
@@ -13,7 +11,7 @@ $ unzip json-ld-cli-....zip
 $ chmod +x jsonld
 ```
 
-# Usage
+## Usage
 
 ```bash
 $ ./jsonld -h
@@ -34,7 +32,7 @@ Commands:
   tordf    Transforms JSON-LD document into N-Quads document
 ```
 
-## Expansion
+### Expansion
 
 ```bash
 $ ./jsonld expand -h
@@ -54,7 +52,7 @@ Options:
                               lexicographically
 ```
 
-## To RDF
+### To RDF
 
 ```bash
 $ ./jsonld tordf -h
@@ -78,7 +76,11 @@ Options:
                               lexicographically
 ```
 
-# Building
+## Contributing
+
+All PR's welcome!
+
+### Building
 
 1. [Install GraalVM and Native Image](https://www.graalvm.org/java/quickstart/)
    - download and unpack ```graalvm-ce-java11-[platform]-[version].tar.gz```
@@ -87,8 +89,11 @@ Options:
 3. ```mvn clean package -P native-image```
 4. ```./target/jsonld```
 
-# Sponsors
+## Sponsors
 
 <a href="https://github.com/thadguidry">
-  <img src="https://avatars.githubusercontent.com/u/986438?v=4" width="25" />
+  <img src="https://avatars.githubusercontent.com/u/986438?v=4" width="40" />
 </a> 
+
+## Commercial Support
+Commercial support is available at filip26@gmail.com
