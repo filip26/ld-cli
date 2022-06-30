@@ -4,7 +4,7 @@ A simple command line utility allowing to process JSON-LD 1.1 documents. The goa
 
 ## Installation
 
-[Download](https://github.com/filip26/json-ld-cli/actions/runs/2111255917)
+[Download](https://github.com/filip26/json-ld-cli/releases/tag/v0.7.0)
 
 ```bash
 $ unzip json-ld-cli-....zip
@@ -30,6 +30,11 @@ Commands:
   frame    Frames JSON-LD document using the frame
   fromrdf  Transforms N-Quads document into a JSON-LD document in expanded form
   tordf    Transforms JSON-LD document into N-Quads document
+```
+
+### Pipeline
+```bash
+cat document.json | ./jsonld expand -op > expanded.jsonld
 ```
 
 ### Expansion

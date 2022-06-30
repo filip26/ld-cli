@@ -7,6 +7,7 @@ import com.apicatalog.cli.Output;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.CompactionApi;
+import com.apicatalog.jsonld.document.JsonDocument;
 
 import jakarta.json.JsonObject;
 import picocli.CommandLine.Command;
@@ -68,9 +69,7 @@ public final class CompactCmd implements Callable<Integer> {
             api = JsonLd.compact(input, context);
 
         } else {
-            //TODO https://github.com/filip26/titanium-json-ld/issues/217
-            //api = JsonLd.compact(JsonDocument.of(System.in), context);
-            throw new IllegalStateException();
+            api = JsonLd.compact(JsonDocument.of(System.in), context);
         }
 
         if (mode != null) {
