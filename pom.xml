@@ -32,7 +32,7 @@
         <picocli-jansi-graalvm.version>1.2.0</picocli-jansi-graalvm.version>
         <jansi.version>1.18</jansi.version>
 
-        <junit.jupiter.version>5.8.2</junit.jupiter.version>
+        <junit.jupiter.version>5.9.0</junit.jupiter.version>
     </properties>
 
     <dependencies>
