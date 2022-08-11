@@ -1,4 +1,4 @@
-# Linked Data Command Line Interface
+# Linked Data CLI
 
 A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, documents. The goal is to provide native executables compiled for Ubuntu, Mac and Windows.
 
