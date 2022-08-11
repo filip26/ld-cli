@@ -19,7 +19,7 @@ $ chmod +x jsonld
 ## Usage
 
 ```bash
-$ ld-cli -h
+> ld-cli -h
 Usage: ld-cli [-hv] [COMMAND]
 
 Linked Data Command Line Processor
@@ -41,7 +41,7 @@ Commands:
 
 ### Pipeline
 ```bash
-cat document.json | ld-cli expand --ordered --pretty > expanded.jsonld
+> cat document.json | ld-cli expand --ordered --pretty > expanded.jsonld
 ```
 
 ### `file:/` scheme support
