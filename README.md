@@ -1,84 +1,53 @@
-# JSON-LD 1.1 CLI
+# Linked Data CLI
 
-A simple command line utility allowing to process JSON-LD 1.1 documents. The goal is to provide native executables  compiled for Ubuntu, Mac and Windows.
+A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, documents. The goal is to provide native executables compiled for Ubuntu, Mac and Windows.
+
+## Features
+
+* JSON-LD 1.1
+* CBOR-LD
 
 ## Installation
 
-[Download](https://github.com/filip26/json-ld-cli/releases/tag/v0.7.0)
+[Download](https://github.com/filip26/ld-cli/releases/tag/v0.7.0)
 
 ```bash
-$ unzip json-ld-cli-....zip
+$ unzip ld-cli-....zip
 $ chmod +x jsonld
 ```
 
 ## Usage
 
 ```bash
-$ ./jsonld -h
-Usage: jsonld [-hv] [COMMAND]
+> ld-cli -h
+Usage: ld-cli [-hv] [COMMAND]
 
-JSON-LD 1.1 Command Line Processor
+Linked Data Command Line Processor
 
 Options:
   -h, --help      display help message
   -v, --version   display a version
 
 Commands:
-  expand   Expands JSON-LD document
-  compact  Compacts JSON-LD document using the context
-  flatten  Flattens JSON-LD document and optionally compacts it using a context
-  frame    Frames JSON-LD document using the frame
-  fromrdf  Transforms N-Quads document into a JSON-LD document in expanded form
-  tordf    Transforms JSON-LD document into N-Quads document
+  expand      Expand JSON-LD document
+  compact     Compact JSON-LD document using the context
+  flatten     Flatten JSON-LD document and optionally compacts it using a context
+  frame       Frame JSON-LD document using the frame
+  fromrdf     Transform N-Quads document into a JSON-LD document in expanded form
+  tordf       Transform JSON-LD document into N-Quads document
+  compress    Compress JSON-LD document into CBOR-LD  
+  decompress  Decompress CBOR-LD document into JSON-LD
 ```
 
 ### Pipeline
 ```bash
-cat document.json | ./jsonld expand -op > expanded.jsonld
+> cat document.json | ld-cli expand --ordered --pretty > expanded.jsonld
 ```
 
-### Expansion
+### `file:/` scheme support
 
 ```bash
-$ ./jsonld expand -h
-Usage: jsonld expand [-op] [-b=<base>] [-c=<context>] [-m=1.0|1.1] [<input>]
-
-Expand JSON-LD 1.1 document
-
-Parameters:
-      [<input>]             document URL
-
-Options:
-  -p, --pretty              pretty print output JSON
-  -c, --context=<context>   context URL
-  -b, --base=<base>         base URL
-  -m, --mode=1.0|1.1        processing mode
-  -o, --ordered             certain algorithm processing steps are ordered
-                              lexicographically
-```
-
-### To RDF
-
-```bash
-$ ./jsonld tordf -h
-Usage: jsonld tordf [-no] [-b=<base>] [-c=<context>]
-                    [-d=I18N_DATATYPE|COMPOUND_LITERAL] [-m=1.0|1.1] [<input>]
-
-Transforms JSON-LD document into N-Quads document
-
-Parameters:
-      [<input>]             document URL
-
-Options:
-  -b, --base=<base>         base URL
-  -c, --context=<context>   context URL
-  -d, --direction=I18N_DATATYPE|COMPOUND_LITERAL
-                            determines how value objects containing a base
-                              direction are transformed
-  -m, --mode=1.0|1.1        processing mode
-  -n, --no-blanks           omit blank nodes for triple predicates
-  -o, --ordered             certain algorithm processing steps are ordered
-                              lexicographically
+> ld-cli compress -i file:/home/filip/example.jsonld output.cborld
 ```
 
 ## Contributing
@@ -88,11 +57,17 @@ All PR's welcome!
 ### Building
 
 1. [Install GraalVM and Native Image](https://www.graalvm.org/java/quickstart/)
-   - download and unpack ```graalvm-ce-java11-[platform]-[version].tar.gz```
+   - download and unpack ```graalvm-ce-java17-[platform]-[version].tar.gz```
    - set ```JAVA_HOME``` and ```PATH``` env variables
    - ```gu install native-image```
 3. ```mvn clean package -P native-image```
-4. ```./target/jsonld```
+4. ```./target/ld-cli```
+
+
+## Resources
+
+* [Titanium JSON-LD 1.1 Processor](https://github.com/filip26/titanium-json-ld)
+* [Iridium CBOR-LD Processor](https://github.com/filip26/iridium-cbor-ld)
 
 ## Sponsors
 

@@ -3,7 +3,7 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.Output;
+import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdEmbed;
 import com.apicatalog.jsonld.JsonLdVersion;
@@ -20,7 +20,7 @@ import picocli.CommandLine.Spec;
 @Command(
         name = "frame", 
         mixinStandardHelpOptions = false, 
-        description = "Frames JSON-LD document using the frame",
+        description = "Frame JSON-LD document using the frame",
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
@@ -34,17 +34,17 @@ public final class FrameCmd implements Callable<Integer> {
     @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
     boolean pretty = false;
 
-    @Parameters(index = "0", arity = "1", description = "document URL")
+    @Option(names = { "-i", "--input" }, description = "input document IRI")
     URI input = null;
 
-    @Parameters(index = "1", arity = "1", description = "frame URL")
+    @Parameters(index = "0", arity = "1", description = "frame IRI")
     URI frame = null;
 
-    @Option(names = { "-c", "--context" }, description = "context URL")
-    String context = null;
+    @Option(names = { "-c", "--context" }, description = "context IRI")
+    URI context = null;
     
-    @Option(names = { "-b", "--base" }, description = "base URL")
-    String base = null;
+    @Option(names = { "-b", "--base" }, description = "input document base IRI")
+    URI base = null;
 
     @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "1.0|1.1")
     String mode = "1.1";
@@ -100,7 +100,7 @@ public final class FrameCmd implements Callable<Integer> {
 
         final JsonObject output = api.get();
 
-        Output.print(output, pretty);
+        JsonOutput.print(output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

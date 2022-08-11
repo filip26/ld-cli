@@ -3,7 +3,7 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.Output;
+import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FlatteningApi;
@@ -13,13 +13,12 @@ import jakarta.json.JsonStructure;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 @Command(
         name = "flatten", 
         mixinStandardHelpOptions = false, 
-        description = "Flattens JSON-LD document and optionally compacts it using a context",
+        description = "Flatten JSON-LD document and optionally compacts it using a context",
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
@@ -33,14 +32,14 @@ public final class FlattenCmd implements Callable<Integer> {
     @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
     boolean pretty = false;
 
-    @Parameters(index = "0", arity = "0..1", description = "document URL")
+    @Option(names = { "-i", "--input" }, description = "input document IRI")
     URI input = null;
 
-    @Option(names = { "-c", "--context" }, description = "context URL")
+    @Option(names = { "-c", "--context" }, description = "context IRI")
     URI context = null;
 
-    @Option(names = { "-b", "--base" }, description = "base URL")
-    String base = null;
+    @Option(names = { "-b", "--base" }, description = "input document base IRI")
+    URI base = null;
 
     @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "1.0|1.1")
     String mode = "1.1";
@@ -80,7 +79,7 @@ public final class FlattenCmd implements Callable<Integer> {
 
         final JsonStructure output = api.get();
 
-        Output.print(output, pretty);
+        JsonOutput.print(output, pretty);
 
         return spec.exitCodeOnSuccess();
     }
