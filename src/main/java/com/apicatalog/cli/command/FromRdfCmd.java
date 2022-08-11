@@ -1,5 +1,6 @@
 package com.apicatalog.cli.command;
 
+import java.net.URI;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.JsonOutput;
@@ -12,7 +13,6 @@ import jakarta.json.JsonStructure;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 @Command(
@@ -32,14 +32,14 @@ public final class FromRdfCmd implements Callable<Integer> {
     @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
     boolean pretty = false;
 
-    @Parameters(index = "0", arity = "0..1", description = "document URL")
-    String input = null;
+    @Option(names = { "-i", "--input" }, description = "input document IRI")
+    URI input = null;
 
-    @Option(names = { "-c", "--context" }, description = "context URL")
-    String context = null;
+    @Option(names = { "-c", "--context" }, description = "context IRI")
+    URI context = null;
 
-    @Option(names = { "-b", "--base" }, description = "base URL")
-    String base = null;
+    @Option(names = { "-b", "--base" }, description = "input document base IRI")
+    URI base = null;
 
     @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "1.0|1.1")
     String mode = "1.1";
