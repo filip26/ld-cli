@@ -1,6 +1,7 @@
 package com.apicatalog.cli;
 
 import com.apicatalog.cli.command.CompactCmd;
+import com.apicatalog.cli.command.CompressCmd;
 import com.apicatalog.cli.command.ExpandCmd;
 import com.apicatalog.cli.command.FlattenCmd;
 import com.apicatalog.cli.command.FrameCmd;
@@ -15,15 +16,16 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.ParseResult;
 
 @Command(
-    name = "jsonld",
-    description = "JSON-LD 1.1 Command Line Processor",
+    name = "ld-cli",
+    description = "Linked Data Command Line Processor",
     subcommands = { 
             ExpandCmd.class,
             CompactCmd.class,
             FlattenCmd.class,
             FrameCmd.class,
             FromRdfCmd.class,
-            ToRdfCmd.class
+            ToRdfCmd.class,
+            CompressCmd.class,
             },
     mixinStandardHelpOptions = false,
     descriptionHeading = "%n",
@@ -31,8 +33,9 @@ import picocli.CommandLine.ParseResult;
     optionListHeading = "%nOptions:%n",
     commandListHeading = "%nCommands:%n",
     version = {
-            "json-ld-cli       0.7.0  https://github.com/filip26/json-ld-cli",
-            "titanium-json-ld  1.3.0  https://github.com/filip26/titanium-json-ld"
+            "json-ld-cli       0.8.0  https://github.com/filip26/json-ld-cli",
+            "titanium-json-ld  1.3.1  https://github.com/filip26/titanium-json-ld",
+            "iridium-cbor-ld   0.1.0  https://github.com/filip26/iridium-cbor-ld",
             }
     )
 public final class App {

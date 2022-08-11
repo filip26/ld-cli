@@ -4,15 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.apicatalog</groupId>
     <artifactId>json-ld-cli</artifactId>
-    <version>0.7.0-SNAPSHOT</version>
+    <version>0.8.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>JSON-LD 1.1 Command Line Processor</name>
-    <url>https://github.com/filip26/json-ld-cli</url>
+    <name>Linked Data Command Line Processor</name>
+    <url>https://github.com/filip26/ld-cli</url>
 
     <properties>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,9 +22,10 @@
         <argLine>-Dfile.encoding=UTF-8</argLine>
 
         <mainClass>com.apicatalog.cli.App</mainClass>
-        <command.name>jsonld</command.name>
+        <command.name>ld-cli</command.name>
 
         <titanium.version>1.3.1</titanium.version>
+        <iridium.version>0.1.0</iridium.version>
         <jakarta.json-p.version>2.0.1</jakarta.json-p.version>
 
         <graal.version>22.2.0</graal.version>
@@ -40,6 +41,12 @@
             <groupId>com.apicatalog</groupId>
             <artifactId>titanium-json-ld</artifactId>
             <version>${titanium.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>iridium-cbor-ld</artifactId>
+            <version>${iridium.version}</version>
         </dependency>
 
         <dependency>
@@ -169,7 +176,7 @@
                         <configuration>
                             <imageName>${command.name}</imageName>
                             <mainClass>${mainClass}</mainClass>
-                            <buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets &#45;H:IncludeResourceBundles=org.glassfish.json.messages</buildArgs>                            
+                            <buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets &#45;H:IncludeResourceBundles=org.glassfish.json.messages &#45;H:IncludeResources=.*/.*jsonld$</buildArgs>                            
                         </configuration>
                         <executions>
                             <execution>

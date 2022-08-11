@@ -3,7 +3,7 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.Output;
+import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FlatteningApi;
@@ -80,7 +80,7 @@ public final class FlattenCmd implements Callable<Integer> {
 
         final JsonStructure output = api.get();
 
-        Output.print(output, pretty);
+        JsonOutput.print(output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

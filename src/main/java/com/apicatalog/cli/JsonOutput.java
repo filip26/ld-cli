@@ -9,7 +9,7 @@ import jakarta.json.JsonWriter;
 import jakarta.json.JsonWriterFactory;
 import jakarta.json.stream.JsonGenerator;
 
-public class Output {
+public class JsonOutput {
 
     public static final void print(JsonStructure document, boolean pretty) {
         if (!pretty) {

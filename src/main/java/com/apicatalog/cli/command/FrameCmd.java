@@ -3,7 +3,7 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.Output;
+import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdEmbed;
 import com.apicatalog.jsonld.JsonLdVersion;
@@ -100,7 +100,7 @@ public final class FrameCmd implements Callable<Integer> {
 
         final JsonObject output = api.get();
 
-        Output.print(output, pretty);
+        JsonOutput.print(output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

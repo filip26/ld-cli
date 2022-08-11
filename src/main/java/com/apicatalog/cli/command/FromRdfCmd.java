@@ -2,7 +2,7 @@ package com.apicatalog.cli.command;
 
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.Output;
+import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FromRdfApi;
@@ -80,7 +80,7 @@ public final class FromRdfCmd implements Callable<Integer> {
         
         final JsonStructure output = api.get();
 
-        Output.print(output, pretty);
+        JsonOutput.print(output, pretty);
 
         return spec.exitCodeOnSuccess();
     }
