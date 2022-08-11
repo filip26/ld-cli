@@ -13,7 +13,7 @@ A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, doc
 
 ```bash
 $ unzip ld-cli-....zip
-$ chmod +x jsonld
+$ chmod +x ld-cli
 ```
 
 ## Usage
