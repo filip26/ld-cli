@@ -22,7 +22,7 @@ import picocli.CommandLine.Spec;
 @Command(
         name = "tordf", 
         mixinStandardHelpOptions = false, 
-        description = "Transforms JSON-LD document into N-Quads document", 
+        description = "Transform JSON-LD document into N-Quads document", 
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",

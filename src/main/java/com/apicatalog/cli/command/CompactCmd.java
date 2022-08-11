@@ -19,7 +19,7 @@ import picocli.CommandLine.Spec;
 @Command(
         name = "compact", 
         mixinStandardHelpOptions = false, 
-        description = "Compacts JSON-LD document using the context",
+        description = "Compact JSON-LD document using the context",
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",

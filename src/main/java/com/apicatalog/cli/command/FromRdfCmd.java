@@ -18,7 +18,7 @@ import picocli.CommandLine.Spec;
 @Command(
         name = "fromrdf", 
         mixinStandardHelpOptions = false, 
-        description = "Transforms N-Quads document into a JSON-LD document in expanded form", 
+        description = "Transform N-Quads document into a JSON-LD document in expanded form", 
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",

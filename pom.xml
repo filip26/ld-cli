@@ -172,7 +172,7 @@
                     <plugin>
                         <groupId>org.graalvm.nativeimage</groupId>
                         <artifactId>native-image-maven-plugin</artifactId>
-                        <version>${graal.version}</version>
+                        <version>21.2.0</version>
                         <configuration>
                             <imageName>${command.name}</imageName>
                             <mainClass>${mainClass}</mainClass>

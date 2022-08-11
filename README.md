@@ -1,6 +1,6 @@
 # Linked Data Command Line Interface
 
-A simple command line utility allowing to process JSON-LD, RDF, and CBOR, documents. The goal is to provide native executables compiled for Ubuntu, Mac and Windows.
+A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, documents. The goal is to provide native executables compiled for Ubuntu, Mac and Windows.
 
 ## Features
 
@@ -29,13 +29,14 @@ Options:
   -v, --version   display a version
 
 Commands:
-  expand   Expands JSON-LD document
-  compact  Compacts JSON-LD document using the context
-  flatten  Flattens JSON-LD document and optionally compacts it using a context
-  frame    Frames JSON-LD document using the frame
-  fromrdf  Transforms N-Quads document into a JSON-LD document in expanded form
-  tordf    Transforms JSON-LD document into N-Quads document
-  compress Compress JSON-LD document into CBOR-LD  
+  expand      Expand JSON-LD document
+  compact     Compact JSON-LD document using the context
+  flatten     Flatten JSON-LD document and optionally compacts it using a context
+  frame       Frame JSON-LD document using the frame
+  fromrdf     Transform N-Quads document into a JSON-LD document in expanded form
+  tordf       Transform JSON-LD document into N-Quads document
+  compress    Compress JSON-LD document into CBOR-LD  
+  decompress  Decompress CBOR-LD document into JSON-LD
 ```
 
 ### Pipeline
@@ -61,6 +62,12 @@ All PR's welcome!
    - ```gu install native-image```
 3. ```mvn clean package -P native-image```
 4. ```./target/ld-cli```
+
+
+## Resources
+
+* [Titanium JSON-LD 1.1 Processor](https://github.com/filip26/titanium-json-ld)
+* [Iridium CBOR-LD Processor](https://github.com/filip26/iridium-cbor-ld)
 
 ## Sponsors
 

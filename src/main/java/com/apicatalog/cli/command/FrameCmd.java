@@ -20,7 +20,7 @@ import picocli.CommandLine.Spec;
 @Command(
         name = "frame", 
         mixinStandardHelpOptions = false, 
-        description = "Frames JSON-LD document using the frame",
+        description = "Frame JSON-LD document using the frame",
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",

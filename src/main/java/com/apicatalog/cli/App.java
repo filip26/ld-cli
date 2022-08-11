@@ -2,6 +2,7 @@ package com.apicatalog.cli;
 
 import com.apicatalog.cli.command.CompactCmd;
 import com.apicatalog.cli.command.CompressCmd;
+import com.apicatalog.cli.command.DecompressCmd;
 import com.apicatalog.cli.command.ExpandCmd;
 import com.apicatalog.cli.command.FlattenCmd;
 import com.apicatalog.cli.command.FrameCmd;
@@ -26,6 +27,7 @@ import picocli.CommandLine.ParseResult;
             FromRdfCmd.class,
             ToRdfCmd.class,
             CompressCmd.class,
+            DecompressCmd.class,
             },
     mixinStandardHelpOptions = false,
     descriptionHeading = "%n",
@@ -33,9 +35,9 @@ import picocli.CommandLine.ParseResult;
     optionListHeading = "%nOptions:%n",
     commandListHeading = "%nCommands:%n",
     version = {
-            "json-ld-cli       0.8.0  https://github.com/filip26/json-ld-cli",
+            "ld-cli            0.8.0  https://github.com/filip26/ld-cli",
             "titanium-json-ld  1.3.1  https://github.com/filip26/titanium-json-ld",
-            "iridium-cbor-ld   0.1.0  https://github.com/filip26/iridium-cbor-ld",
+            "iridium-cbor-ld   0.1.1  https://github.com/filip26/iridium-cbor-ld",
             }
     )
 public final class App {

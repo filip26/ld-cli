@@ -22,7 +22,7 @@ import picocli.CommandLine.Spec;
 @Command(
         name = "compress", 
         mixinStandardHelpOptions = false, 
-        description = "Compress JSON-LD document as CBOR-LD",
+        description = "Compress JSON-LD document into CBOR-LD",
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",

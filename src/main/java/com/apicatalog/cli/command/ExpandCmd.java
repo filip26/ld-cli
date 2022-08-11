@@ -18,7 +18,7 @@ import picocli.CommandLine.Spec;
 @Command(
         name = "expand", 
         mixinStandardHelpOptions = false, 
-        description = "Expands JSON-LD document",
+        description = "Expand JSON-LD document",
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
