@@ -63,4 +63,4 @@ jobs:
       - id: extraction
         name: 'Extract Version'
         run: |
-          echo "::set-output name=BUILD_VERSION::$( grep '<revision>' pom.xml | sed 's/[[:alpha:]|<|>|/|[:space:]]//g' | awk -F- '{print $1}')"
+          echo "::set-output name=BUILD_VERSION::$( grep '<version>' pom.xml | head -1 | sed 's/[[:alpha:]|<|>|/|[:space:]]//g' | awk -F- '{print $1}')"
