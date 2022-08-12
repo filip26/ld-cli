@@ -42,6 +42,9 @@ public final class CompressCmd implements Callable<Integer> {
     @Option(names = { "-b", "--base" }, description = "input document base IRI")
     URI base = null;
     
+    @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
+    boolean keepArrays = false;
+    
     @Spec
     CommandSpec spec;
 
@@ -68,6 +71,7 @@ public final class CompressCmd implements Callable<Integer> {
         
         final byte[] encoded = CborLd.encoder(json.asJsonObject())
                                     .base(base)
+                                    .compactArray(!keepArrays)
                                     .encode();
 
         try (FileOutputStream os = new FileOutputStream(output)) {

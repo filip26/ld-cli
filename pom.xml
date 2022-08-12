@@ -7,7 +7,7 @@
     <version>0.8.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Linked Data Command Line Processor</name>
+    <name>Command Line Processor for Linked Data Processing</name>
     <url>https://github.com/filip26/ld-cli</url>
 
     <properties>

@@ -7,7 +7,6 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.cborld.CborLd;
 import com.apicatalog.cli.JsonOutput;
-import com.apicatalog.jsonld.document.Document;
 
 import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
@@ -40,6 +39,9 @@ public final class DecompressCmd implements Callable<Integer> {
     @Option(names = { "-b", "--base" }, description = "input document base IRI")
     URI base = null;
     
+    @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
+    boolean keepArrays = false;
+    
     @Spec
     CommandSpec spec;
 
@@ -50,7 +52,10 @@ public final class DecompressCmd implements Callable<Integer> {
 
         byte[] encoded = Files.readAllBytes(input.toPath());
         
-        final JsonValue output = CborLd.decoder(encoded).base(base).decode();
+        final JsonValue output = CborLd.decoder(encoded)
+                                    .compactArray(!keepArrays)
+                                    .base(base)
+                                    .decode();
 
         JsonOutput.print((JsonStructure)output, pretty);
 

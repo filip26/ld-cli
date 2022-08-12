@@ -50,10 +50,10 @@ public final class CompactCmd implements Callable<Integer> {
     boolean ordered = false;
 
     @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
-    boolean compactArrays = true;
+    boolean keepArrays = false;
     
     @Option(names = { "-r", "--keep-iris" }, description = "keep absolute IRIs")
-    boolean compactToRelative = true;
+    boolean keepAbsoluteIris = false;
     
     @Spec
     CommandSpec spec;
@@ -78,8 +78,8 @@ public final class CompactCmd implements Callable<Integer> {
 
         api.base(base);
         api.ordered(ordered);
-        api.compactArrays(compactArrays);
-        api.compactToRelative(compactToRelative);
+        api.compactArrays(!keepArrays);
+        api.compactToRelative(!keepAbsoluteIris);
 
         final JsonObject output = api.get();
 
