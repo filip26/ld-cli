@@ -9,7 +9,7 @@ A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, doc
 
 ## Installation
 
-[Downloads](https://github.com/filip26/ld-cli/releases/tag/v0.7.0)
+[Downloads](https://github.com/filip26/ld-cli/releases/tag/v0.8.0)
 
 ```bash
 > unzip ld-cli-....zip
