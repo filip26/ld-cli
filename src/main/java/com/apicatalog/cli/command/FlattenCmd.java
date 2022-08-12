@@ -18,7 +18,7 @@ import picocli.CommandLine.Spec;
 @Command(
         name = "flatten", 
         mixinStandardHelpOptions = false, 
-        description = "Flatten JSON-LD document and optionally compacts it using a context",
+        description = "Flatten JSON-LD document and optionally compact it using a context",
         sortOptions = true,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
