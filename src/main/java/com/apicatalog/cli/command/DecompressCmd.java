@@ -6,8 +6,10 @@ import java.nio.file.Files;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cborld.CborLd;
+import com.apicatalog.cborld.config.DefaultConfig;
+import com.apicatalog.cborld.db.DbConfig;
+import com.apicatalog.cborld.decoder.DecoderConfig;
 import com.apicatalog.cli.JsonOutput;
-import com.apicatalog.jsonld.document.Document;
 
 import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
@@ -40,6 +42,12 @@ public final class DecompressCmd implements Callable<Integer> {
     @Option(names = { "-b", "--base" }, description = "input document base IRI")
     URI base = null;
     
+    @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
+    boolean keepArrays = false;
+    
+    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "default|digitalbazaar")
+    String mode = "default";
+
     @Spec
     CommandSpec spec;
 
@@ -50,7 +58,17 @@ public final class DecompressCmd implements Callable<Integer> {
 
         byte[] encoded = Files.readAllBytes(input.toPath());
         
-        final JsonValue output = CborLd.decoder(encoded).base(base).decode();
+        DecoderConfig config = DefaultConfig.INSTANCE;
+        
+        if ("digitalbazaar".equalsIgnoreCase(mode)) {
+            config = DbConfig.INSTANCE;
+        }
+        
+        final JsonValue output = CborLd.decoder(encoded)
+                                    .config(config)
+                                    .base(base)
+                                    .compactArray(!keepArrays)
+                                    .decode();
 
         JsonOutput.print((JsonStructure)output, pretty);
 
