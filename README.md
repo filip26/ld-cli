@@ -13,7 +13,7 @@ A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, doc
 
 ```bash
 $ unzip ld-cli-....zip
-$ chmod +x jsonld
+$ chmod +x ld-cli
 ```
 
 ## Usage
@@ -37,6 +37,21 @@ Commands:
   tordf       Transform JSON-LD document into N-Quads document
   compress    Compress JSON-LD document into CBOR-LD  
   decompress  Decompress CBOR-LD document into JSON-LD
+  
+> ld-cli expand -h
+Usage: ld-cli expand [-op] [-b=<base>] [-c=<context>] [-i=<input>] [-m=1.0|1.1]
+
+Expand JSON-LD document
+
+Options:
+  -b, --base=<base>         input document base IRI
+  -c, --context=<context>   context IRI
+  -i, --input=<input>       input document IRI
+  -m, --mode=1.0|1.1        processing mode
+  -o, --ordered             certain algorithm processing steps are ordered
+                              lexicographically
+  -p, --pretty              pretty print output JSON
+
 ```
 
 ### Pipeline

@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.apicatalog</groupId>
-    <artifactId>json-ld-cli</artifactId>
-    <version>0.8.0-SNAPSHOT</version>
+    <artifactId>ld-cli</artifactId>
+    <version>0.8.0</version>
     <packaging>jar</packaging>
 
     <name>Command Line Processor for Linked Data Processing</name>
