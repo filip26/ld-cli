@@ -26,7 +26,7 @@
         <command.name>ld-cli</command.name>
 
         <titanium.version>1.3.3</titanium.version>
-        <iridium.version>0.1.1</iridium.version>
+        <iridium.version>0.1.2</iridium.version>
         <jakarta.json-p.version>2.0.1</jakarta.json-p.version>
 
         <graal.version>23.1.1</graal.version>
