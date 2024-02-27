@@ -25,7 +25,7 @@
         <mainClass>com.apicatalog.cli.App</mainClass>
         <command.name>ld-cli</command.name>
 
-        <titanium.version>1.3.3</titanium.version>
+        <titanium.version>1.4.0</titanium.version>
         <iridium.version>0.1.3</iridium.version>
         <jakarta.json-p.version>2.0.1</jakarta.json-p.version>
 
