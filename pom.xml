@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.apicatalog</groupId>
     <artifactId>ld-cli</artifactId>
-    <version>0.8.0</version>
+    <version>0.9.0</version>
     <packaging>jar</packaging>
 
     <name>A Command Line Processor for Linked Data Processing</name>
@@ -12,8 +12,8 @@
     <url>https://github.com/filip26/ld-cli</url>
 
     <properties>
-        <maven.compiler.target>17</maven.compiler.target>
-        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

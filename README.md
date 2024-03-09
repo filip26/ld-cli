@@ -9,7 +9,7 @@ A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, doc
 
 ## Installation
 
-[Downloads](https://github.com/filip26/ld-cli/releases/tag/v0.8.0)
+[Downloads](https://github.com/filip26/ld-cli/releases/tag/v0.9.0)
 
 ```bash
 > unzip ld-cli-....zip
@@ -71,12 +71,11 @@ All PR's welcome!
 
 ### Building
 
-1. [Install GraalVM and Native Image](https://www.graalvm.org/java/quickstart/)
-   - download and unpack ```graalvm-ce-java17-[platform]-[version].tar.gz```
-   - set ```JAVA_HOME``` and ```PATH``` env variables
-   - ```gu install native-image```
-3. ```mvn clean package -P native-image```
-4. ```./target/ld-cli```
+1. [Install GraalVM and Native Image](https://www.graalvm.org/downloads/)
+   - download and unpack `graalvm-*.tar.gz`
+   - set `JAVA_HOME` and `PATH` env variables
+2. `mvn clean package -P native-image`
+3. `./target/ld-cli`
 
 
 ## Resources
