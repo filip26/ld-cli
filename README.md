@@ -83,6 +83,7 @@ All PR's welcome!
 
 * [Titanium JSON-LD 1.1 Processor](https://github.com/filip26/titanium-json-ld)
 * [Iridium CBOR-LD Processor](https://github.com/filip26/iridium-cbor-ld)
+* [LEXREX](https://lexrex.web.app/) - Semantic vocabularies visual builder and manager
 
 ## Sponsors
 
