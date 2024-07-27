@@ -1,8 +1,12 @@
 package com.apicatalog.cli.command;
 
-import java.io.File;
 import java.net.URI;
+import java.net.http.HttpClient.Redirect;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Duration;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cborld.CborLd;
@@ -29,8 +33,8 @@ public final class DecompressCmd implements Callable<Integer> {
     @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
     boolean pretty = false;
 
-    @Parameters(index = "0", arity = "1", description = "input document filename")
-    File input = null;
+    @Parameters(index = "0", arity = "1", description = "input document IRI or filepath")
+    URI input = null;
 
     @Option(names = { "-b", "--base" }, description = "input document base IRI")
     URI base = null;
@@ -44,13 +48,15 @@ public final class DecompressCmd implements Callable<Integer> {
     @Spec
     CommandSpec spec;
 
+    static final java.net.http.HttpClient CLIENT = java.net.http.HttpClient.newBuilder().followRedirects(Redirect.ALWAYS).build();
+
     private DecompressCmd() {
     }
 
     @Override
     public Integer call() throws Exception {
 
-        final byte[] encoded = Files.readAllBytes(input.toPath());
+        final byte[] encoded = fetch();
 
         final DecoderConfig config = switch (mode) {
         case "barcodes" -> BarcodesConfig.INSTANCE;
@@ -67,5 +73,34 @@ public final class DecompressCmd implements Callable<Integer> {
         JsonOutput.print((JsonStructure) output, pretty);
 
         return spec.exitCodeOnSuccess();
+    }
+
+    protected byte[] fetch() throws Exception {
+        if (input.isAbsolute()) {
+            if ("file".equalsIgnoreCase(input.getScheme())) {
+                return Files.readAllBytes(Path.of(input));
+            }
+            return fetch(input);
+        }
+        return Files.readAllBytes(Path.of(input.toString()));
+    }
+
+    protected byte[] fetch(URI uri) throws Exception {
+
+        var request = HttpRequest.newBuilder()
+                .GET()
+                .uri(uri)
+                .header("Accept", "*/*")
+                .timeout(Duration.ofMinutes(1));
+
+        var response = CLIENT.send(request.build(), BodyHandlers.ofInputStream());
+
+        if (response.statusCode() != 200) {
+            throw new IllegalArgumentException("The [" + uri + "] has returned code " + response.statusCode() + ", expected 200 OK");
+        }
+
+        try (var is = response.body()) {
+            return is.readAllBytes();
+        }
     }
 }
