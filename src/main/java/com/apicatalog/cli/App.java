@@ -41,7 +41,7 @@ import picocli.CommandLine.ParseResult;
             }
     )
 public final class App {
-
+    
     @Option(names = { "-h", "--help" }, usageHelp = true, description = "display help message")
     boolean help = false;
 

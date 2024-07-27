@@ -62,7 +62,7 @@ Options:
 ### `file:/` scheme support
 
 ```bash
-> ld-cli compress -i file:/home/filip/example.jsonld output.cborld
+> ld-cli compress -i file:/home/filip/example.jsonld
 ```
 
 ## Contributing
