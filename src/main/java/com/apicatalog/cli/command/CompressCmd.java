@@ -3,17 +3,16 @@ package com.apicatalog.cli.command;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
+import com.apicatalog.base.Base16;
 import com.apicatalog.cborld.CborLd;
 import com.apicatalog.cborld.barcode.BarcodesConfig;
 import com.apicatalog.cborld.config.DefaultConfig;
 import com.apicatalog.cborld.config.V05Config;
-import com.apicatalog.cborld.hex.Hex;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.json.JsonUtils;
@@ -93,11 +92,11 @@ public final class CompressCmd implements Callable<Integer> {
                 .encode(json.asJsonObject());
 
         if (output == null) {
-            write(encoded, System.out, true);
+            System.out.write(encode(encoded, true));
 
         } else {
             try (var os = new FileOutputStream(output)) {
-                write(encoded, os, hex);
+                os.write(encode(encoded, hex));
                 os.flush();
             }
         }
@@ -105,20 +104,10 @@ public final class CompressCmd implements Callable<Integer> {
         return spec.exitCodeOnSuccess();
     }
 
-    byte[] encode(byte[] encoded) {
+    static byte[] encode(byte[] encoded, boolean hex) throws IOException {
         return hex
-                ? Hex.toString(encoded, encoded.length).getBytes()
+                ? Base16.encode(encoded, Base16.ALPHABET_LOWER).getBytes()
                 : encoded;
-    }
-
-    static void write(byte[] encoded, OutputStream os, boolean hex) throws IOException {
-        if (hex) {
-            for (int i = 0; i < encoded.length; i++) {
-                os.write(toString(encoded[i]).getBytes());
-            }
-            return;
-        }
-        os.write(encoded);
     }
 
     static final String toString(byte value) {
