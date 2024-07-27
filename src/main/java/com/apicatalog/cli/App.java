@@ -37,7 +37,7 @@ import picocli.CommandLine.ParseResult;
     version = {
             "ld-cli            0.9.0  https://github.com/filip26/ld-cli",
             "titanium-json-ld  1.4.1  https://github.com/filip26/titanium-json-ld",
-            "iridium-cbor-ld   0.2.0  https://github.com/filip26/iridium-cbor-ld",
+            "iridium-cbor-ld   0.2.2  https://github.com/filip26/iridium-cbor-ld",
             }
     )
 public final class App {
