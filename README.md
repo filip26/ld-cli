@@ -5,11 +5,11 @@ A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, doc
 ## Features
 
 * [JSON-LD 1.1](https://www.w3.org/TR/json-ld/) 
-* [CBOR-LD 1.0](https://digitalbazaar.github.io/cbor-ld-spec/)
+* [CBOR-LD 1.0](https://json-ld.github.io/cbor-ld-spec/)
 
 ## Installation
 
-[Downloads](https://github.com/filip26/ld-cli/releases/tag/v0.8.0)
+[Downloads](https://github.com/filip26/ld-cli/releases/)
 
 ```bash
 > unzip ld-cli-....zip
