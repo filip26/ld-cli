@@ -34,7 +34,9 @@
         <graal.version>24.0.2</graal.version>
         <picocli.version>4.7.6</picocli.version>
         <picocli-jansi-graalvm.version>1.2.0</picocli-jansi-graalvm.version>
-        <jansi.version>1.18</jansi.version>
+        
+        <jansi.version>2.4.1</jansi.version>
+<!--        <jansi.version>1.18</jansi.version>-->
 
         <junit.jupiter.version>5.10.3</junit.jupiter.version>
     </properties>
@@ -118,6 +120,7 @@
                     <compilerArgs>
                         <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
                     </compilerArgs>
+                    <fork>true</fork>
                 </configuration>
             </plugin>
             <plugin>
@@ -132,6 +135,14 @@
                         <id>default-jar</id>
                     </execution>
                 </executions>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.apicatalog.App</mainClass>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -163,6 +174,48 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>0.10.2</version>
+                        <extensions>true</extensions>
+                        <configuration>
+<!--                            <imageName>${command.name}</imageName>-->
+<!--                            <mainClass>${mainClass}</mainClass>-->
+                            <buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback
+                                &#45;&#45;report-unsupported-elements-at-runtime
+                                &#45;H:+UnlockExperimentalVMOptions
+                                &#45;H:+ReportExceptionStackTraces
+                                &#45;H:+AddAllCharsets                                
+                                &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json
+                                &#45;H:IncludeResourceBundles=org.glassfish.json.messages
+                                &#45;H:IncludeResources=.*/.*jsonld$</buildArgs>
+                        </configuration>
+                        
+                        <executions>
+                            <execution>
+                                <id>build-native</id>
+                                <goals>
+                                    <goal>compile-no-fork</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                            <execution>
+                                <id>test-native</id>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <phase>test</phase>
+                            </execution>
+                        </executions>
+                    </plugin>                  
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>native-image</id>
             <activation>

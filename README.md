@@ -71,11 +71,10 @@ All PR's welcome!
 
 ### Building
 
-1. [Install GraalVM and Native Image](https://www.graalvm.org/java/quickstart/)
-   - download and unpack ```graalvm-ce-java17-[platform]-[version].tar.gz```
+1. [Install GraalVM and Native Image](https://www.graalvm.org/latest/docs/)
+   - download and unpack ```graalvm-jdk-....tar.gz```
    - set ```JAVA_HOME``` and ```PATH``` env variables
-   - ```gu install native-image```
-3. ```mvn clean package -P native-image```
+3. ```mvn clean package -Pnative```
 4. ```./target/ld-cli```
 
 
