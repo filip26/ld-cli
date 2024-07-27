@@ -5,11 +5,11 @@ A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, doc
 ## Features
 
 * [JSON-LD 1.1](https://www.w3.org/TR/json-ld/) 
-* [CBOR-LD 1.0](https://digitalbazaar.github.io/cbor-ld-spec/)
+* [CBOR-LD 1.0](https://json-ld.github.io/cbor-ld-spec/)
 
 ## Installation
 
-[Downloads](https://github.com/filip26/ld-cli/releases/tag/v0.8.0)
+[Downloads](https://github.com/filip26/ld-cli/releases/)
 
 ```bash
 > unzip ld-cli-....zip
@@ -71,11 +71,10 @@ All PR's welcome!
 
 ### Building
 
-1. [Install GraalVM and Native Image](https://www.graalvm.org/java/quickstart/)
-   - download and unpack ```graalvm-ce-java17-[platform]-[version].tar.gz```
+1. [Install GraalVM and Native Image](https://www.graalvm.org/latest/docs/)
+   - download and unpack ```graalvm-jdk-....tar.gz```
    - set ```JAVA_HOME``` and ```PATH``` env variables
-   - ```gu install native-image```
-3. ```mvn clean package -P native-image```
+3. ```mvn clean package -Pnative```
 4. ```./target/ld-cli```
 
 
@@ -83,6 +82,7 @@ All PR's welcome!
 
 * [Titanium JSON-LD 1.1 Processor](https://github.com/filip26/titanium-json-ld)
 * [Iridium CBOR-LD Processor](https://github.com/filip26/iridium-cbor-ld)
+* [LEXREX](https://lexrex.web.app/) - Semantic vocabularies visual builder and manager
 
 ## Sponsors
 

@@ -32,12 +32,12 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           version: 'latest'
-          java-version: '17'
+          java-version: '21'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Build Native Image'
-        run: mvn package -P native-image
+        run: mvn package -P native
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

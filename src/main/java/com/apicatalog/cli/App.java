@@ -35,9 +35,9 @@ import picocli.CommandLine.ParseResult;
     optionListHeading = "%nOptions:%n",
     commandListHeading = "%nCommands:%n",
     version = {
-            "ld-cli            0.8.0  https://github.com/filip26/ld-cli",
-            "titanium-json-ld  1.3.1  https://github.com/filip26/titanium-json-ld",
-            "iridium-cbor-ld   0.1.1  https://github.com/filip26/iridium-cbor-ld",
+            "ld-cli            0.9.0  https://github.com/filip26/ld-cli",
+            "titanium-json-ld  1.4.1  https://github.com/filip26/titanium-json-ld",
+            "iridium-cbor-ld   0.2.2  https://github.com/filip26/iridium-cbor-ld",
             }
     )
 public final class App {
@@ -49,7 +49,7 @@ public final class App {
     boolean version;    
 
     static {
-        ((HttpLoader) HttpLoader.defaultInstance()).setFallbackContentType(MediaType.JSON);
+        ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.JSON);
     }
     
     public static void main(String[] args) {
