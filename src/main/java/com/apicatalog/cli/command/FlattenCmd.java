@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
+import com.apicatalog.jsonld.JsonLdOptions;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FlatteningApi;
 import com.apicatalog.jsonld.document.JsonDocument;
@@ -35,8 +36,11 @@ public final class FlattenCmd implements Callable<Integer> {
     @Option(names = { "-i", "--input" }, description = "input document IRI")
     URI input = null;
 
-    @Option(names = { "-c", "--context" }, description = "context IRI")
+    @Option(names = { "-c", "--context" }, description = "context IRI to compact the flattened document")
     URI context = null;
+
+    @Option(names = { "-e", "--expand-context" }, description = "context IRI to expand the document before flattening")
+    URI expandContext = null;
 
     @Option(names = { "-b", "--base" }, description = "input document base IRI")
     URI base = null;
@@ -67,6 +71,11 @@ public final class FlattenCmd implements Callable<Integer> {
         } else {
             api = JsonLd.flatten(JsonDocument.of(System.in));
         }
+        
+        final JsonLdOptions options = new JsonLdOptions();
+        options.setExpandContext(expandContext);
+
+        api.options(options);
 
         if (mode != null) {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
