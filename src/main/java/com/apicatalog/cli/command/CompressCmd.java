@@ -10,9 +10,9 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.base.Base16;
 import com.apicatalog.cborld.CborLd;
-import com.apicatalog.cborld.barcode.BarcodesConfig;
 import com.apicatalog.cborld.config.DefaultConfig;
 import com.apicatalog.cborld.config.V05Config;
+import com.apicatalog.cli.JsonCborDictionary;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.json.JsonUtils;
@@ -43,8 +43,11 @@ public final class CompressCmd implements Callable<Integer> {
     @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
     boolean keepArrays = false;
 
-    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "default|barcodes|v05")
+    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "default|v05")
     String mode = "default";
+
+    @Option(names = { "-d", "--dictionary" }, description = "a custom dictionary (JSON) location")
+    URI dictionary = null;
 
     @Option(names = { "-x", "--hex" }, description = "print encoded as hexadecimal bytes")
     boolean hex = false;
@@ -80,14 +83,19 @@ public final class CompressCmd implements Callable<Integer> {
         }
 
         var config = switch (mode) {
-        case "barcodes" -> BarcodesConfig.INSTANCE;
         case "v05" -> V05Config.INSTANCE;
         default -> DefaultConfig.INSTANCE;
         };
 
-        var encoded = CborLd.createEncoder(config)
+        var encoder = CborLd.createEncoder(config)
                 .base(base)
-                .compactArray(!keepArrays)
+                .compactArray(!keepArrays);
+
+        if (dictionary != null) {
+            encoder.dictionary(JsonCborDictionary.of(dictionary));
+        }
+
+        var encoded = encoder
                 .build()
                 .encode(json.asJsonObject());
 
@@ -113,5 +121,4 @@ public final class CompressCmd implements Callable<Integer> {
     static final String toString(byte value) {
         return String.format("%02x", value);
     }
-
 }

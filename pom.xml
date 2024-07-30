@@ -29,14 +29,13 @@
 
         <titanium.version>1.4.1</titanium.version>
         <iridium.version>0.2.2</iridium.version>
-        <jakarta.json-p.version>2.0.1</jakarta.json-p.version>
+        <jakarta.json.version>2.0.1</jakarta.json.version>
 
         <graal.version>24.0.2</graal.version>
         <picocli.version>4.7.6</picocli.version>
         <picocli-jansi-graalvm.version>1.2.0</picocli-jansi-graalvm.version>
-        
+
         <jansi.version>2.4.1</jansi.version>
-<!--        <jansi.version>1.18</jansi.version>-->
 
         <junit.jupiter.version>5.10.3</junit.jupiter.version>
     </properties>
@@ -55,9 +54,14 @@
         </dependency>
 
         <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <version>${jakarta.json.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
-            <version>${jakarta.json-p.version}</version>
+            <version>${jakarta.json.version}</version>
         </dependency>
 
         <dependency>
@@ -184,18 +188,18 @@
                         <version>0.10.2</version>
                         <extensions>true</extensions>
                         <configuration>
-<!--                            <imageName>${command.name}</imageName>-->
-<!--                            <mainClass>${mainClass}</mainClass>-->
+                            <!--                            <imageName>${command.name}</imageName>-->
+                            <!--                            <mainClass>${mainClass}</mainClass>-->
                             <buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback
                                 &#45;&#45;report-unsupported-elements-at-runtime
                                 &#45;H:+UnlockExperimentalVMOptions
                                 &#45;H:+ReportExceptionStackTraces
-                                &#45;H:+AddAllCharsets                                
+                                &#45;H:+AddAllCharsets
                                 &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json
                                 &#45;H:IncludeResourceBundles=org.glassfish.json.messages
                                 &#45;H:IncludeResources=.*/.*jsonld$</buildArgs>
                         </configuration>
-                        
+
                         <executions>
                             <execution>
                                 <id>build-native</id>
@@ -212,7 +216,7 @@
                                 <phase>test</phase>
                             </execution>
                         </executions>
-                    </plugin>                  
+                    </plugin>
                 </plugins>
             </build>
         </profile>

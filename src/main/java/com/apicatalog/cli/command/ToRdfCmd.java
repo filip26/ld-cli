@@ -19,15 +19,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(
-        name = "tordf", 
-        mixinStandardHelpOptions = false, 
-        description = "Transform JSON-LD document into N-Quads document", 
-        sortOptions = true,
-        descriptionHeading = "%n",
-        parameterListHeading = "%nParameters:%n",
-        optionListHeading = "%nOptions:%n"
-        )
+@Command(name = "tordf", mixinStandardHelpOptions = false, description = "Transform JSON-LD document into N-Quads document", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class ToRdfCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
@@ -36,7 +28,7 @@ public final class ToRdfCmd implements Callable<Integer> {
     @Option(names = { "-i", "--input" }, description = "input document IRI")
     URI input = null;
 
-    @Option(names = { "-c", "--context" }, description = "context IRI")
+    @Option(names = { "-c", "--context" }, description = "expansion context IRI")
     URI context = null;
 
     @Option(names = { "-b", "--base" }, description = "input document base IRI")
@@ -45,24 +37,20 @@ public final class ToRdfCmd implements Callable<Integer> {
     @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "1.0|1.1")
     String mode = "1.1";
 
-    @Option(names = { "-o", "--ordered" }, 
-            description = "certain algorithm processing steps are ordered lexicographically")
+    @Option(names = { "-o", "--ordered" }, description = "certain algorithm processing steps are ordered lexicographically")
     boolean ordered = false;
 
-    @Option(names = { "-d", "--direction" }, 
-            description = "determines how value objects containing a base direction are transformed",
-            paramLabel = "I18N_DATATYPE|COMPOUND_LITERAL")
+    @Option(names = { "-d", "--direction" }, description = "determines how value objects containing a base direction are transformed", paramLabel = "I18N_DATATYPE|COMPOUND_LITERAL")
     String rdfDirection;
 
-    @Option(names = { "-n", "--no-blanks" }, 
-            description = "omit blank nodes for triple predicates"
-            )
-    boolean generalizedRdf = true;  
+    @Option(names = { "-n", "--no-blanks" }, description = "omit blank nodes for triple predicates")
+    boolean generalizedRdf = true;
 
     @Spec
     CommandSpec spec;
 
-    private ToRdfCmd() {}
+    private ToRdfCmd() {
+    }
 
     @Override
     public Integer call() throws Exception {
@@ -84,16 +72,16 @@ public final class ToRdfCmd implements Callable<Integer> {
         api.base(base);
         api.ordered(ordered);
         api.produceGeneralizedRdf(generalizedRdf);
-        
+
         if (rdfDirection != null) {
             api.rdfDirection(RdfDirection.valueOf(rdfDirection.toUpperCase()));
         }
 
         final RdfDataset output = api.get();
-        
+
         final StringWriter stringWriter = new StringWriter();
-        
-        final  RdfWriter writer = Rdf.createWriter(MediaType.N_QUADS, stringWriter);
+
+        final RdfWriter writer = Rdf.createWriter(MediaType.N_QUADS, stringWriter);
         writer.write(output);
 
         System.out.println(stringWriter.toString());
