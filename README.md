@@ -65,6 +65,11 @@ Options:
 > ld-cli compress -i file:/home/filip/example.jsonld
 ```
 
+### Custom CBOR-LD dictionaries
+```bash
+> ld-cli decompress --pretty --dictionary=./utopia-barcodes-dictionary-example.json <<< 'd90664a60183198000198001198002189d82187618a418b8a3189c18a618ce18b218d01ae592208118baa2189c18a018a8447582002018be18aa18c0a5189c186c18d60418e018e618e258417ab7c2e56b49e2cce62184ce26818e15a8b173164401b5d3bb93ffd6d2b5eb8f6ac0971502ae3dd49d17ec66528164034c912685b8111bc04cdc9ec13dbadd91cc18e418ac'
+```
+
 ## Contributing
 
 All PR's welcome!
