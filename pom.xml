@@ -150,7 +150,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                     <excludedGroups>native-image</excludedGroups>
