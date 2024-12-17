@@ -37,7 +37,7 @@
 
         <jansi.version>2.4.1</jansi.version>
 
-        <junit.jupiter.version>5.11.3</junit.jupiter.version>
+        <junit.jupiter.version>5.11.4</junit.jupiter.version>
     </properties>
 
     <dependencies>
