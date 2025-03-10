@@ -97,10 +97,10 @@ All PR's welcome!
 
 ## Resources
 
-* [Titanium JSON-LD 1.1 Processor](https://github.com/filip26/titanium-json-ld)
+* [Titanium JSON-LD](https://github.com/filip26/titanium-json-ld)
 * [Titanium RDFC](https://github.com/filip26/titanium-rfc-canon)
 * [Titanium JCS](https://github.com/filip26/titanium-jcs)
-* [Iridium CBOR-LD Processor](https://github.com/filip26/iridium-cbor-ld)
+* [Iridium CBOR-LD](https://github.com/filip26/iridium-cbor-ld)
 
 ## Sponsors
 
