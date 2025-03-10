@@ -11,7 +11,9 @@ import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.jsonld.document.Document;
+import com.apicatalog.jsonld.http.media.MediaType;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
+import com.apicatalog.jsonld.loader.HttpLoader;
 import com.apicatalog.jsonld.loader.SchemeRouter;
 import com.apicatalog.rdf.RdfResource;
 import com.apicatalog.rdf.canon.RdfCanon;
@@ -66,6 +68,9 @@ public final class RdfCanonCmd implements Callable<Integer> {
 
         if (input != null) {
             if (input.isAbsolute()) {
+                
+                ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
+                
                 var loader = SchemeRouter.defaultInstance();
                 Document document = loader.loadDocument(input, new DocumentLoaderOptions());
                 document.getRdfContent()
