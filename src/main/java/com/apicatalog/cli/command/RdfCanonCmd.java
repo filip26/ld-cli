@@ -1,23 +1,25 @@
 package com.apicatalog.cli.command;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Writer;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.base.Base16;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
 import com.apicatalog.jsonld.loader.SchemeRouter;
-import com.apicatalog.rdf.RdfDataset;
+import com.apicatalog.rdf.RdfResource;
 import com.apicatalog.rdf.canon.RdfCanon;
 import com.apicatalog.rdf.canon.RdfCanonTicker;
 import com.apicatalog.rdf.canon.RdfCanonTimeTicker;
+import com.apicatalog.rdf.nquads.NQuadsAlphabet;
 import com.apicatalog.rdf.nquads.NQuadsReader;
+import com.apicatalog.rdf.nquads.NQuadsWriter;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
@@ -33,8 +35,8 @@ public final class RdfCanonCmd implements Callable<Integer> {
     @Option(names = { "-i", "--input" }, description = "input document IRI or filepath")
     URI input = null;
 
-    @Option(names = { "-o", "--output" }, description = "output document filename")
-    String output = null;
+//    @Option(names = { "-o", "--output" }, description = "output document filename")
+//    String output = null;
 
     @Option(names = { "-t", "--timeout" }, description = "terminates after the specified time in milliseconds (default: 10s)")
     long timeout = 10 * 1000;
@@ -52,26 +54,64 @@ public final class RdfCanonCmd implements Callable<Integer> {
     public Integer call() throws Exception {
 
         String hashAlgo = "SHA-256";
-        if ("SHA384".equals(digest)) {
+        if ("SHA384".equalsIgnoreCase(digest)) {
             hashAlgo = "SHA-384";
         }
-        
+
         RdfCanonTicker ticker = timeout > 0
-                    ? new RdfCanonTimeTicker(timeout)
-                    : RdfCanonTicker.EMPTY;
-        
+                ? new RdfCanonTimeTicker(timeout)
+                : RdfCanonTicker.EMPTY;
+
         RdfCanon canon = RdfCanon.create(hashAlgo, ticker);
-        
+
         if (input != null) {
             if (input.isAbsolute()) {
                 var loader = SchemeRouter.defaultInstance();
                 Document document = loader.loadDocument(input, new DocumentLoaderOptions());
-                RdfDataset x = document.getRdfContent()
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid input document. N-QUADS document expected but got [" + document.getContentType() + "]."));
-                x.toList().forEach(s -> {
-//                    canon.quad(s.get, hashAlgo, hashAlgo, hashAlgo, hashAlgo, hashAlgo, hashAlgo)
-                });
-                
+                document.getRdfContent()
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid input document. N-QUADS document expected but got [" + document.getContentType() + "]."))
+                        .toList().forEach(s -> {
+                            if (s.getObject().isLiteral()) {
+                                var literal = s.getObject().asLiteral();
+
+                                var datatype = literal.getDatatype();
+                                var language = literal.getLanguage().orElse(null);
+                                String direction = null;
+
+                                if (datatype.startsWith(NQuadsAlphabet.I18N_BASE)) {
+
+                                    datatype = NQuadsAlphabet.I18N_BASE;
+
+                                    String[] langDir = datatype.substring(NQuadsAlphabet.I18N_BASE.length()).split("_");
+
+                                    if (langDir.length > 1) {
+                                        direction = langDir[1];
+                                    }
+                                    if (langDir.length > 0) {
+                                        language = langDir[0];
+                                    }
+                                }
+
+                                canon.quad(
+                                        s.getSubject().getValue(),
+                                        s.getPredicate().getValue(),
+                                        s.getObject().getValue(),
+                                        datatype,
+                                        language,
+                                        direction,
+                                        s.getGraphName().map(RdfResource::getValue).orElse(null));
+                                return;
+                            }
+                            canon.quad(
+                                    s.getSubject().getValue(),
+                                    s.getPredicate().getValue(),
+                                    s.getObject().getValue(),
+                                    null,
+                                    null,
+                                    null,
+                                    s.getGraphName().map(RdfResource::getValue).orElse(null));
+                        });
+
             } else {
                 try (final Reader reader = Files.newBufferedReader(Path.of(input.toString()), StandardCharsets.UTF_8)) {
                     new NQuadsReader(reader).provide(canon);
@@ -81,51 +121,17 @@ public final class RdfCanonCmd implements Callable<Integer> {
         } else {
             try (final Reader reader = new InputStreamReader(System.in)) {
                 new NQuadsReader(reader).provide(canon);
-            };
+            }
         }
-        
-//
-//        if (JsonUtils.isNotObject(json)) {
-//            throw new IllegalArgumentException("The input docunent root is not JSON object but [" + json.getValueType() + "].");
-//        }
-//
-//        var config = switch (mode) {
-//        case "v05" -> V05Config.INSTANCE;
-//        default -> DefaultConfig.INSTANCE;
-//        };
-//
-//        var encoder = CborLd.createEncoder(config)
-//                .base(base)
-//                .compactArray(!timeout);
-//
-//        if (dictionary != null) {
-//            encoder.dictionary(JsonCborDictionary.of(dictionary));
-//        }
-//
-//        var encoded = encoder
-//                .build()
-//                .encode(json.asJsonObject());
-//
-//        if (output == null) {
-//            System.out.write(encode(encoded, true));
-//
-//        } else {
-//            try (var os = new FileOutputStream(output)) {
-//                os.write(encode(encoded, hex));
-//                os.flush();
-//            }
-//        }
+
+        try (final Writer writer = new OutputStreamWriter(System.out, StandardCharsets.UTF_8)) {
+            canon.provide(new NQuadsWriter(writer));
+            writer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return spec.exitCodeOnExecutionException();
+        }
 
         return spec.exitCodeOnSuccess();
-    }
-
-    static byte[] encode(byte[] encoded, boolean hex) throws IOException {
-        return hex
-                ? Base16.encode(encoded, Base16.ALPHABET_LOWER).getBytes()
-                : encoded;
-    }
-
-    static final String toString(byte value) {
-        return String.format("%02x", value);
     }
 }

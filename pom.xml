@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.apicatalog</groupId>
     <artifactId>ld-cli</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.10.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>A Command Line Processor for Linked Data Processing</name>
@@ -198,14 +198,17 @@
                         <configuration>
                             <!--                            <imageName>${command.name}</imageName>-->
                             <!--                            <mainClass>${mainClass}</mainClass>-->
-                            <buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback
-                                &#45;&#45;report-unsupported-elements-at-runtime
-                                &#45;H:+UnlockExperimentalVMOptions
-                                &#45;H:+ReportExceptionStackTraces
-                                &#45;H:+AddAllCharsets
-                                &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json
-                                &#45;H:IncludeResourceBundles=org.glassfish.json.messages
-                                &#45;H:IncludeResources=.*/.*jsonld$</buildArgs>
+                            <buildArgs>
+                                <buildArg>&#45;&#45;report-unsupported-elements-at-runtime</buildArg>
+                                <buildArg>&#45;H:+AddAllCharsets</buildArg>
+                                <buildArg>&#45;&#45;enable&#45;http</buildArg>
+                                <buildArg>&#45;&#45;enable-https</buildArg>
+                                <buildArg>&#45;H:&#43;UnlockExperimentalVMOptions</buildArg>
+                                <buildArg>&#45;H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>&#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json</buildArg>
+                                <buildArg>&#45;H:IncludeResourceBundles=org.glassfish.json.messages</buildArg>
+                                <buildArg>&#45;H:IncludeResources=.*/.*jsonld$</buildArg>
+                                </buildArgs>
                         </configuration>
 
                         <executions>
