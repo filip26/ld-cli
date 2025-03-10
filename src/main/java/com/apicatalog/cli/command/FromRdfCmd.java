@@ -8,6 +8,8 @@ import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FromRdfApi;
 import com.apicatalog.jsonld.document.JsonDocument;
+import com.apicatalog.jsonld.http.media.MediaType;
+import com.apicatalog.jsonld.loader.HttpLoader;
 
 import jakarta.json.JsonStructure;
 import picocli.CommandLine.Command;
@@ -64,6 +66,7 @@ public final class FromRdfCmd implements Callable<Integer> {
         final FromRdfApi api;
 
         if (input != null) {
+            ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
             api = JsonLd.fromRdf(input);
 
         } else {

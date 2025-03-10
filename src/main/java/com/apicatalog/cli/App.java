@@ -7,6 +7,8 @@ import com.apicatalog.cli.command.ExpandCmd;
 import com.apicatalog.cli.command.FlattenCmd;
 import com.apicatalog.cli.command.FrameCmd;
 import com.apicatalog.cli.command.FromRdfCmd;
+import com.apicatalog.cli.command.JcsCmd;
+import com.apicatalog.cli.command.RdfCanonCmd;
 import com.apicatalog.cli.command.ToRdfCmd;
 import com.apicatalog.jsonld.http.media.MediaType;
 import com.apicatalog.jsonld.loader.HttpLoader;
@@ -28,6 +30,8 @@ import picocli.CommandLine.ParseResult;
             ToRdfCmd.class,
             CompressCmd.class,
             DecompressCmd.class,
+            RdfCanonCmd.class,
+            JcsCmd.class,
             },
     mixinStandardHelpOptions = false,
     descriptionHeading = "%n",
@@ -35,9 +39,11 @@ import picocli.CommandLine.ParseResult;
     optionListHeading = "%nOptions:%n",
     commandListHeading = "%nCommands:%n",
     version = {
-            "ld-cli            0.9.0  https://github.com/filip26/ld-cli",
-            "titanium-json-ld  1.4.1  https://github.com/filip26/titanium-json-ld",
-            "iridium-cbor-ld   0.2.2  https://github.com/filip26/iridium-cbor-ld",
+            "ld-cli            0.10.0  https://github.com/filip26/ld-cli",
+            "titanium-json-ld  1.6.0  https://github.com/filip26/titanium-json-ld",
+            "titanium-rdfc     2.0.0  https://github.com/filip26/titanium-rdf-canon",
+            "titanium-jcs      1.0.0  https://github.com/filip26/titanium-jcs",
+            "iridium-cbor-ld   0.3.0  https://github.com/filip26/iridium-cbor-ld",
             }
     )
 public final class App {
