@@ -8,8 +8,10 @@ A simple command-line utility designed to process JSON-LD, RDF, and CBOR-LD docu
 
 ## Features
 
-* [JSON-LD 1.1](https://www.w3.org/TR/json-ld/) 
-* [CBOR-LD 1.0](https://json-ld.github.io/cbor-ld-spec/)
+* [W3C JSON-LD 1.1](https://www.w3.org/TR/json-ld/) 
+* [W3C CBOR-LD 1.0](https://json-ld.github.io/cbor-ld-spec/)
+* [W3C Standard RDF Dataset Canonicalization Algorithm](https://www.w3.org/TR/rdf-canon/)
+* [RFC 8785 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785)
 
 ## Status
 
@@ -46,6 +48,7 @@ Commands:
   tordf       Transform JSON-LD document into N-Quads document
   compress    Compress JSON-LD document into CBOR-LD  
   decompress  Decompress CBOR-LD document into JSON-LD
+  rdfc        Canonicalize an RDF N-Quads document with RDFC-1.0
   
 > ld-cli expand -h
 Usage: ld-cli expand [-op] [-b=<base>] [-c=<context>] [-i=<input>] [-m=1.0|1.1]
@@ -95,8 +98,9 @@ All PR's welcome!
 ## Resources
 
 * [Titanium JSON-LD 1.1 Processor](https://github.com/filip26/titanium-json-ld)
+* [Titanium RDFC](https://github.com/filip26/titanium-rfc-canon)
+* [Titanium JCS](https://github.com/filip26/titanium-jcs)
 * [Iridium CBOR-LD Processor](https://github.com/filip26/iridium-cbor-ld)
-* [LEXREX](https://lexrex.web.app/) - Semantic vocabularies visual builder and manager
 
 ## Sponsors
 
