@@ -1,11 +1,20 @@
+
+> [!IMPORTANT]
+> Your feedback is essential to the improvement of this library. Please share any concerns, primary use cases, areas for enhancement, or challenges you have encountered. Your insights help refine and optimize the library to better meet user needs. Thank you for your time and contributions.
+
 # Linked Data CLI
 
-A simple command line utility allowing to process JSON-LD, RDF, and CBOR-LD, documents. The goal is to provide native executables compiled for Ubuntu, Mac and Windows.
+A simple command-line utility designed to process JSON-LD, RDF, and CBOR-LD documents. The goal is to provide native executables compiled for Ubuntu, macOS, and Windows.
 
 ## Features
 
 * [JSON-LD 1.1](https://www.w3.org/TR/json-ld/) 
 * [CBOR-LD 1.0](https://json-ld.github.io/cbor-ld-spec/)
+
+## Status
+
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/filip26/ld-cli?include_prereleases)](https://github.com/filip26/ld-cli/releases)
+[![Downloads](https://img.shields.io/github/downloads/filip26/ld-cli/total)](https://github.com/filip26/ld-cli/releases)
 
 ## Installation
 
