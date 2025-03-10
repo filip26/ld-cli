@@ -7,6 +7,7 @@ import com.apicatalog.cli.command.ExpandCmd;
 import com.apicatalog.cli.command.FlattenCmd;
 import com.apicatalog.cli.command.FrameCmd;
 import com.apicatalog.cli.command.FromRdfCmd;
+import com.apicatalog.cli.command.JcsCmd;
 import com.apicatalog.cli.command.RdfCanonCmd;
 import com.apicatalog.cli.command.ToRdfCmd;
 import com.apicatalog.jsonld.http.media.MediaType;
@@ -30,6 +31,7 @@ import picocli.CommandLine.ParseResult;
             CompressCmd.class,
             DecompressCmd.class,
             RdfCanonCmd.class,
+            JcsCmd.class,
             },
     mixinStandardHelpOptions = false,
     descriptionHeading = "%n",

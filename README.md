@@ -48,8 +48,9 @@ Commands:
   tordf       Transform JSON-LD document into N-Quads document
   compress    Compress JSON-LD document into CBOR-LD  
   decompress  Decompress CBOR-LD document into JSON-LD
-  rdfc        Canonicalize an RDF N-Quads document with RDFC-1.0
-  
+  rdfc        Canonize an RDF N-Quads document with RDFC-1.0
+  jcs         Canonize a JSON document using the JSON Canonicalization Scheme (JCS)
+
 > ld-cli expand -h
 Usage: ld-cli expand [-op] [-b=<base>] [-c=<context>] [-i=<input>] [-m=1.0|1.1]
 

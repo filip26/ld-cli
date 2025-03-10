@@ -28,7 +28,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "rdfc", mixinStandardHelpOptions = false, description = "Canonicalize an RDF N-Quads document with RDFC-1.0", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "rdfc", mixinStandardHelpOptions = false, description = "Canonize an RDF N-Quads document with RDFC-1.0", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class RdfCanonCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
