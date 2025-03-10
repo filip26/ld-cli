@@ -72,6 +72,12 @@ Options:
 > cat document.json | ld-cli expand --ordered --pretty > expanded.jsonld
 ```
 
+### `https://` scheme support
+
+```bash
+> ld-cli rdfc -i https://raw.githubusercontent.com/filip26/titanium-rdf-canon/refs/heads/main/src/test/resources/com/apicatalog/rdf/canon/rdfc10/test022-in.nq 
+```
+
 ### `file:/` scheme support
 
 ```bash
