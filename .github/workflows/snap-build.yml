@@ -1,0 +1,31 @@
+name: Snap Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - src/
+      - ".github/workflows/snap-build.yml"
+  
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    outputs:
+      snap: ${{ steps.snapcraft.outputs.snap }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        uses: snapcore/action-build@v1
+        id: snapcraft
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ld-cli-snap
+          path: ${{ steps.snapcraft.outputs.snap }}
+        
