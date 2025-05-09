@@ -16,13 +16,12 @@ A simple command-line utility designed to process JSON-LD, RDF, and CBOR-LD docu
 ## Status
 
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/filip26/ld-cli?include_prereleases)](https://github.com/filip26/ld-cli/releases)
+[![Snap Status](https://snapcraft.io/ld-cli/badge.svg)](https://snapcraft.io/ld-cli)
 [![Downloads](https://img.shields.io/github/downloads/filip26/ld-cli/total)](https://github.com/filip26/ld-cli/releases)
 
 ## Installation
 
 ### 📦 Install via Snap
-
-[![Snap Status](https://snapcraft.io/ld-cli/badge.svg)](https://snapcraft.io/ld-cli)
 
 You can install this app easily on any Linux distribution that supports [Snaps](https://snapcraft.io/docs):
 
@@ -37,8 +36,8 @@ Download the latest release from the [GitHub Releases page](https://github.com/f
 After downloading, extract the archive and make the binary executable:
 
 ```bash
-> unzip ld-cli-....zip
-> chmod +x ld-cli
+unzip ld-cli-....zip
+chmod +x ld-cli
 ```
 
 ## Usage
