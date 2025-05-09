@@ -6,8 +6,16 @@ name: Java CI
 on:
   push:
     branches: [ main ]
+    paths:
+      - src/
+      - "pom.xml"
+      - ".github/workflows/build.yml"
   pull_request:
     branches: [ main ]
+    paths:
+      - src/
+      - "pom.xml"
+      - ".github/workflows/build.yml"
 
 jobs:
   build:
