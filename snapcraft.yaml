@@ -1,0 +1,73 @@
+name: ld-cli
+title: LinkedData CLI
+version: 0.10.0
+license: Apache-2.0
+summary: Command-line tool for JSON-LD, RDF, RDFC, JCS, and CBOR-LD processing
+description: |
+  LinkedData CLI (`ld-cli`) is a command-line tool for processing and transforming linked data formats,
+  including:
+
+    • JSON-LD (JavaScript Object Notation for Linked Data)
+    • RDF (Resource Description Framework)
+    • RDFC (RDF Canonicalization)
+    • JCS (JSON Canonicalization Scheme)
+    • CBOR-LD (Concise Binary Object Representation for Linked Data)
+
+  Built with GraalVM, `ld-cli` provides native execution with zero JVM startup overhead.
+  It's ideal for batch workflows, automated validation, canonicalization, and serialization of
+  linked data resources in knowledge graphs, decentralized identifiers (DIDs), and semantic web applications.
+
+  This Snap includes a precompiled native executable built with GraalVM for optimal performance
+  on modern Ubuntu systems.
+
+source-code: https://github.com/filip26/ld-cli
+issues: https://github.com/filip26/ld-cli/issues
+contact: filip26@gmail.com
+confinement: strict
+base: core24
+grade: stable
+
+parts:
+  graalvm:
+    plugin: nil
+    source: https://download.oracle.com/graalvm/21/latest/graalvm-jdk-21_linux-x64_bin.tar.gz
+    build-packages:
+      - wget
+      - tar 
+    override-build: |
+      echo "=== Entering GraalVM override-build ==="
+      mkdir -p $SNAPCRAFT_STAGE/opt
+      wget -qO- https://download.oracle.com/graalvm/24/latest/graalvm-jdk-24_linux-x64_bin.tar.gz | tar xz -C $SNAPCRAFT_STAGE/opt
+      GRAALVM_DIR=$(find $SNAPCRAFT_STAGE/opt -maxdepth 1 -type d -name "graalvm-*")
+      
+      if [ -z "$GRAALVM_DIR" ]; then
+        ls -l "$GRAALVM_DIR"
+        echo "❌ Error: GraalVM directory not found."
+        exit 1
+      fi
+
+      echo "✅ Found GraalVM directory: $GRAALVM_DIR"
+
+      # Create symlink
+      ln -s "$GRAALVM_DIR" "$SNAPCRAFT_STAGE/opt/graalvm"
+
+  ld-cli:
+    after: [graalvm]
+    plugin: nil
+    source: .
+    build-packages:
+      - maven
+      - build-essential
+    override-build: |
+      export JAVA_HOME=$SNAPCRAFT_STAGE/opt/graalvm
+      export PATH=$JAVA_HOME/bin:$PATH
+      echo "JAVA_HOME is set to: $JAVA_HOME"  # For debugging purposes
+      echo "PATH is set to: $PATH"  # For debugging purposes
+      mvn clean package -Pnative
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp target/ld-cli $SNAPCRAFT_PART_INSTALL/bin/
+
+apps:
+  ld-cli:
+    command: bin/ld-cli
+    plugs: [home, network, network-bind]
