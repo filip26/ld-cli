@@ -1,6 +1,6 @@
 # This is a basic workflow that is manually triggered
 
-name: Create Executables
+name: Native Build
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -10,7 +10,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build-image:
-    name: 'Build Native Image'
+    name: 'Compile'
     needs: get-version
     runs-on: ${{ matrix.os }}
     strategy:
@@ -32,7 +32,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           version: 'latest'
-          java-version: '23'
+          java-version: '24'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -51,7 +51,7 @@ jobs:
           if-no-files-found: error
 
   get-version:
-    name: 'Get Build Version'
+    name: 'Get Version'
     runs-on: ubuntu-latest
     outputs:
       BUILD_VERSION: ${{ steps.extraction.outputs.BUILD_VERSION }}

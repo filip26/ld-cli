@@ -1,7 +1,3 @@
-
-> [!IMPORTANT]
-> Your feedback is essential to the improvement of this library. Please share any concerns, primary use cases, areas for enhancement, or challenges you have encountered. Your insights help refine and optimize the library to better meet user needs. Thank you for your time and contributions.
-
 # Linked Data CLI
 
 A simple command-line utility designed to process JSON-LD, RDF, and CBOR-LD documents. The goal is to provide native executables compiled for Ubuntu, macOS, and Windows.
@@ -16,15 +12,28 @@ A simple command-line utility designed to process JSON-LD, RDF, and CBOR-LD docu
 ## Status
 
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/filip26/ld-cli?include_prereleases)](https://github.com/filip26/ld-cli/releases)
+[![Snap Status](https://snapcraft.io/ld-cli/badge.svg)](https://snapcraft.io/ld-cli)
 [![Downloads](https://img.shields.io/github/downloads/filip26/ld-cli/total)](https://github.com/filip26/ld-cli/releases)
 
 ## Installation
 
-[Downloads](https://github.com/filip26/ld-cli/releases/)
+### 📦 Install via Snap
+
+You can install this app easily on any Linux distribution that supports [Snaps](https://snapcraft.io/docs):
 
 ```bash
-> unzip ld-cli-....zip
-> chmod +x ld-cli
+sudo snap install ld-cli
+```
+
+### 📁 Manual Download
+
+Download the latest release from the [GitHub Releases page](https://github.com/filip26/ld-cli/releases/).
+
+After downloading, extract the archive and make the binary executable:
+
+```bash
+unzip ld-cli-....zip
+chmod +x ld-cli
 ```
 
 ## Usage
@@ -69,24 +78,24 @@ Options:
 
 ### Pipeline
 ```bash
-> cat document.json | ld-cli expand --ordered --pretty > expanded.jsonld
+cat document.json | ld-cli expand --ordered --pretty > expanded.jsonld
 ```
 
 ### `https://` scheme support
 
 ```bash
-> ld-cli rdfc -i https://raw.githubusercontent.com/filip26/titanium-rdf-canon/refs/heads/main/src/test/resources/com/apicatalog/rdf/canon/rdfc10/test022-in.nq 
+ld-cli rdfc -i https://raw.githubusercontent.com/filip26/titanium-rdf-canon/refs/heads/main/src/test/resources/com/apicatalog/rdf/canon/rdfc10/test022-in.nq 
 ```
 
 ### `file:/` scheme support
 
 ```bash
-> ld-cli compress -i file:/home/filip/example.jsonld
+ld-cli compress -i file:/home/filip/example.jsonld
 ```
 
 ### Custom CBOR-LD dictionaries
 ```bash
-> ld-cli decompress --pretty --dictionary=./utopia-barcodes-dictionary-example.json <<< 'd90664a60183198000198001198002189d82187618a418b8a3189c18a618ce18b218d01ae592208118baa2189c18a018a8447582002018be18aa18c0a5189c186c18d60418e018e618e258417ab7c2e56b49e2cce62184ce26818e15a8b173164401b5d3bb93ffd6d2b5eb8f6ac0971502ae3dd49d17ec66528164034c912685b8111bc04cdc9ec13dbadd91cc18e418ac'
+ld-cli decompress --pretty --dictionary=./utopia-barcodes-dictionary-example.json <<< 'd90664a60183198000198001198002189d82187618a418b8a3189c18a618ce18b218d01ae592208118baa2189c18a018a8447582002018be18aa18c0a5189c186c18d60418e018e618e258417ab7c2e56b49e2cce62184ce26818e15a8b173164401b5d3bb93ffd6d2b5eb8f6ac0971502ae3dd49d17ec66528164034c912685b8111bc04cdc9ec13dbadd91cc18e418ac'
 ```
 
 ## Contributing
