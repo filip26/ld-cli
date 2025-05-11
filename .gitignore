@@ -13,8 +13,9 @@ buildNumber.properties
 .project
 .settings/
 *.swp
-
+*.snap
 /out.cborld
 /o.cborld
 /ex.jsonld
 /ld-cli
+squashfs-root/

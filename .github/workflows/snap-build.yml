@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - src/
+      - "pom.xml"
       - ".github/workflows/snap-build.yml"
   
 jobs:
