@@ -1,6 +1,8 @@
 # Linked Data CLI
 
-A simple command-line utility designed to process JSON-LD, RDF, and CBOR-LD documents. The goal is to provide native executables compiled for Ubuntu, macOS, and Windows.
+A simple command-line utility designed to process JSON-LD, RDF, and CBOR-LD documents. Built with GraalVM, `ld-cli` provides native executables for Ubuntu, macOS, and Windows - completely free of JVM dependencies or overhead
+
+It's ideal for batch workflows, automated validation, canonicalization, and serialization of linked data resources in knowledge graphs, decentralized identifiers (DIDs), and semantic web applications.
 
 ## Features
 
