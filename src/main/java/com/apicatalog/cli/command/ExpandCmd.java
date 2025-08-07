@@ -67,7 +67,7 @@ public final class ExpandCmd implements Callable<Integer> {
 
         final JsonArray output = api.get();
 
-        JsonOutput.print(output, pretty);
+        JsonOutput.print(spec.commandLine().getOut(), output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

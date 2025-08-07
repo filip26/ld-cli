@@ -100,7 +100,8 @@ public final class CompressCmd implements Callable<Integer> {
                 .encode(json.asJsonObject());
 
         if (output == null) {
-            System.out.write(encode(encoded, true));
+            spec.commandLine().getOut().print(encode(encoded, true));
+            spec.commandLine().getOut().flush();
 
         } else {
             try (var os = new FileOutputStream(output)) {

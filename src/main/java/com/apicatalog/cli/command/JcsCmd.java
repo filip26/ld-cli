@@ -1,9 +1,7 @@
 package com.apicatalog.cli.command;
 
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,18 +53,13 @@ public final class JcsCmd implements Callable<Integer> {
             }
         }
 
-        try (final Writer writer = new OutputStreamWriter(System.out, StandardCharsets.UTF_8)) {
-            JsonCanonicalizer.canonize(
-                    document.getJsonContent()
-                            .orElseThrow(() -> new IllegalArgumentException("Invalid input document. JSON document expected but got [" + document.getContentType() + "].")),
-                    writer);
-            writer.flush();
+        JsonCanonicalizer.canonize(
+                document.getJsonContent()
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid input document. JSON document expected but got [" + document.getContentType() + "].")),
+                spec.commandLine().getOut());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return spec.exitCodeOnExecutionException();
-        }
-
+        spec.commandLine().getOut().flush();
+        
         return spec.exitCodeOnSuccess();
     }
 }

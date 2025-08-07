@@ -75,7 +75,7 @@ public final class CompactCmd implements Callable<Integer> {
 
         final JsonObject output = api.get();
 
-        JsonOutput.print(output, pretty);
+        JsonOutput.print(spec.commandLine().getOut(), output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

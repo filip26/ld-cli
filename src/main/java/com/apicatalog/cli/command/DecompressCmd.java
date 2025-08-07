@@ -24,15 +24,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(
-        name = "decompress", 
-        mixinStandardHelpOptions = false, 
-        description = "Decompress CBOR-LD document into JSON-LD.", 
-        sortOptions = true, 
-        descriptionHeading = "%n", 
-        parameterListHeading = "%nParameters:%n", 
-        optionListHeading = "%nOptions:%n"
-        )
+@Command(name = "decompress", mixinStandardHelpOptions = false, description = "Decompress CBOR-LD document into JSON-LD.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class DecompressCmd implements Callable<Integer> {
 
     @Mixin
@@ -82,7 +74,7 @@ public final class DecompressCmd implements Callable<Integer> {
 
         var output = decoder.build().decode(encoded);
 
-        JsonOutput.print((JsonStructure) output, pretty);
+        JsonOutput.print(spec.commandLine().getOut(), (JsonStructure) output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

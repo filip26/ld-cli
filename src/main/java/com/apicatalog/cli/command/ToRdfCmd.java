@@ -1,6 +1,5 @@
 package com.apicatalog.cli.command;
 
-import java.io.StringWriter;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
@@ -79,12 +78,9 @@ public final class ToRdfCmd implements Callable<Integer> {
 
         final RdfDataset output = api.get();
 
-        final StringWriter stringWriter = new StringWriter();
-
-        final RdfWriter writer = Rdf.createWriter(MediaType.N_QUADS, stringWriter);
+        final RdfWriter writer = Rdf.createWriter(MediaType.N_QUADS, spec.commandLine().getOut());
         writer.write(output);
-
-        System.out.println(stringWriter.toString());
+        spec.commandLine().getOut().flush();
 
         return spec.exitCodeOnSuccess();
     }

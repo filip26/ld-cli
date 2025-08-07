@@ -47,7 +47,7 @@ public final class FrameCmd implements Callable<Integer> {
     @Option(names = { "-d", "--omit-default" }, description = "Omit properties with default values.")
     boolean omitDefault = false;
 
-    @Option(names = { "-x", "--explicit" }, description =  "Only include properties explicitly specified in the frame.")
+    @Option(names = { "-x", "--explicit" }, description = "Only include properties explicitly specified in the frame.")
     boolean explicit = false;
 
     @Option(names = { "-g", "--omit-graph" }, description = "Omit the top-level @graph.")
@@ -92,7 +92,7 @@ public final class FrameCmd implements Callable<Integer> {
 
         final JsonObject output = api.get();
 
-        JsonOutput.print(output, pretty);
+        JsonOutput.print(spec.commandLine().getOut(), output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

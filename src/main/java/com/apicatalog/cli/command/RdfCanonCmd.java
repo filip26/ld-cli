@@ -1,9 +1,7 @@
 package com.apicatalog.cli.command;
 
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,7 +33,7 @@ public final class RdfCanonCmd implements Callable<Integer> {
     @Mixin
     CommandOptions options;
 
-    @Option(names = { "-t", "--timeout" }, description = "Timeout in milliseconds (default: 10000 = 10s). Terminates processing after the specified time.", paramLabel ="<milliseconds>")
+    @Option(names = { "-t", "--timeout" }, description = "Timeout in milliseconds (default: 10000 = 10s). Terminates processing after the specified time.", paramLabel = "<milliseconds>")
     long timeout = 10 * 1000;
 
     @Option(names = { "-d", "--digest" }, description = "Digest algorithm to use.", paramLabel = "SHA256|SHA384")
@@ -63,9 +61,9 @@ public final class RdfCanonCmd implements Callable<Integer> {
 
         if (options.input != null) {
             if (options.input.isAbsolute()) {
-                
+
                 ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
-                
+
                 var loader = SchemeRouter.defaultInstance();
                 Document document = loader.loadDocument(options.input, new DocumentLoaderOptions());
                 document.getRdfContent()
@@ -124,13 +122,8 @@ public final class RdfCanonCmd implements Callable<Integer> {
             }
         }
 
-        try (final Writer writer = new OutputStreamWriter(System.out, StandardCharsets.UTF_8)) {
-            canon.provide(new NQuadsWriter(writer));
-            writer.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return spec.exitCodeOnExecutionException();
-        }
+        canon.provide(new NQuadsWriter(spec.commandLine().getOut()));
+        spec.commandLine().getOut().flush();
 
         return spec.exitCodeOnSuccess();
     }

@@ -80,7 +80,7 @@ public final class FlattenCmd implements Callable<Integer> {
 
         final JsonStructure output = api.get();
 
-        JsonOutput.print(output, pretty);
+        JsonOutput.print(spec.commandLine().getOut(), output, pretty);
 
         return spec.exitCodeOnSuccess();
     }

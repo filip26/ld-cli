@@ -1,5 +1,7 @@
 package com.apicatalog.cli;
 
+import com.apicatalog.cli.mixin.CommandOptions;
+
 import picocli.CommandLine;
 import picocli.CommandLine.IExecutionExceptionHandler;
 import picocli.CommandLine.ParseResult;
@@ -12,9 +14,9 @@ public class ErrorHandler implements IExecutionExceptionHandler {
 
         cmd.getErr().println(ex.getMessage());
 
-        boolean debug = parseResult != null && Boolean.TRUE.equals(parseResult.matchedOptionValue("debug", Boolean.FALSE));
+        var options = ((CommandOptions) cmd.getMixins().get("options"));
 
-        if (debug) {
+        if (options.debug) {
             ex.printStackTrace(cmd.getErr());
         }
 
