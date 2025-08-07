@@ -7,8 +7,8 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.apicatalog.cborld.document.DocumentDictionary;
-import com.apicatalog.cborld.document.DocumentDictionaryBuilder;
+import com.apicatalog.cborld.registry.DocumentDictionary;
+import com.apicatalog.cborld.registry.DocumentDictionaryBuilder;
 import com.apicatalog.jsonld.JsonLdError;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.loader.DocumentLoader;
@@ -47,9 +47,8 @@ public class JsonCborDictionary {
                 continue;
             case "context":
                 item.getValue().asJsonObject().entrySet()
-                        .forEach(e -> builder.context(
-                                ((JsonNumber) e.getValue()).intValue(),
-                                e.getKey()));
+                        .forEach(e -> builder.context(e.getKey(),
+                                ((JsonNumber) e.getValue()).intValue()));
             default:
                 item.getValue().asJsonObject().entrySet()
                         .forEach(e -> builder.type(

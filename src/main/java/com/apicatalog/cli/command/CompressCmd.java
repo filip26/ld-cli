@@ -10,8 +10,9 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.base.Base16;
 import com.apicatalog.cborld.CborLd;
-import com.apicatalog.cborld.config.DefaultConfig;
-import com.apicatalog.cborld.config.V05Config;
+import com.apicatalog.cborld.config.ConfigV1;
+import com.apicatalog.cborld.config.LegacyConfigV05;
+import com.apicatalog.cborld.config.LegacyConfigV06;
 import com.apicatalog.cli.JsonCborDictionary;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.document.JsonDocument;
@@ -83,8 +84,10 @@ public final class CompressCmd implements Callable<Integer> {
         }
 
         var config = switch (mode) {
-        case "v05" -> V05Config.INSTANCE;
-        default -> DefaultConfig.INSTANCE;
+        case "v05" -> LegacyConfigV05.INSTANCE;
+        case "v06" -> LegacyConfigV06.INSTANCE;
+        case "v1" -> ConfigV1.INSTANCE;
+        default -> ConfigV1.INSTANCE;
         };
 
         var encoder = CborLd.createEncoder(config)
