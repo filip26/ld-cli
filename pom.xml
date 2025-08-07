@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.apicatalog</groupId>
     <artifactId>ld-cli</artifactId>
-    <version>0.10.0</version>
+    <version>0.11.0</version>
     <packaging>jar</packaging>
 
     <name>A Command Line Processor for Linked Data Processing</name>
