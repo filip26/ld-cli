@@ -42,14 +42,14 @@ public final class DecompressCmd implements Callable<Integer> {
     @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
     boolean keepArrays = false;
 
-    @Option(names = { "-d", "--dictionary" }, description = "a custom dictionary (JSON) location")
-    URI dictionary = null;
+    @Option(names = { "-d", "--dictionary" }, description = "Custom dictionary (JSON) URI(s). Can be specified multiple times.", paramLabel = "<uri>")
+    URI[] dictionaries = null;
 
     @Option(names = { "-x", "--hex" }, description = "input is encoded as hexadecimal bytes")
     boolean hex = false;
 
-    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "default|v05")
-    String mode = "default";
+    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "v1|v06|v05")
+    String mode = "v1";
 
     @Spec
     CommandSpec spec;
@@ -77,8 +77,10 @@ public final class DecompressCmd implements Callable<Integer> {
                 .base(base)
                 .compactArray(!keepArrays);
 
-        if (dictionary != null) {
-            decoder.dictionary(JsonCborDictionary.of(dictionary));
+        if (dictionaries != null) {
+            for (URI dictionary : dictionaries) {
+                decoder.dictionary(JsonCborDictionary.of(dictionary));
+            }
         }
 
         var output = decoder.build()

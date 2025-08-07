@@ -37,9 +37,6 @@ public final class RdfCanonCmd implements Callable<Integer> {
     @Option(names = { "-i", "--input" }, description = "input document IRI or filepath")
     URI input = null;
 
-//    @Option(names = { "-o", "--output" }, description = "output document filename")
-//    String output = null;
-
     @Option(names = { "-t", "--timeout" }, description = "terminates after the specified time in milliseconds (default: 10s)")
     long timeout = 10 * 1000;
 

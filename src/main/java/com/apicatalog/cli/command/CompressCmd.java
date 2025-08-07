@@ -44,8 +44,8 @@ public final class CompressCmd implements Callable<Integer> {
     @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
     boolean keepArrays = false;
 
-    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "default|v05")
-    String mode = "default";
+    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "v1|v06|v05")
+    String mode = "v1";
 
     @Option(names = { "-d", "--dictionary" }, description = "a custom dictionary (JSON) location")
     URI dictionary = null;
