@@ -12,6 +12,7 @@ import com.apicatalog.base.Base16;
 import com.apicatalog.cborld.CborLd;
 import com.apicatalog.cborld.CborLdVersion;
 import com.apicatalog.cli.JsonCborDictionary;
+import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.json.JsonUtils;
@@ -20,6 +21,7 @@ import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
 import com.apicatalog.jsonld.loader.SchemeRouter;
 
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
@@ -27,13 +29,10 @@ import picocli.CommandLine.Spec;
 @Command(name = "compress", mixinStandardHelpOptions = false, description = "Compress JSON-LD document into CBOR-LD.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class CompressCmd implements Callable<Integer> {
 
-    @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
-    boolean help = false;
+    @Mixin
+    CommandOptions options;
 
-    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
-    URI input = null;
-
-    @Option(names = { "-o", "--output" }, description = "Output file name. If omitted, -x is assumed.", paramLabel = "<uri>")
+    @Option(names = { "-o", "--output" }, description = "Output file name. If omitted, -x is assumed.", paramLabel = "<uri|file>")
     String output = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
@@ -45,7 +44,7 @@ public final class CompressCmd implements Callable<Integer> {
     @Option(names = { "-m", "--mode" }, description = "Encoding version to use.", paramLabel = "v1|v06|v05")
     String mode = "v1";
 
-    @Option(names = { "-d", "--dictionary" }, description = "Custom dictionary location (JSON).", paramLabel = "<uri>")
+    @Option(names = { "-d", "--dictionary" }, description = "Custom dictionary location (JSON).", paramLabel = "<uri|file>")
     URI dictionary = null;
 
     @Option(names = { "-x", "--hex" }, description = "Output result as hexadecimal-encoded.")
@@ -62,12 +61,12 @@ public final class CompressCmd implements Callable<Integer> {
 
         final Document document;
 
-        if (input != null) {
-            if (input.isAbsolute()) {
+        if (options.input != null) {
+            if (options.input.isAbsolute()) {
                 final DocumentLoader loader = SchemeRouter.defaultInstance();
-                document = loader.loadDocument(input, new DocumentLoaderOptions());
+                document = loader.loadDocument(options.input, new DocumentLoaderOptions());
             } else {
-                document = JsonDocument.of(new ByteArrayInputStream(Files.readAllBytes(Path.of(input.toString()))));
+                document = JsonDocument.of(new ByteArrayInputStream(Files.readAllBytes(Path.of(options.input.toString()))));
             }
 
         } else {

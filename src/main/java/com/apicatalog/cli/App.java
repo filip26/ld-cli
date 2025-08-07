@@ -18,51 +18,41 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParseResult;
 
-@Command(
-    name = "ld-cli",
-    description = "Linked Data Command Line Processor",
-    subcommands = { 
-            ExpandCmd.class,
-            CompactCmd.class,
-            FlattenCmd.class,
-            FrameCmd.class,
-            FromRdfCmd.class,
-            ToRdfCmd.class,
-            CompressCmd.class,
-            DecompressCmd.class,
-            RdfCanonCmd.class,
-            JcsCmd.class,
-            },
-    mixinStandardHelpOptions = false,
-    descriptionHeading = "%n",
-    parameterListHeading = "%nParameters:%n",
-    optionListHeading = "%nOptions:%n",
-    commandListHeading = "%nCommands:%n",
-    version = {
-            "ld-cli            0.11.0  https://github.com/filip26/ld-cli",
-            "titanium-json-ld  1.6.0   https://github.com/filip26/titanium-json-ld",
-            "titanium-rdfc     2.0.0   https://github.com/filip26/titanium-rdf-canon",
-            "titanium-jcs      1.0.0   https://github.com/filip26/titanium-jcs",
-            "iridium-cbor-ld   0.7.0   https://github.com/filip26/iridium-cbor-ld",
-            }
-    )
+@Command(name = "ld-cli", description = "Linked Data Command Line Processor", subcommands = {
+        ExpandCmd.class,
+        CompactCmd.class,
+        FlattenCmd.class,
+        FrameCmd.class,
+        FromRdfCmd.class,
+        ToRdfCmd.class,
+        CompressCmd.class,
+        DecompressCmd.class,
+        RdfCanonCmd.class,
+        JcsCmd.class,
+}, mixinStandardHelpOptions = false, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n", commandListHeading = "%nCommands:%n", version = {
+        "ld-cli            0.11.0  https://github.com/filip26/ld-cli",
+        "titanium-json-ld  1.6.0   https://github.com/filip26/titanium-json-ld",
+        "titanium-rdfc     2.0.0   https://github.com/filip26/titanium-rdf-canon",
+        "titanium-jcs      1.0.0   https://github.com/filip26/titanium-jcs",
+        "iridium-cbor-ld   0.7.0   https://github.com/filip26/iridium-cbor-ld",
+})
 public final class App {
-    
+
     @Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help message.")
     boolean help = false;
-
-    @Option(names = {"-v", "--version"}, versionHelp = true, description = "Display version information.")
-    boolean version;    
-
+    
+    @Option(names = { "-v", "--version" }, versionHelp = true, description = "Display version information.")
+    boolean version;
+    
     static {
         ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.JSON);
     }
-    
+
     public static void main(String[] args) {
 
         final CommandLine cli = new CommandLine(new App());
         cli.setCaseInsensitiveEnumValuesAllowed(true);
-
+        cli.setExecutionExceptionHandler(new ErrorHandler());
         try {
 
             final ParseResult result = cli.parseArgs(args);

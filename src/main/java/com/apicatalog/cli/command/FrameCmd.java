@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.JsonOutput;
+import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdEmbed;
 import com.apicatalog.jsonld.JsonLdVersion;
@@ -12,6 +13,7 @@ import com.apicatalog.jsonld.document.JsonDocument;
 
 import jakarta.json.JsonObject;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -20,14 +22,11 @@ import picocli.CommandLine.Spec;
 @Command(name = "frame", mixinStandardHelpOptions = false, description = "Frame a JSON-LD document using the provided frame.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class FrameCmd implements Callable<Integer> {
 
-    @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
-    boolean help = false;
+    @Mixin
+    CommandOptions options;
 
     @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
     boolean pretty = false;
-
-    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
-    URI input = null;
 
     @Parameters(index = "0", arity = "1", description = "Frame URI.", paramLabel = "<uri>")
     URI frame = null;
@@ -71,8 +70,8 @@ public final class FrameCmd implements Callable<Integer> {
 
         final FramingApi api;
 
-        if (input != null) {
-            api = JsonLd.frame(input, frame);
+        if (options.input != null) {
+            api = JsonLd.frame(options.input, frame);
 
         } else {
             api = JsonLd.frame(JsonDocument.of(System.in), frame);

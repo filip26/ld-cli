@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.JsonOutput;
+import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FromRdfApi;
@@ -13,6 +14,7 @@ import com.apicatalog.jsonld.loader.HttpLoader;
 
 import jakarta.json.JsonStructure;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
@@ -20,14 +22,11 @@ import picocli.CommandLine.Spec;
 @Command(name = "fromrdf", mixinStandardHelpOptions = false, description = "Transform an N-Quads document into a JSON-LD document in expanded form.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class FromRdfCmd implements Callable<Integer> {
 
-    @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
-    boolean help = false;
+    @Mixin
+    CommandOptions options;
 
     @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
     boolean pretty = false;
-
-    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
-    URI input = null;
 
     @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
@@ -56,9 +55,9 @@ public final class FromRdfCmd implements Callable<Integer> {
 
         final FromRdfApi api;
 
-        if (input != null) {
+        if (options.input != null) {
             ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
-            api = JsonLd.fromRdf(input);
+            api = JsonLd.fromRdf(options.input);
 
         } else {
             api = JsonLd.fromRdf(JsonDocument.of(System.in));

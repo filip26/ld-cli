@@ -4,12 +4,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
+import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.http.media.MediaType;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
@@ -24,6 +24,7 @@ import com.apicatalog.rdf.nquads.NQuadsReader;
 import com.apicatalog.rdf.nquads.NQuadsWriter;
 
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
@@ -31,13 +32,10 @@ import picocli.CommandLine.Spec;
 @Command(name = "rdfc", mixinStandardHelpOptions = false, description = "Canonize an RDF N-Quads document using the RDFC-1.0 algorithm.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class RdfCanonCmd implements Callable<Integer> {
 
-    @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
-    boolean help = false;
+    @Mixin
+    CommandOptions options;
 
-    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
-    URI input = null;
-
-    @Option(names = { "-t", "--timeout" }, description = "Timeout in milliseconds (default: 10000 = 10s). Terminates processing after the specified time.")
+    @Option(names = { "-t", "--timeout" }, description = "Timeout in milliseconds (default: 10000 = 10s). Terminates processing after the specified time.", paramLabel ="<milliseconds>")
     long timeout = 10 * 1000;
 
     @Option(names = { "-d", "--digest" }, description = "Digest algorithm to use.", paramLabel = "SHA256|SHA384")
@@ -63,13 +61,13 @@ public final class RdfCanonCmd implements Callable<Integer> {
 
         RdfCanon canon = RdfCanon.create(hashAlgo, ticker);
 
-        if (input != null) {
-            if (input.isAbsolute()) {
+        if (options.input != null) {
+            if (options.input.isAbsolute()) {
                 
                 ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
                 
                 var loader = SchemeRouter.defaultInstance();
-                Document document = loader.loadDocument(input, new DocumentLoaderOptions());
+                Document document = loader.loadDocument(options.input, new DocumentLoaderOptions());
                 document.getRdfContent()
                         .orElseThrow(() -> new IllegalArgumentException("Invalid input document. N-QUADS document expected but got [" + document.getContentType() + "]."))
                         .toList().forEach(s -> {
@@ -115,7 +113,7 @@ public final class RdfCanonCmd implements Callable<Integer> {
                         });
 
             } else {
-                try (final Reader reader = Files.newBufferedReader(Path.of(input.toString()), StandardCharsets.UTF_8)) {
+                try (final Reader reader = Files.newBufferedReader(Path.of(options.input.toString()), StandardCharsets.UTF_8)) {
                     new NQuadsReader(reader).provide(canon);
                 }
             }

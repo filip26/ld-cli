@@ -15,9 +15,11 @@ import com.apicatalog.cborld.CborLd;
 import com.apicatalog.cborld.CborLdVersion;
 import com.apicatalog.cli.JsonCborDictionary;
 import com.apicatalog.cli.JsonOutput;
+import com.apicatalog.cli.mixin.CommandOptions;
 
 import jakarta.json.JsonStructure;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
@@ -33,14 +35,11 @@ import picocli.CommandLine.Spec;
         )
 public final class DecompressCmd implements Callable<Integer> {
 
-    @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
-    boolean help = false;
+    @Mixin
+    CommandOptions options;
 
     @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
     boolean pretty = false;
-
-    @Option(names = { "-i", "--input" }, description = "Input document URI or file path. If missing, -x is assumed.", paramLabel = "<uri>")
-    URI input = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
     URI base = null;
@@ -48,7 +47,7 @@ public final class DecompressCmd implements Callable<Integer> {
     @Option(names = { "-a", "--keep-arrays" }, description = "Preserve arrays that contain only one element.")
     boolean keepArrays = true;
 
-    @Option(names = { "-d", "--dictionary" }, description = "Custom dictionary (JSON) URI(s). Can be specified multiple times.", paramLabel = "<uri>")
+    @Option(names = { "-d", "--dictionary" }, description = "Custom dictionary (JSON) URI(s). Can be specified multiple times.", paramLabel = "<uri|file>")
     URI[] dictionaries = null;
 
     @Option(names = { "-x", "--hex" }, description = "Treat input as a hexadecimal-encoded CBOR-LD document.")
@@ -65,9 +64,9 @@ public final class DecompressCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        hex = hex || input == null;
+        hex = hex || options.input == null;
 
-        var encoded = decode(fetch(input));
+        var encoded = decode(fetch(options.input));
 
         var decoder = CborLd.createDecoder(CborLdVersion.V1, CborLdVersion.V06, CborLdVersion.V05)
                 .base(base)

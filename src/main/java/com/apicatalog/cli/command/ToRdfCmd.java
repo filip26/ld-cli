@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
+import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdOptions.RdfDirection;
 import com.apicatalog.jsonld.JsonLdVersion;
@@ -15,6 +16,7 @@ import com.apicatalog.rdf.RdfDataset;
 import com.apicatalog.rdf.io.RdfWriter;
 
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
@@ -22,11 +24,8 @@ import picocli.CommandLine.Spec;
 @Command(name = "tordf", mixinStandardHelpOptions = false, description = "Transform a JSON-LD document into an RDF N-Quads document.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class ToRdfCmd implements Callable<Integer> {
 
-    @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
-    boolean help = false;
-
-    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
-    URI input = null;
+    @Mixin
+    CommandOptions options;
 
     @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
@@ -58,8 +57,8 @@ public final class ToRdfCmd implements Callable<Integer> {
 
         final ToRdfApi api;
 
-        if (input != null) {
-            api = JsonLd.toRdf(input);
+        if (options.input != null) {
+            api = JsonLd.toRdf(options.input);
 
         } else {
             api = JsonLd.toRdf(JsonDocument.of(System.in));

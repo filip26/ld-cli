@@ -1,0 +1,15 @@
+{
+  "code": 101,
+  "context": {
+    "https://www.w3.org/ns/credentials/v2": 32768,
+    "https://w3id.org/vc-barcodes/v1": 32769,
+    "https://w3id.org/utopia/v2": 32770
+  },
+  "https://w3id.org/security#cryptosuiteString": {
+    "ecdsa-rdfc-2019": 1,
+    "ecdsa-sd-2023": 2,
+    "eddsa-rdfc-2022": 3,
+    "ecdsa-xi-2023": 4
+  }
+}
+

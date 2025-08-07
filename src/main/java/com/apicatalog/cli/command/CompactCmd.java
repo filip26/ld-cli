@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.JsonOutput;
+import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.CompactionApi;
@@ -11,6 +12,7 @@ import com.apicatalog.jsonld.document.JsonDocument;
 
 import jakarta.json.JsonObject;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -19,16 +21,13 @@ import picocli.CommandLine.Spec;
 @Command(name = "compact", mixinStandardHelpOptions = false, description = "Compact a JSON-LD document using the provided context.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class CompactCmd implements Callable<Integer> {
 
-    @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
-    boolean help = false;
+    @Mixin
+    CommandOptions options;
 
     @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
     boolean pretty = false;
 
-    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
-    URI input = null;
-
-    @Parameters(index = "0", arity = "1", description = "Context URI or file path.", paramLabel = "<uri>")
+    @Parameters(index = "0", arity = "1", description = "Context URI or file path.", paramLabel = "<uri|file>")
     URI context = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
@@ -58,8 +57,8 @@ public final class CompactCmd implements Callable<Integer> {
 
         final CompactionApi api;
 
-        if (input != null) {
-            api = JsonLd.compact(input, context);
+        if (options.input != null) {
+            api = JsonLd.compact(options.input, context);
 
         } else {
             api = JsonLd.compact(JsonDocument.of(System.in), context);
