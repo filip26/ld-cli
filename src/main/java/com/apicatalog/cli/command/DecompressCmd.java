@@ -12,9 +12,7 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.base.Base16;
 import com.apicatalog.cborld.CborLd;
-import com.apicatalog.cborld.config.ConfigV1;
-import com.apicatalog.cborld.config.LegacyConfigV05;
-import com.apicatalog.cborld.config.LegacyConfigV06;
+import com.apicatalog.cborld.CborLdVersion;
 import com.apicatalog.cli.JsonCborDictionary;
 import com.apicatalog.cli.JsonOutput;
 
@@ -48,9 +46,6 @@ public final class DecompressCmd implements Callable<Integer> {
     @Option(names = { "-x", "--hex" }, description = "input is encoded as hexadecimal bytes")
     boolean hex = false;
 
-    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "v1|v06|v05")
-    String mode = "v1";
-
     @Spec
     CommandSpec spec;
 
@@ -66,25 +61,19 @@ public final class DecompressCmd implements Callable<Integer> {
 
         var encoded = decode(fetch(input));
 
-        var config = switch (mode) {
-        case "v05" -> LegacyConfigV05.INSTANCE;
-        case "v06" -> LegacyConfigV06.INSTANCE;
-        case "v1" -> ConfigV1.INSTANCE;
-        default -> ConfigV1.INSTANCE;
-        };
-
-        var decoder = CborLd.createDecoder(config)
+        var decoder = CborLd.createDecoder(CborLdVersion.V1, CborLdVersion.V06, CborLdVersion.V05)
                 .base(base)
                 .compactArray(!keepArrays);
 
         if (dictionaries != null) {
-            for (URI dictionary : dictionaries) {
+            for (var dictionary : dictionaries) {
+                // register dictionaries for all formats to keep it backward compatible
                 decoder.dictionary(JsonCborDictionary.of(dictionary));
+                decoder.dictionary(CborLdVersion.V06, JsonCborDictionary.of(dictionary));
             }
         }
 
-        var output = decoder.build()
-                .decode(encoded);
+        var output = decoder.build().decode(encoded);
 
         JsonOutput.print((JsonStructure) output, pretty);
 

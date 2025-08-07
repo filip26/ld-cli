@@ -10,9 +10,7 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.base.Base16;
 import com.apicatalog.cborld.CborLd;
-import com.apicatalog.cborld.config.ConfigV1;
-import com.apicatalog.cborld.config.LegacyConfigV05;
-import com.apicatalog.cborld.config.LegacyConfigV06;
+import com.apicatalog.cborld.CborLdVersion;
 import com.apicatalog.cli.JsonCborDictionary;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.document.JsonDocument;
@@ -83,14 +81,14 @@ public final class CompressCmd implements Callable<Integer> {
             throw new IllegalArgumentException("The input docunent root is not JSON object but [" + json.getValueType() + "].");
         }
 
-        var config = switch (mode) {
-        case "v05" -> LegacyConfigV05.INSTANCE;
-        case "v06" -> LegacyConfigV06.INSTANCE;
-        case "v1" -> ConfigV1.INSTANCE;
-        default -> ConfigV1.INSTANCE;
+        var version = switch (mode) {
+        case "v05" -> CborLdVersion.V05;
+        case "v06" -> CborLdVersion.V06;
+        case "v1" -> CborLdVersion.V1;
+        default -> CborLdVersion.V1;
         };
 
-        var encoder = CborLd.createEncoder(config)
+        var encoder = CborLd.createEncoder(version)
                 .base(base)
                 .compactArray(!keepArrays);
 
@@ -119,9 +117,5 @@ public final class CompressCmd implements Callable<Integer> {
         return hex
                 ? Base16.encode(encoded, Base16.ALPHABET_LOWER).getBytes()
                 : encoded;
-    }
-
-    static final String toString(byte value) {
-        return String.format("%02x", value);
     }
 }
