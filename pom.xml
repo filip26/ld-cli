@@ -29,7 +29,7 @@
 
         <titanium.version>1.6.0</titanium.version>
         <titanium.rdfc.version>2.0.0</titanium.rdfc.version>
-        <iridium.version>0.3.0</iridium.version>
+        <iridium.version>0.7.0</iridium.version>
 
         <jakarta.json.version>2.0.1</jakarta.json.version>
 
