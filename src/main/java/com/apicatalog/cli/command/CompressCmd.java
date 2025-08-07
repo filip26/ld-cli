@@ -24,31 +24,31 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "compress", mixinStandardHelpOptions = false, description = "Compress JSON-LD document into CBOR-LD", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "compress", mixinStandardHelpOptions = false, description = "Compress JSON-LD document into CBOR-LD.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class CompressCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Option(names = { "-i", "--input" }, description = "input document IRI or filepath")
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
     URI input = null;
 
-    @Option(names = { "-o", "--output" }, description = "output document filename, -x is implicit when missing")
+    @Option(names = { "-o", "--output" }, description = "Output file name. If omitted, -x is assumed.", paramLabel = "<uri>")
     String output = null;
 
-    @Option(names = { "-b", "--base" }, description = "input document base IRI")
+    @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
     URI base = null;
 
-    @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
-    boolean keepArrays = false;
+    @Option(names = { "-a", "--keep-arrays" }, description = "Preserve arrays that contain only one element.")
+    boolean keepArrays = true;
 
-    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "v1|v06|v05")
+    @Option(names = { "-m", "--mode" }, description = "Encoding version to use.", paramLabel = "v1|v06|v05")
     String mode = "v1";
 
-    @Option(names = { "-d", "--dictionary" }, description = "a custom dictionary (JSON) location")
+    @Option(names = { "-d", "--dictionary" }, description = "Custom dictionary location (JSON).", paramLabel = "<uri>")
     URI dictionary = null;
 
-    @Option(names = { "-x", "--hex" }, description = "print encoded as hexadecimal bytes")
+    @Option(names = { "-x", "--hex" }, description = "Output result as hexadecimal-encoded.")
     boolean hex = false;
 
     @Spec

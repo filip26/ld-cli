@@ -19,31 +19,32 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "tordf", mixinStandardHelpOptions = false, description = "Transform JSON-LD document into N-Quads document", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "tordf", mixinStandardHelpOptions = false, description = "Transform a JSON-LD document into an RDF N-Quads document.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class ToRdfCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Option(names = { "-i", "--input" }, description = "input document IRI")
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
     URI input = null;
 
-    @Option(names = { "-c", "--context" }, description = "expansion context IRI")
+    @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
 
-    @Option(names = { "-b", "--base" }, description = "input document base IRI")
+    @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
     URI base = null;
 
-    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "1.0|1.1")
+    @Option(names = { "-m", "--mode" }, description = "Processing mode.", paramLabel = "1.0|1.1")
     String mode = "1.1";
 
-    @Option(names = { "-o", "--ordered" }, description = "certain algorithm processing steps are ordered lexicographically")
+    @Option(names = { "-o",
+            "--ordered" }, description = "Order certain algorithm steps lexicographically.")
     boolean ordered = false;
 
-    @Option(names = { "-d", "--direction" }, description = "determines how value objects containing a base direction are transformed", paramLabel = "I18N_DATATYPE|COMPOUND_LITERAL")
+    @Option(names = { "-d", "--direction" }, description = "Determine how base direction in value objects is represented.", paramLabel = "I18N_DATATYPE|COMPOUND_LITERAL")
     String rdfDirection;
 
-    @Option(names = { "-n", "--no-blanks" }, description = "omit blank nodes for triple predicates")
+    @Option(names = { "-n", "--no-blanks" }, description = "Omit blank nodes for triple predicates.")
     boolean generalizedRdf = true;
 
     @Spec

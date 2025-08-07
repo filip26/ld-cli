@@ -39,19 +39,19 @@ import picocli.CommandLine.ParseResult;
     optionListHeading = "%nOptions:%n",
     commandListHeading = "%nCommands:%n",
     version = {
-            "ld-cli            0.10.0  https://github.com/filip26/ld-cli",
-            "titanium-json-ld  1.6.0  https://github.com/filip26/titanium-json-ld",
-            "titanium-rdfc     2.0.0  https://github.com/filip26/titanium-rdf-canon",
-            "titanium-jcs      1.0.0  https://github.com/filip26/titanium-jcs",
-            "iridium-cbor-ld   0.3.0  https://github.com/filip26/iridium-cbor-ld",
+            "ld-cli            0.11.0  https://github.com/filip26/ld-cli",
+            "titanium-json-ld  1.6.0   https://github.com/filip26/titanium-json-ld",
+            "titanium-rdfc     2.0.0   https://github.com/filip26/titanium-rdf-canon",
+            "titanium-jcs      1.0.0   https://github.com/filip26/titanium-jcs",
+            "iridium-cbor-ld   0.7.0   https://github.com/filip26/iridium-cbor-ld",
             }
     )
 public final class App {
     
-    @Option(names = { "-h", "--help" }, usageHelp = true, description = "display help message")
+    @Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help message.")
     boolean help = false;
 
-    @Option(names = {"-v", "--version"}, versionHelp = true, description = "display a version")
+    @Option(names = {"-v", "--version"}, versionHelp = true, description = "Display version information.")
     boolean version;    
 
     static {

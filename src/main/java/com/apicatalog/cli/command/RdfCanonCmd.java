@@ -28,19 +28,19 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "rdfc", mixinStandardHelpOptions = false, description = "Canonize an RDF N-Quads document with RDFC-1.0", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "rdfc", mixinStandardHelpOptions = false, description = "Canonize an RDF N-Quads document using the RDFC-1.0 algorithm.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class RdfCanonCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Option(names = { "-i", "--input" }, description = "input document IRI or filepath")
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
     URI input = null;
 
-    @Option(names = { "-t", "--timeout" }, description = "terminates after the specified time in milliseconds (default: 10s)")
+    @Option(names = { "-t", "--timeout" }, description = "Timeout in milliseconds (default: 10000 = 10s). Terminates processing after the specified time.")
     long timeout = 10 * 1000;
 
-    @Option(names = { "-d", "--digest" }, description = "the name of the hash algorithm to use", paramLabel = "SHA256|SHA384")
+    @Option(names = { "-d", "--digest" }, description = "Digest algorithm to use.", paramLabel = "SHA256|SHA384")
     String digest = "SHA256";
 
     @Spec

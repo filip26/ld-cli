@@ -22,28 +22,36 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "decompress", mixinStandardHelpOptions = false, description = "Decompress CBOR-LD document into JSON-LD", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(
+        name = "decompress", 
+        mixinStandardHelpOptions = false, 
+        description = "Decompress CBOR-LD document into JSON-LD.", 
+        sortOptions = true, 
+        descriptionHeading = "%n", 
+        parameterListHeading = "%nParameters:%n", 
+        optionListHeading = "%nOptions:%n"
+        )
 public final class DecompressCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
+    @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
     boolean pretty = false;
 
-    @Option(names = { "-i", "--input" }, description = "input document IRI or filepath, -x is implicit when missing")
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path. If missing, -x is assumed.", paramLabel = "<uri>")
     URI input = null;
 
-    @Option(names = { "-b", "--base" }, description = "input document base IRI")
+    @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
     URI base = null;
 
-    @Option(names = { "-a", "--keep-arrays" }, description = "keep arrays with just one element")
-    boolean keepArrays = false;
+    @Option(names = { "-a", "--keep-arrays" }, description = "Preserve arrays that contain only one element.")
+    boolean keepArrays = true;
 
     @Option(names = { "-d", "--dictionary" }, description = "Custom dictionary (JSON) URI(s). Can be specified multiple times.", paramLabel = "<uri>")
     URI[] dictionaries = null;
 
-    @Option(names = { "-x", "--hex" }, description = "input is encoded as hexadecimal bytes")
+    @Option(names = { "-x", "--hex" }, description = "Treat input as a hexadecimal-encoded CBOR-LD document.")
     boolean hex = false;
 
     @Spec

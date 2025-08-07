@@ -21,13 +21,13 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "jcs", mixinStandardHelpOptions = false, description = "Canonize a JSON document using the JSON Canonicalization Scheme (JCS)", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "jcs", mixinStandardHelpOptions = false, description = "Canonize a JSON document using the JSON Canonicalization Scheme (JCS).", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class JcsCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Option(names = { "-i", "--input" }, description = "input document IRI or filepath")
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
     URI input = null;
 
     @Spec

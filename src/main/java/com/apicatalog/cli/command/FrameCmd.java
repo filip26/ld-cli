@@ -17,61 +17,54 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-@Command(
-        name = "frame", 
-        mixinStandardHelpOptions = false, 
-        description = "Frame JSON-LD document using the frame",
-        sortOptions = true,
-        descriptionHeading = "%n",
-        parameterListHeading = "%nParameters:%n",
-        optionListHeading = "%nOptions:%n"
-        )
+@Command(name = "frame", mixinStandardHelpOptions = false, description = "Frame a JSON-LD document using the provided frame.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class FrameCmd implements Callable<Integer> {
 
     @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
+    @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
     boolean pretty = false;
 
-    @Option(names = { "-i", "--input" }, description = "input document IRI")
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri>")
     URI input = null;
 
-    @Parameters(index = "0", arity = "1", description = "frame IRI")
+    @Parameters(index = "0", arity = "1", description = "Frame URI.", paramLabel = "<uri>")
     URI frame = null;
 
-    @Option(names = { "-c", "--context" }, description = "context IRI")
+    @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
-    
-    @Option(names = { "-b", "--base" }, description = "input document base IRI")
+
+    @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
     URI base = null;
 
-    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "1.0|1.1")
+    @Option(names = { "-m", "--mode" }, description = "Processing mode.", paramLabel = "1.0|1.1")
     String mode = "1.1";
 
     @Option(names = { "-o",
-            "--ordered" }, description = "certain algorithm processing steps are ordered lexicographically")
+            "--ordered" }, description = "Order certain algorithm steps lexicographically.")
     boolean ordered = false;
 
-    @Option(names = { "-d", "--omit-default" }, description = "")
+    @Option(names = { "-d", "--omit-default" }, description = "Omit properties with default values.")
     boolean omitDefault = false;
-    
-    @Option(names = { "-x", "--explicit" }, description = "")
+
+    @Option(names = { "-x", "--explicit" }, description =  "Only include properties explicitly specified in the frame.")
     boolean explicit = false;
-    
-    @Option(names = { "-g", "--omit-graph" }, description = "")
+
+    @Option(names = { "-g", "--omit-graph" }, description = "Omit the top-level @graph.")
     boolean omitGraph = false;
-    
-    @Option(names = { "-a", "--require-all" }, description = "")
+
+    @Option(names = { "-a", "--require-all" }, description = "Require all properties in the frame to match.")
     boolean requiredAll = false;
-    
-    @Option(names = { "-e", "--embed" }, description = "", paramLabel = "ALWAYS|NEVER|ONCE")
+
+    @Option(names = { "-e", "--embed" }, description = "Embedding behavior.", paramLabel = "ALWAYS|NEVER|ONCE")
     String embed = "ONCE";
 
     @Spec
     CommandSpec spec;
 
-    private FrameCmd() {}
+    private FrameCmd() {
+    }
 
     @Override
     public Integer call() throws Exception {
