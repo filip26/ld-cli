@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.cli.mixin.CommandOptions;
+import com.apicatalog.cli.mixin.JsonOutputOptions;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.ExpansionApi;
@@ -23,8 +24,8 @@ public final class ExpandCmd implements Callable<Integer> {
     @Mixin
     CommandOptions options;
 
-    @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
-    boolean pretty = false;
+    @Mixin
+    JsonOutputOptions outputOptions;
 
     @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
@@ -67,7 +68,7 @@ public final class ExpandCmd implements Callable<Integer> {
 
         final JsonArray output = api.get();
 
-        JsonOutput.print(spec.commandLine().getOut(), output, pretty);
+        JsonOutput.print(spec.commandLine().getOut(), output, outputOptions.pretty);
 
         return spec.exitCodeOnSuccess();
     }

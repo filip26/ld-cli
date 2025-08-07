@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.cli.mixin.CommandOptions;
+import com.apicatalog.cli.mixin.JsonOutputOptions;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdOptions;
 import com.apicatalog.jsonld.JsonLdVersion;
@@ -24,8 +25,8 @@ public final class FlattenCmd implements Callable<Integer> {
     @Mixin
     CommandOptions options;
 
-    @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
-    boolean pretty = false;
+    @Mixin
+    JsonOutputOptions outputOptions;
 
     @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
@@ -80,7 +81,7 @@ public final class FlattenCmd implements Callable<Integer> {
 
         final JsonStructure output = api.get();
 
-        JsonOutput.print(spec.commandLine().getOut(), output, pretty);
+        JsonOutput.print(spec.commandLine().getOut(), output, outputOptions.pretty);
 
         return spec.exitCodeOnSuccess();
     }

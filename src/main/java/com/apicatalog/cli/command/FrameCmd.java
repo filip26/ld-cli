@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.cli.mixin.CommandOptions;
+import com.apicatalog.cli.mixin.JsonOutputOptions;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdEmbed;
 import com.apicatalog.jsonld.JsonLdVersion;
@@ -25,8 +26,8 @@ public final class FrameCmd implements Callable<Integer> {
     @Mixin
     CommandOptions options;
 
-    @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
-    boolean pretty = false;
+    @Mixin
+    JsonOutputOptions outputOptions;
 
     @Parameters(index = "0", arity = "1", description = "Frame URI.", paramLabel = "<uri>")
     URI frame = null;
@@ -92,7 +93,7 @@ public final class FrameCmd implements Callable<Integer> {
 
         final JsonObject output = api.get();
 
-        JsonOutput.print(spec.commandLine().getOut(), output, pretty);
+        JsonOutput.print(spec.commandLine().getOut(), output, outputOptions.pretty);
 
         return spec.exitCodeOnSuccess();
     }

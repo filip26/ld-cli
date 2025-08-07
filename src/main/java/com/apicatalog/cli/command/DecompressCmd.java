@@ -16,6 +16,7 @@ import com.apicatalog.cborld.CborLdVersion;
 import com.apicatalog.cli.JsonCborDictionary;
 import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.cli.mixin.CommandOptions;
+import com.apicatalog.cli.mixin.JsonOutputOptions;
 
 import jakarta.json.JsonStructure;
 import picocli.CommandLine.Command;
@@ -30,8 +31,8 @@ public final class DecompressCmd implements Callable<Integer> {
     @Mixin
     CommandOptions options;
 
-    @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
-    boolean pretty = false;
+    @Mixin
+    JsonOutputOptions outputOptions;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
     URI base = null;
@@ -74,7 +75,7 @@ public final class DecompressCmd implements Callable<Integer> {
 
         var output = decoder.build().decode(encoded);
 
-        JsonOutput.print(spec.commandLine().getOut(), (JsonStructure) output, pretty);
+        JsonOutput.print(spec.commandLine().getOut(), (JsonStructure) output, outputOptions.pretty);
 
         return spec.exitCodeOnSuccess();
     }
