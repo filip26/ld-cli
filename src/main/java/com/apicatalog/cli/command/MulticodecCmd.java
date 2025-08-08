@@ -35,7 +35,7 @@ public final class MulticodecCmd implements Callable<Integer> {
     static final MultibaseDecoder MULTIBASE = MultibaseDecoder.getInstance();
 
     static class ModeGroup {
-        @Option(names = { "-s", "--strip" }, description = "Strip multicodec (and multibase) and return raw bytes")
+        @Option(names = { "-s", "--strip" }, description = "Strip multicodec (+ multibase) and return raw bytes")
         boolean strip;
 
         @Option(names = { "-a", "--analyze" }, description = "validate, detects a codec, byte lenght")
