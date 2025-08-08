@@ -188,7 +188,7 @@ public final class MultibaseCmd implements Callable<Integer> {
             printer.println("Size: " + (decoded != null ? decoded.length : 0) + " bytes");
             return;
         }
-        printer.println("Unrecognized base encoding, prefix " + document[0] + " (" + Hex.toString(document[0]) + ").");
+        printer.println("Unrecognized base encoding, prefix: " + (char)document[0] + " (" + Hex.toString(document[0]) + ").");
     }
 
     static final void print(PrintWriter printer, Multibase base) {
