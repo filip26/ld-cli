@@ -9,6 +9,7 @@ import com.apicatalog.cli.command.FrameCmd;
 import com.apicatalog.cli.command.FromRdfCmd;
 import com.apicatalog.cli.command.JcsCmd;
 import com.apicatalog.cli.command.MultibaseCmd;
+import com.apicatalog.cli.command.MulticodecCmd;
 import com.apicatalog.cli.command.RdfCanonCmd;
 import com.apicatalog.cli.command.ToRdfCmd;
 import com.apicatalog.jsonld.http.media.MediaType;
@@ -32,6 +33,7 @@ import picocli.CommandLine.ParseResult;
         RdfCanonCmd.class,
         JcsCmd.class,
         MultibaseCmd.class,
+        MulticodecCmd.class,
 }, mixinStandardHelpOptions = false, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n", commandListHeading = "%nCommands:%n", version = {
         "ld-cli            0.11.0  https://github.com/filip26/ld-cli",
         "titanium-json-ld  1.6.0   https://github.com/filip26/titanium-json-ld",

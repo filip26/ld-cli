@@ -22,8 +22,8 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "multibase", mixinStandardHelpOptions = false, description = "", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
-public final class MultibaseCmd implements Callable<Integer> {
+@Command(name = "multicodec", mixinStandardHelpOptions = false, description = "", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+public final class MulticodecCmd implements Callable<Integer> {
 
     static final Map<String, Multibase> BASES = Stream.of(Multibase.provided())
             .collect(Collectors.toUnmodifiableMap(Multibase::name, Function.identity()));
@@ -31,25 +31,26 @@ public final class MultibaseCmd implements Callable<Integer> {
     static final MultibaseDecoder DECODER = MultibaseDecoder.getInstance();
 
     static class ModeGroup {
-        @Option(names = { "-e", "--encode" }, description = "Encode input with base", paramLabel = "<base>")
-        String encode = null;
+        @Option(names = { "-e", "--enrich" }, description = "Enrich input as multicodec", paramLabel = "<codec>")
+        String enrich = null;
 
-        @Option(names = { "-d", "--decode" }, description = "Decode mutibase input to raw bytes.")
-        boolean decode;
+        @Option(names = { "-s", "--strip" }, description = "Strip multicodec (and multibase) and return raw bytes")
+        boolean strip;
 
-        @Option(names = { "-r", "--rebase" }, description = "", paramLabel = "<base>")
-        String rebase = null;
-
-        @Option(names = { "-l", "--list" }, description = "list supported base encodings.")
+        @Option(names = { "-l", "--list" }, description = "list supported codecs")
         boolean list = false;
 
-        @Option(names = { "-a", "--analyze" }, description = "validate, detects encoding, byte lenght")
+        @Option(names = { "-a", "--analyze" }, description = "validate, detects a codec, byte lenght")
         boolean analyze = false;
     }
 
     @ArgGroup(exclusive = true, multiplicity = "1")
     ModeGroup mode;
 
+    @Option(names = { "-mb", "--multibase" }, description = "Input is multibase encoded.")
+    boolean multibase = false;
+
+    
     @Option(names = { "-o", "--output" }, description = "Output file name.", paramLabel = "<file>")
     String output = null;
 
@@ -62,7 +63,7 @@ public final class MultibaseCmd implements Callable<Integer> {
     @Spec
     CommandSpec spec;
 
-    private MultibaseCmd() {
+    private MulticodecCmd() {
     }
 
     @Override
@@ -83,7 +84,7 @@ public final class MultibaseCmd implements Callable<Integer> {
             return spec.exitCodeOnSuccess();
         }
 
-        if (mode.decode) {
+        if (mode.strip) {
             var document = input.fetch();
 
             var decoded = DECODER.decode(new String(document, StandardCharsets.UTF_8).strip());
@@ -101,12 +102,12 @@ public final class MultibaseCmd implements Callable<Integer> {
             return spec.exitCodeOnSuccess();
         }
 
-        if (mode.encode != null) {
+        if (mode.enrich != null) {
 
-            Multibase base = BASES.get(mode.encode);
+            Multibase base = BASES.get(mode.enrich);
 
             if (base == null) {
-                throw new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list.");
+                throw new IllegalArgumentException("Unsupported base " + mode.enrich + ". List supported bases with --list.");
             }
 
             var encoded = base.encode(input.fetch());
@@ -125,32 +126,6 @@ public final class MultibaseCmd implements Callable<Integer> {
             return spec.exitCodeOnSuccess();
         }
 
-        if (mode.rebase != null) {
-            Multibase base = BASES.get(mode.rebase);
-
-            if (base == null) {
-                throw new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list.");
-            }
-
-            var document = input.fetch();
-
-            var decoded = DECODER.decode(new String(document, StandardCharsets.UTF_8).strip());
-
-            var encoded = base.encode(decoded);
-
-            if (output != null) {
-                try (var os = new FileOutputStream(output)) {
-                    os.write(encoded.getBytes(StandardCharsets.UTF_8));
-                    os.flush();
-                }
-
-            } else {
-                spec.commandLine().getOut().print(encoded);
-                spec.commandLine().getOut().flush();
-            }
-
-            return spec.exitCodeOnSuccess();
-        }
 
         if (mode.analyze) {
             var document = input.fetch();
