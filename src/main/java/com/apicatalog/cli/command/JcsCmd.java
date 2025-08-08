@@ -2,17 +2,13 @@ package com.apicatalog.cli.command;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.mixin.CommandOptions;
+import com.apicatalog.cli.mixin.JsonInput;
 import com.apicatalog.jcs.JsonCanonicalizer;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.document.JsonDocument;
-import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
-import com.apicatalog.jsonld.loader.SchemeRouter;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -21,6 +17,9 @@ import picocli.CommandLine.Spec;
 
 @Command(name = "jcs", mixinStandardHelpOptions = false, description = "Canonize a JSON document using the JSON Canonicalization Scheme (JCS).", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class JcsCmd implements Callable<Integer> {
+
+    @Mixin
+    JsonInput input;
 
     @Mixin
     CommandOptions options;
@@ -36,16 +35,8 @@ public final class JcsCmd implements Callable<Integer> {
 
         final Document document;
 
-        if (options.input != null) {
-            if (options.input.isAbsolute()) {
-                var loader = SchemeRouter.defaultInstance();
-                document = loader.loadDocument(options.input, new DocumentLoaderOptions());
-
-            } else {
-                try (final Reader reader = Files.newBufferedReader(Path.of(options.input.toString()), StandardCharsets.UTF_8)) {
-                    document = JsonDocument.of(reader);
-                }
-            }
+        if (input.input != null) {
+            document = input.fetch();
 
         } else {
             try (final Reader reader = new InputStreamReader(System.in)) {
@@ -59,7 +50,7 @@ public final class JcsCmd implements Callable<Integer> {
                 spec.commandLine().getOut());
 
         spec.commandLine().getOut().flush();
-        
+
         return spec.exitCodeOnSuccess();
     }
 }

@@ -2,6 +2,7 @@ package com.apicatalog.cli.command;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,14 +31,17 @@ import picocli.CommandLine.Spec;
 @Command(name = "rdfc", mixinStandardHelpOptions = false, description = "Canonize an RDF N-Quads document using the RDFC-1.0 algorithm.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class RdfCanonCmd implements Callable<Integer> {
 
-    @Mixin
-    CommandOptions options;
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri|file>")
+    public URI input = null;
 
     @Option(names = { "-t", "--timeout" }, description = "Timeout in milliseconds (default: 10000 = 10s). Terminates processing after the specified time.", paramLabel = "<milliseconds>")
     long timeout = 10 * 1000;
 
     @Option(names = { "-d", "--digest" }, description = "Digest algorithm to use.", paramLabel = "SHA256|SHA384")
     String digest = "SHA256";
+
+    @Mixin
+    CommandOptions options;
 
     @Spec
     CommandSpec spec;
@@ -59,13 +63,13 @@ public final class RdfCanonCmd implements Callable<Integer> {
 
         RdfCanon canon = RdfCanon.create(hashAlgo, ticker);
 
-        if (options.input != null) {
-            if (options.input.isAbsolute()) {
+        if (input != null) {
+            if (input.isAbsolute()) {
 
                 ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
 
                 var loader = SchemeRouter.defaultInstance();
-                Document document = loader.loadDocument(options.input, new DocumentLoaderOptions());
+                Document document = loader.loadDocument(input, new DocumentLoaderOptions());
                 document.getRdfContent()
                         .orElseThrow(() -> new IllegalArgumentException("Invalid input document. N-QUADS document expected but got [" + document.getContentType() + "]."))
                         .toList().forEach(s -> {
@@ -111,7 +115,7 @@ public final class RdfCanonCmd implements Callable<Integer> {
                         });
 
             } else {
-                try (final Reader reader = Files.newBufferedReader(Path.of(options.input.toString()), StandardCharsets.UTF_8)) {
+                try (final Reader reader = Files.newBufferedReader(Path.of(input.toString()), StandardCharsets.UTF_8)) {
                     new NQuadsReader(reader).provide(canon);
                 }
             }

@@ -3,9 +3,9 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.cli.mixin.CommandOptions;
-import com.apicatalog.cli.mixin.JsonOutputOptions;
+import com.apicatalog.cli.mixin.JsonInput;
+import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.ExpansionApi;
@@ -22,10 +22,10 @@ import picocli.CommandLine.Spec;
 public final class ExpandCmd implements Callable<Integer> {
 
     @Mixin
-    CommandOptions options;
+    JsonInput input;
 
     @Mixin
-    JsonOutputOptions outputOptions;
+    JsonOutput output;
 
     @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
@@ -40,6 +40,9 @@ public final class ExpandCmd implements Callable<Integer> {
             "--ordered" }, description = "Order certain algorithm steps lexicographically.")
     boolean ordered = false;
 
+    @Mixin
+    CommandOptions options;
+
     @Spec
     CommandSpec spec;
 
@@ -51,8 +54,8 @@ public final class ExpandCmd implements Callable<Integer> {
 
         final ExpansionApi api;
 
-        if (options.input != null) {
-            api = JsonLd.expand(options.input);
+        if (input.input != null) {
+            api = JsonLd.expand(input.input);
 
         } else {
             api = JsonLd.expand(JsonDocument.of(System.in));
@@ -66,9 +69,9 @@ public final class ExpandCmd implements Callable<Integer> {
         api.base(base);
         api.ordered(ordered);
 
-        final JsonArray output = api.get();
+        final JsonArray expanded = api.get();
 
-        JsonOutput.print(spec.commandLine().getOut(), output, outputOptions.pretty);
+        output.print(spec.commandLine().getOut(), expanded);
 
         return spec.exitCodeOnSuccess();
     }

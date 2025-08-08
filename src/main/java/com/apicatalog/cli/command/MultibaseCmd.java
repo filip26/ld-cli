@@ -1,15 +1,17 @@
 package com.apicatalog.cli.command;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Collection;
-import java.util.List;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.apicatalog.cli.mixin.ByteInput;
 import com.apicatalog.cli.mixin.CommandOptions;
-import com.apicatalog.jsonld.document.Document;
-import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.multibase.Multibase;
+import com.apicatalog.multibase.MultibaseDecoder;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -21,7 +23,8 @@ import picocli.CommandLine.Spec;
 @Command(name = "multibase", mixinStandardHelpOptions = false, description = "", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class MultibaseCmd implements Callable<Integer> {
 
-    static final Collection<Multibase> BASES = List.of(Multibase.BASE_58_BTC,
+    static final Map<String, Multibase> BASES = Stream.of(
+            Multibase.BASE_58_BTC,
             Multibase.BASE_64,
             Multibase.BASE_64_PAD,
             Multibase.BASE_64_URL,
@@ -36,17 +39,17 @@ public final class MultibaseCmd implements Callable<Integer> {
             Multibase.BASE_32_HEX_PAD_UPPER,
             Multibase.BASE_16,
             Multibase.BASE_16_UPPER,
-            Multibase.BASE_2);
+            Multibase.BASE_2)
+            .collect(Collectors.toUnmodifiableMap(Multibase::name, Function.identity()));
 
-    @Mixin
-    CommandOptions options;
+    static final MultibaseDecoder DECODER = MultibaseDecoder.getInstance();
 
     static class ModeGroup {
-        @Option(names = { "-e", "--encode" }, description = "", paramLabel = "<base>")
+        @Option(names = { "-e", "--encode" }, description = "Encode input with base", paramLabel = "<base>")
         String encode = null;
 
-        @Option(names = { "-d", "--decode" }, description = "")
-        boolean decode = false;
+        @Option(names = { "-d", "--decode" }, description = "Decode input to file.")
+        boolean decode;
 
         @Option(names = { "-r", "--rebase" }, description = "", paramLabel = "<base>")
         String rebase = null;
@@ -57,7 +60,16 @@ public final class MultibaseCmd implements Callable<Integer> {
 
     @ArgGroup(exclusive = true, multiplicity = "1")
     ModeGroup mode;
-    
+
+    @Option(names = { "-o", "--output" }, description = "Output file name (required for --decode).", paramLabel = "<file>")
+    String output = null;
+
+    @Mixin
+    ByteInput input;
+
+    @Mixin
+    CommandOptions options;
+
     @Spec
     CommandSpec spec;
 
@@ -68,50 +80,53 @@ public final class MultibaseCmd implements Callable<Integer> {
     public Integer call() throws Exception {
 
         var writer = spec.commandLine().getOut();
-        
+
         if (mode.list) {
             writer.println("Supported base encodings:");
             writer.println();
             writer.printf("%s %s %s", "Prefix", "Length", "Name");
             writer.println();
             writer.println("------ ------ -----------------");
-            for (var base : BASES) {
+            for (var base : BASES.values()) {
                 writer.format("%-7s%-7d%s", base.prefix(), base.length(), base.name());
                 writer.println();
             }
             return spec.exitCodeOnSuccess();
         }
-        
+
         if (mode.decode) {
-            
-        }
-
-        final Document document;
-
-        if (options.input != null) {
-//            if (options.input.isAbsolute()) {
-//                var loader = SchemeRouter.defaultInstance();
-//                document = loader.loadDocument(options.input, new DocumentLoaderOptions());
-//
-//            } else {
-//                try (final Reader reader = Files.newBufferedReader(Path.of(options.input.toString()), StandardCharsets.UTF_8)) {
-//                    document = JsonDocument.of(reader);
-//                }
+//            if (output == null) {
+//                throw new IllegalArgumentException("Paremeter --output is required for decoding.");
 //            }
 
-        } else {
-            try (final Reader reader = new InputStreamReader(System.in)) {
-                document = JsonDocument.of(reader);
+            var document = input.fetch();
+
+            var decoded = DECODER.decode(new String(document, StandardCharsets.UTF_8));
+
+            if (output != null) {
+                try (var os = new FileOutputStream(output)) {
+                    os.write(decoded);
+                    os.flush();
+                }
+
+            } else {
+                System.out.write(decoded);
             }
+
+            return spec.exitCodeOnSuccess();
         }
 
-//        JsonCanonicalizer.canonize(
-//                document.getJsonContent()
-//                        .orElseThrow(() -> new IllegalArgumentException("Invalid input document. JSON document expected but got [" + document.getContentType() + "].")),
-//                spec.commandLine().getOut());
-//
-//        spec.commandLine().getOut().flush();
-//        
+        if (mode.encode != null) {
+
+            Multibase base = BASES.get(mode.encode);
+            if (base == null) {
+                throw new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list.");
+            }
+
+            base.encode(null);
+
+        }
+
         return spec.exitCodeOnSuccess();
     }
 }

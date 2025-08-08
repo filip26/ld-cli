@@ -3,9 +3,9 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.cli.mixin.CommandOptions;
-import com.apicatalog.cli.mixin.JsonOutputOptions;
+import com.apicatalog.cli.mixin.JsonInput;
+import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdOptions;
 import com.apicatalog.jsonld.JsonLdVersion;
@@ -23,10 +23,10 @@ import picocli.CommandLine.Spec;
 public final class FlattenCmd implements Callable<Integer> {
 
     @Mixin
-    CommandOptions options;
+    JsonInput input;
 
     @Mixin
-    JsonOutputOptions outputOptions;
+    JsonOutput output;
 
     @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
@@ -47,6 +47,9 @@ public final class FlattenCmd implements Callable<Integer> {
     @Option(names = { "-a", "--keep-arrays" }, description = "Keep arrays with just one element.")
     boolean compactArrays = true;
 
+    @Mixin
+    CommandOptions options;
+
     @Spec
     CommandSpec spec;
 
@@ -58,8 +61,8 @@ public final class FlattenCmd implements Callable<Integer> {
 
         final FlatteningApi api;
 
-        if (options.input != null) {
-            api = JsonLd.flatten(options.input);
+        if (input.input != null) {
+            api = JsonLd.flatten(input.input);
 
         } else {
             api = JsonLd.flatten(JsonDocument.of(System.in));
@@ -79,9 +82,9 @@ public final class FlattenCmd implements Callable<Integer> {
         api.ordered(ordered);
         api.compactArrays(compactArrays);
 
-        final JsonStructure output = api.get();
+        final JsonStructure flattened = api.get();
 
-        JsonOutput.print(spec.commandLine().getOut(), output, outputOptions.pretty);
+        output.print(spec.commandLine().getOut(), flattened);
 
         return spec.exitCodeOnSuccess();
     }

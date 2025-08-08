@@ -63,18 +63,19 @@ Commands:
   jcs         Canonize a JSON document using the JSON Canonicalization Scheme (JCS)
 
 > ld-cli expand -h
-Usage: ld-cli expand [-op] [-b=<base>] [-c=<context>] [-i=<input>] [-m=1.0|1.1]
+Usage: ld-cli expand [-op] [--debug] [-b=<uri>] [-c=<uri>] [-i=<uri|file>]
+                     [-m=1.0|1.1]
 
-Expand JSON-LD document
+Expand a JSON-LD document.
 
 Options:
-  -b, --base=<base>         input document base IRI
-  -c, --context=<context>   context IRI
-  -i, --input=<input>       input document IRI
-  -m, --mode=1.0|1.1        processing mode
-  -o, --ordered             certain algorithm processing steps are ordered
-                              lexicographically
-  -p, --pretty              pretty print output JSON
+  -b, --base=<uri>         Base URI of the input document.
+  -c, --context=<uri>      Context URI.
+      --debug              Print detailed error information.
+  -i, --input=<uri|file>   Input document URI or file path.
+  -m, --mode=1.0|1.1       Processing mode.
+  -o, --ordered            Order certain algorithm steps lexicographically.
+  -p, --pretty             Pretty-print the output JSON.
 
 ```
 

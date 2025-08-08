@@ -3,8 +3,8 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.cli.mixin.CommandOptions;
+import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FromRdfApi;
@@ -22,11 +22,11 @@ import picocli.CommandLine.Spec;
 @Command(name = "fromrdf", mixinStandardHelpOptions = false, description = "Transform an N-Quads document into a JSON-LD document in expanded form.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class FromRdfCmd implements Callable<Integer> {
 
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri|file>")
+    public URI input = null;
+    
     @Mixin
-    CommandOptions options;
-
-    @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
-    boolean pretty = false;
+    JsonOutput output;
 
     @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
@@ -44,6 +44,9 @@ public final class FromRdfCmd implements Callable<Integer> {
     @Option(names = { "-n", "--native-types" }, description = "Use native types for numbers and booleans when possible.")
     boolean nativeTypes = false;
 
+    @Mixin
+    CommandOptions options;
+
     @Spec
     CommandSpec spec;
 
@@ -55,9 +58,9 @@ public final class FromRdfCmd implements Callable<Integer> {
 
         final FromRdfApi api;
 
-        if (options.input != null) {
+        if (input != null) {
             ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
-            api = JsonLd.fromRdf(options.input);
+            api = JsonLd.fromRdf(input);
 
         } else {
             api = JsonLd.fromRdf(JsonDocument.of(System.in));
@@ -71,9 +74,9 @@ public final class FromRdfCmd implements Callable<Integer> {
         api.ordered(ordered);
         api.nativeTypes(nativeTypes);
 
-        final JsonStructure output = api.get();
+        final JsonStructure jsonld = api.get();
 
-        JsonOutput.print(spec.commandLine().getOut(), output, pretty);
+        output.print(spec.commandLine().getOut(), jsonld);
 
         return spec.exitCodeOnSuccess();
     }

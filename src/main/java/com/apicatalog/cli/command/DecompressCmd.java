@@ -1,22 +1,15 @@
 package com.apicatalog.cli.command;
 
-import java.io.InputStream;
 import java.net.URI;
-import java.net.http.HttpClient.Redirect;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse.BodyHandlers;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Duration;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.base.Base16;
 import com.apicatalog.cborld.CborLd;
 import com.apicatalog.cborld.CborLdVersion;
 import com.apicatalog.cli.JsonCborDictionary;
-import com.apicatalog.cli.JsonOutput;
+import com.apicatalog.cli.mixin.ByteInput;
 import com.apicatalog.cli.mixin.CommandOptions;
-import com.apicatalog.cli.mixin.JsonOutputOptions;
+import com.apicatalog.cli.mixin.JsonOutput;
 
 import jakarta.json.JsonStructure;
 import picocli.CommandLine.Command;
@@ -29,10 +22,10 @@ import picocli.CommandLine.Spec;
 public final class DecompressCmd implements Callable<Integer> {
 
     @Mixin
-    CommandOptions options;
+    ByteInput input;
 
     @Mixin
-    JsonOutputOptions outputOptions;
+    JsonOutput output;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
     URI base = null;
@@ -46,10 +39,11 @@ public final class DecompressCmd implements Callable<Integer> {
     @Option(names = { "-x", "--hex" }, description = "Treat input as a hexadecimal-encoded CBOR-LD document.")
     boolean hex = false;
 
+    @Mixin
+    CommandOptions options;
+
     @Spec
     CommandSpec spec;
-
-    static final java.net.http.HttpClient CLIENT = java.net.http.HttpClient.newBuilder().followRedirects(Redirect.ALWAYS).build();
 
     private DecompressCmd() {
     }
@@ -57,9 +51,9 @@ public final class DecompressCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        hex = hex || options.input == null;
+        hex = hex || input == null;
 
-        var encoded = decode(fetch(options.input));
+        var encoded = decode(input.fetch());
 
         var decoder = CborLd.createDecoder(CborLdVersion.V1, CborLdVersion.V06, CborLdVersion.V05)
                 .base(base)
@@ -73,44 +67,13 @@ public final class DecompressCmd implements Callable<Integer> {
             }
         }
 
-        var output = decoder.build().decode(encoded);
+        var decoded = decoder.build().decode(encoded);
 
-        JsonOutput.print(spec.commandLine().getOut(), (JsonStructure) output, outputOptions.pretty);
+        output.print(spec.commandLine().getOut(), (JsonStructure) decoded);
 
         return spec.exitCodeOnSuccess();
     }
 
-    static byte[] fetch(URI input) throws Exception {
-        if (input == null) {
-            return System.in.readAllBytes();
-        }
-
-        if (input.isAbsolute()) {
-            if ("file".equalsIgnoreCase(input.getScheme())) {
-                return Files.readAllBytes(Path.of(input));
-            }
-            try (var is = fetchHttp(input)) {
-                return is.readAllBytes();
-            }
-        }
-        return Files.readAllBytes(Path.of(input.toString()));
-    }
-
-    static InputStream fetchHttp(URI uri) throws Exception {
-
-        var request = HttpRequest.newBuilder()
-                .GET()
-                .uri(uri)
-                .header("Accept", "*/*")
-                .timeout(Duration.ofMinutes(1));
-
-        var response = CLIENT.send(request.build(), BodyHandlers.ofInputStream());
-
-        if (response.statusCode() != 200) {
-            throw new IllegalArgumentException("The [" + uri + "] has returned code " + response.statusCode() + ", expected 200 OK");
-        }
-        return response.body();
-    }
 
     byte[] decode(byte[] data) {
         if (hex) {

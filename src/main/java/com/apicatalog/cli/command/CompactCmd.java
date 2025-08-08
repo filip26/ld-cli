@@ -3,15 +3,14 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.cli.mixin.CommandOptions;
-import com.apicatalog.cli.mixin.JsonOutputOptions;
+import com.apicatalog.cli.mixin.JsonInput;
+import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.CompactionApi;
 import com.apicatalog.jsonld.document.JsonDocument;
 
-import jakarta.json.JsonObject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
@@ -23,10 +22,10 @@ import picocli.CommandLine.Spec;
 public final class CompactCmd implements Callable<Integer> {
 
     @Mixin
-    CommandOptions options;
+    JsonInput input;
 
     @Mixin
-    JsonOutputOptions outputOptions;
+    JsonOutput output;
 
     @Parameters(index = "0", arity = "1", description = "Context URI or file path.", paramLabel = "<uri|file>")
     URI context = null;
@@ -46,6 +45,9 @@ public final class CompactCmd implements Callable<Integer> {
 
     @Option(names = { "-r", "--keep-uris" }, description = "Preserve absolute  absolute URIs.")
     boolean keepAbsoluteURI = false;
+    
+    @Mixin
+    CommandOptions options;
 
     @Spec
     CommandSpec spec;
@@ -58,8 +60,8 @@ public final class CompactCmd implements Callable<Integer> {
 
         final CompactionApi api;
 
-        if (options.input != null) {
-            api = JsonLd.compact(options.input, context);
+        if (input.input != null) {
+            api = JsonLd.compact(input.input, context);
 
         } else {
             api = JsonLd.compact(JsonDocument.of(System.in), context);
@@ -74,9 +76,7 @@ public final class CompactCmd implements Callable<Integer> {
         api.compactArrays(!keepArrays);
         api.compactToRelative(!keepAbsoluteURI);
 
-        final JsonObject output = api.get();
-
-        JsonOutput.print(spec.commandLine().getOut(), output, outputOptions.pretty);
+        output.print(spec.commandLine().getOut(), api.get());
 
         return spec.exitCodeOnSuccess();
     }

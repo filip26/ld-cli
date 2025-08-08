@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.mixin.CommandOptions;
+import com.apicatalog.cli.mixin.JsonInput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdOptions.RdfDirection;
 import com.apicatalog.jsonld.JsonLdVersion;
@@ -24,7 +25,7 @@ import picocli.CommandLine.Spec;
 public final class ToRdfCmd implements Callable<Integer> {
 
     @Mixin
-    CommandOptions options;
+    JsonInput input;
 
     @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
@@ -45,6 +46,9 @@ public final class ToRdfCmd implements Callable<Integer> {
     @Option(names = { "-n", "--no-blanks" }, description = "Omit blank nodes for triple predicates.")
     boolean generalizedRdf = true;
 
+    @Mixin
+    CommandOptions options;
+
     @Spec
     CommandSpec spec;
 
@@ -56,8 +60,8 @@ public final class ToRdfCmd implements Callable<Integer> {
 
         final ToRdfApi api;
 
-        if (options.input != null) {
-            api = JsonLd.toRdf(options.input);
+        if (input.input != null) {
+            api = JsonLd.toRdf(input.input);
 
         } else {
             api = JsonLd.toRdf(JsonDocument.of(System.in));

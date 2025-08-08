@@ -16,6 +16,7 @@ import com.apicatalog.jsonld.loader.HttpLoader;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.MissingParameterException;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParseResult;
 
@@ -42,10 +43,10 @@ public final class App {
 
     @Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help message.")
     boolean help = false;
-    
+
     @Option(names = { "-v", "--version" }, versionHelp = true, description = "Display version information.")
     boolean version;
-    
+
     static {
         ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.JSON);
     }
@@ -55,18 +56,13 @@ public final class App {
         final CommandLine cli = new CommandLine(new App());
         cli.setCaseInsensitiveEnumValuesAllowed(true);
         cli.setExecutionExceptionHandler(new ErrorHandler());
+
         try {
 
             final ParseResult result = cli.parseArgs(args);
 
             if (cli.isUsageHelpRequested()) {
-
-                if (result.subcommand() != null) {
-                    result.subcommand().commandSpec().commandLine().usage(cli.getOut());
-                    return;
-                }
-
-                cli.usage(cli.getOut());
+                usage(cli, result);
                 System.exit(cli.getCommandSpec().exitCodeOnUsageHelp());
                 return;
             }
@@ -78,10 +74,24 @@ public final class App {
             }
 
             System.exit(cli.execute(args));
+            return;
+
+        } catch (MissingParameterException e) {
+            cli.getErr().println(e.getMessage());
+            e.getCommandLine().getCommandSpec().commandLine().usage(cli.getOut());
 
         } catch (Exception ex) {
             cli.getErr().println(ex.getMessage());
-            System.exit(cli.getCommandSpec().exitCodeOnExecutionException());
         }
+
+        System.exit(cli.getCommandSpec().exitCodeOnExecutionException());
     }
+
+    static final void usage(final CommandLine cli, final ParseResult result) {
+        if (result.subcommand() != null) {
+            result.subcommand().commandSpec().commandLine().usage(cli.getOut());
+            return;
+        }
+        cli.usage(cli.getOut());
+    }    
 }

@@ -1,11 +1,8 @@
 package com.apicatalog.cli.command;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.base.Base16;
@@ -13,12 +10,10 @@ import com.apicatalog.cborld.CborLd;
 import com.apicatalog.cborld.CborLdVersion;
 import com.apicatalog.cli.JsonCborDictionary;
 import com.apicatalog.cli.mixin.CommandOptions;
+import com.apicatalog.cli.mixin.JsonInput;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.json.JsonUtils;
-import com.apicatalog.jsonld.loader.DocumentLoader;
-import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
-import com.apicatalog.jsonld.loader.SchemeRouter;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -30,9 +25,9 @@ import picocli.CommandLine.Spec;
 public final class CompressCmd implements Callable<Integer> {
 
     @Mixin
-    CommandOptions options;
+    JsonInput input;
 
-    @Option(names = { "-o", "--output" }, description = "Output file name. If omitted, -x is assumed.", paramLabel = "<uri|file>")
+    @Option(names = { "-o", "--output" }, description = "Output file name. If omitted, -x is assumed.", paramLabel = "<file>")
     String output = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
@@ -50,6 +45,9 @@ public final class CompressCmd implements Callable<Integer> {
     @Option(names = { "-x", "--hex" }, description = "Output result as hexadecimal-encoded.")
     boolean hex = false;
 
+    @Mixin
+    CommandOptions options;
+
     @Spec
     CommandSpec spec;
 
@@ -61,14 +59,9 @@ public final class CompressCmd implements Callable<Integer> {
 
         final Document document;
 
-        if (options.input != null) {
-            if (options.input.isAbsolute()) {
-                final DocumentLoader loader = SchemeRouter.defaultInstance();
-                document = loader.loadDocument(options.input, new DocumentLoaderOptions());
-            } else {
-                document = JsonDocument.of(new ByteArrayInputStream(Files.readAllBytes(Path.of(options.input.toString()))));
-            }
-
+        if (input.input != null) {
+            document = input.fetch();
+            
         } else {
             document = JsonDocument.of(System.in);
         }

@@ -3,9 +3,9 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.JsonOutput;
 import com.apicatalog.cli.mixin.CommandOptions;
-import com.apicatalog.cli.mixin.JsonOutputOptions;
+import com.apicatalog.cli.mixin.JsonInput;
+import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdEmbed;
 import com.apicatalog.jsonld.JsonLdVersion;
@@ -24,10 +24,10 @@ import picocli.CommandLine.Spec;
 public final class FrameCmd implements Callable<Integer> {
 
     @Mixin
-    CommandOptions options;
+    JsonInput input;
 
     @Mixin
-    JsonOutputOptions outputOptions;
+    JsonOutput output;
 
     @Parameters(index = "0", arity = "1", description = "Frame URI.", paramLabel = "<uri>")
     URI frame = null;
@@ -60,6 +60,9 @@ public final class FrameCmd implements Callable<Integer> {
     @Option(names = { "-e", "--embed" }, description = "Embedding behavior.", paramLabel = "ALWAYS|NEVER|ONCE")
     String embed = "ONCE";
 
+    @Mixin
+    CommandOptions options;
+
     @Spec
     CommandSpec spec;
 
@@ -71,8 +74,8 @@ public final class FrameCmd implements Callable<Integer> {
 
         final FramingApi api;
 
-        if (options.input != null) {
-            api = JsonLd.frame(options.input, frame);
+        if (input.input != null) {
+            api = JsonLd.frame(input.input, frame);
 
         } else {
             api = JsonLd.frame(JsonDocument.of(System.in), frame);
@@ -91,9 +94,9 @@ public final class FrameCmd implements Callable<Integer> {
         api.requiredAll(requiredAll);
         api.embed(JsonLdEmbed.valueOf(embed.toUpperCase()));
 
-        final JsonObject output = api.get();
+        final JsonObject framed = api.get();
 
-        JsonOutput.print(spec.commandLine().getOut(), output, outputOptions.pretty);
+        output.print(spec.commandLine().getOut(), framed);
 
         return spec.exitCodeOnSuccess();
     }

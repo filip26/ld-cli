@@ -1,4 +1,4 @@
-package com.apicatalog.cli;
+package com.apicatalog.cli.mixin;
 
 import java.io.PrintWriter;
 import java.util.Collections;
@@ -8,10 +8,14 @@ import jakarta.json.JsonStructure;
 import jakarta.json.JsonWriter;
 import jakarta.json.JsonWriterFactory;
 import jakarta.json.stream.JsonGenerator;
+import picocli.CommandLine.Option;
 
 public class JsonOutput {
 
-    public static final void print(PrintWriter writer, JsonStructure document, boolean pretty) {
+    @Option(names = { "-p", "--pretty" }, description = "Pretty-print the output JSON.")
+    public boolean pretty = false;
+
+    public final void print(PrintWriter writer, JsonStructure document) {
         if (!pretty) {
             writer.println(document.toString());
             return;
