@@ -1,6 +1,7 @@
 package com.apicatalog.cli.command;
 
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -8,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.apicatalog.cborld.hex.Hex;
 import com.apicatalog.cli.mixin.ByteInput;
 import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.multibase.Multibase;
@@ -40,6 +42,9 @@ public final class MultibaseCmd implements Callable<Integer> {
 
         @Option(names = { "-l", "--list" }, description = "list supported base encodings.")
         boolean list = false;
+
+        @Option(names = { "-a", "--analyze" }, description = "validate, detects encoding, byte lenght")
+        boolean analyze = false;
     }
 
     @ArgGroup(exclusive = true, multiplicity = "1")
@@ -99,7 +104,7 @@ public final class MultibaseCmd implements Callable<Integer> {
         if (mode.encode != null) {
 
             Multibase base = BASES.get(mode.encode);
-            
+
             if (base == null) {
                 throw new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list.");
             }
@@ -119,10 +124,10 @@ public final class MultibaseCmd implements Callable<Integer> {
 
             return spec.exitCodeOnSuccess();
         }
-        
+
         if (mode.rebase != null) {
             Multibase base = BASES.get(mode.rebase);
-            
+
             if (base == null) {
                 throw new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list.");
             }
@@ -144,9 +149,41 @@ public final class MultibaseCmd implements Callable<Integer> {
                 spec.commandLine().getOut().flush();
             }
 
-            return spec.exitCodeOnSuccess();            
+            return spec.exitCodeOnSuccess();
         }
-        
+
+        if (mode.analyze) {
+            var document = input.fetch();
+
+            var base = DECODER.getBase((char) document[0]);
+            byte[] decoded = null;
+
+            if (base.isPresent()) {
+
+                var encoded = new String(document, StandardCharsets.UTF_8).strip();
+
+                decoded = base.get().decode(encoded);
+            }
+
+            if (output != null) {
+                try (var os = new PrintWriter(new FileOutputStream(output))) {
+                    if (base.isPresent()) {
+                        os.println(base);
+                        os.println("Length in bytes " + decoded.length);
+                    } else {
+                        os.println("Unrecognized base encoding, prefix " + document[0] + " (" + Hex.toString(document[0]) + ").");
+                    }
+
+                    os.flush();
+                }
+
+            } else {
+                System.out.write(decoded);
+            }
+
+            return spec.exitCodeOnSuccess();
+        }
+
         spec.commandLine().usage(spec.commandLine().getOut());
         return spec.exitCodeOnUsageHelp();
     }
