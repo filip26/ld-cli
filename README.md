@@ -10,6 +10,8 @@ It's ideal for batch workflows, automated validation, canonicalization, and seri
 * [W3C CBOR-LD 1.0](https://json-ld.github.io/cbor-ld-spec/)
 * [W3C Standard RDF Dataset Canonicalization Algorithm](https://www.w3.org/TR/rdf-canon/)
 * [RFC 8785 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785)
+* [W3C CCG Multibase](https://github.com/w3c-ccg/multibase)
+
 
 ## Status
 
@@ -120,6 +122,8 @@ All PR's welcome!
 * [Titanium RDFC](https://github.com/filip26/titanium-rfc-canon)
 * [Titanium JCS](https://github.com/filip26/titanium-jcs)
 * [Iridium CBOR-LD](https://github.com/filip26/iridium-cbor-ld)
+* [Copper Multibase](https://github.com/filip26/copper-multibase)
+* [Copper Multicodec](https://github.com/filip26/copper-multicodec)
 
 ## Sponsors
 

@@ -23,23 +23,7 @@ import picocli.CommandLine.Spec;
 @Command(name = "multibase", mixinStandardHelpOptions = false, description = "", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class MultibaseCmd implements Callable<Integer> {
 
-    static final Map<String, Multibase> BASES = Stream.of(
-            Multibase.BASE_58_BTC,
-            Multibase.BASE_64,
-            Multibase.BASE_64_PAD,
-            Multibase.BASE_64_URL,
-            Multibase.BASE_64_URL_PAD,
-            Multibase.BASE_32,
-            Multibase.BASE_32_UPPER,
-            Multibase.BASE_32_PAD,
-            Multibase.BASE_32_PAD_UPPER,
-            Multibase.BASE_32_HEX,
-            Multibase.BASE_32_HEX_UPPER,
-            Multibase.BASE_32_HEX_PAD,
-            Multibase.BASE_32_HEX_PAD_UPPER,
-            Multibase.BASE_16,
-            Multibase.BASE_16_UPPER,
-            Multibase.BASE_2)
+    static final Map<String, Multibase> BASES = Stream.of(Multibase.provided())
             .collect(Collectors.toUnmodifiableMap(Multibase::name, Function.identity()));
 
     static final MultibaseDecoder DECODER = MultibaseDecoder.getInstance();
@@ -95,13 +79,9 @@ public final class MultibaseCmd implements Callable<Integer> {
         }
 
         if (mode.decode) {
-//            if (output == null) {
-//                throw new IllegalArgumentException("Paremeter --output is required for decoding.");
-//            }
-
             var document = input.fetch();
 
-            var decoded = DECODER.decode(new String(document, StandardCharsets.UTF_8));
+            var decoded = DECODER.decode(new String(document, StandardCharsets.UTF_8).strip());
 
             if (output != null) {
                 try (var os = new FileOutputStream(output)) {
@@ -119,14 +99,55 @@ public final class MultibaseCmd implements Callable<Integer> {
         if (mode.encode != null) {
 
             Multibase base = BASES.get(mode.encode);
+            
             if (base == null) {
                 throw new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list.");
             }
 
-            base.encode(null);
+            var encoded = base.encode(input.fetch());
 
+            if (output != null) {
+                try (var os = new FileOutputStream(output)) {
+                    os.write(encoded.getBytes(StandardCharsets.UTF_8));
+                    os.flush();
+                }
+
+            } else {
+                spec.commandLine().getOut().print(encoded);
+                spec.commandLine().getOut().flush();
+            }
+
+            return spec.exitCodeOnSuccess();
         }
+        
+        if (mode.rebase != null) {
+            Multibase base = BASES.get(mode.rebase);
+            
+            if (base == null) {
+                throw new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list.");
+            }
 
-        return spec.exitCodeOnSuccess();
+            var document = input.fetch();
+
+            var decoded = DECODER.decode(new String(document, StandardCharsets.UTF_8).strip());
+
+            var encoded = base.encode(decoded);
+
+            if (output != null) {
+                try (var os = new FileOutputStream(output)) {
+                    os.write(encoded.getBytes(StandardCharsets.UTF_8));
+                    os.flush();
+                }
+
+            } else {
+                spec.commandLine().getOut().print(encoded);
+                spec.commandLine().getOut().flush();
+            }
+
+            return spec.exitCodeOnSuccess();            
+        }
+        
+        spec.commandLine().usage(spec.commandLine().getOut());
+        return spec.exitCodeOnUsageHelp();
     }
 }
