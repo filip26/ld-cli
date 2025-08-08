@@ -51,8 +51,6 @@ public final class DecompressCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        hex = hex || input == null;
-
         var encoded = decode(input.fetch());
 
         var decoder = CborLd.createDecoder(CborLdVersion.V1, CborLdVersion.V06, CborLdVersion.V05)

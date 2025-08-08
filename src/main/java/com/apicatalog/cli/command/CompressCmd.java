@@ -27,7 +27,7 @@ public final class CompressCmd implements Callable<Integer> {
     @Mixin
     JsonInput input;
 
-    @Option(names = { "-o", "--output" }, description = "Output file name. If omitted, -x is assumed.", paramLabel = "<file>")
+    @Option(names = { "-o", "--output" }, description = "Output file name.", paramLabel = "<file>")
     String output = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
@@ -61,7 +61,7 @@ public final class CompressCmd implements Callable<Integer> {
 
         if (input.input != null) {
             document = input.fetch();
-            
+
         } else {
             document = JsonDocument.of(System.in);
         }
@@ -93,7 +93,7 @@ public final class CompressCmd implements Callable<Integer> {
                 .encode(json.asJsonObject());
 
         if (output == null) {
-            spec.commandLine().getOut().print(encode(encoded, true));
+            spec.commandLine().getOut().print(encode(encoded, hex));
             spec.commandLine().getOut().flush();
 
         } else {

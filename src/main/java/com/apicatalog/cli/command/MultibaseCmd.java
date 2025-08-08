@@ -50,7 +50,7 @@ public final class MultibaseCmd implements Callable<Integer> {
     @ArgGroup(exclusive = true, multiplicity = "1")
     ModeGroup mode;
 
-    @Option(names = { "-o", "--output" }, description = "Output file name (required for --decode).", paramLabel = "<file>")
+    @Option(names = { "-o", "--output" }, description = "Output file name.", paramLabel = "<file>")
     String output = null;
 
     @Mixin
@@ -166,19 +166,13 @@ public final class MultibaseCmd implements Callable<Integer> {
             }
 
             if (output != null) {
-                try (var os = new PrintWriter(new FileOutputStream(output))) {
-                    if (base.isPresent()) {
-                        os.println(base);
-                        os.println("Length in bytes " + decoded.length);
-                    } else {
-                        os.println("Unrecognized base encoding, prefix " + document[0] + " (" + Hex.toString(document[0]) + ").");
-                    }
-
-                    os.flush();
+                try (var printer = new PrintWriter(new FileOutputStream(output))) {
+                    print(printer, base.orElse(null), document, decoded);
+                    printer.flush();
                 }
 
             } else {
-                System.out.write(decoded);
+                print(spec.commandLine().getOut(), base.orElse(null), document, decoded);
             }
 
             return spec.exitCodeOnSuccess();
@@ -186,5 +180,18 @@ public final class MultibaseCmd implements Callable<Integer> {
 
         spec.commandLine().usage(spec.commandLine().getOut());
         return spec.exitCodeOnUsageHelp();
+    }
+
+    static final void print(PrintWriter printer, Multibase base, byte[] document, byte[] decoded) {
+        if (base != null) {
+            printer.print(base.getClass().getSimpleName());
+            printer.print("[name: " + base.name());
+            printer.print(", prefix: " + base.prefix());
+            printer.print(", length: " + base.length());
+            printer.println(" characters]");
+            printer.println("Size: " + (decoded != null ? decoded.length : 0) + " bytes");
+            return;
+        }
+        printer.println("Unrecognized base encoding, prefix " + document[0] + " (" + Hex.toString(document[0]) + ").");
     }
 }
