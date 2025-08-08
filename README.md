@@ -2,7 +2,7 @@
 
 A simple command-line utility designed to process JSON-LD, RDF, and CBOR-LD documents. Built with GraalVM, `ld-cli` delivers native executables for Ubuntu, macOS, and Windows - eliminating JVM dependencies and runtime overhead.
 
-It's ideal for batch workflows, automated validation, canonicalization, and serialization of linked data resources in knowledge graphs, decentralized identifiers (DIDs), and semantic web applications.
+It's ideal for batch workflows, automated validation, canonicalization, and serialization of linked data resources in knowledge graphs, decentralized identifiers (DIDs), multiformats, and semantic web applications.
 
 ## Features
 
@@ -11,7 +11,8 @@ It's ideal for batch workflows, automated validation, canonicalization, and seri
 * [W3C Standard RDF Dataset Canonicalization Algorithm](https://www.w3.org/TR/rdf-canon/)
 * [RFC 8785 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785)
 * [W3C CCG Multibase](https://github.com/w3c-ccg/multibase)
-
+* [Multicodec](https://github.com/multiformats/multicodec)
+* [Multihash](https://github.com/multiformats/multihash)
 
 ## Status
 
@@ -101,6 +102,16 @@ ld-cli compress -i file:/home/filip/example.jsonld
 ### Custom CBOR-LD dictionaries
 ```bash
 ld-cli decompress --pretty --dictionary ./utopia-barcodes-dictionary-example.json <<< 'd90664a60183198000198001198002189d82187618a418b8a3189c18a618ce18b218d01ae592208118baa2189c18a018a8447582002018be18aa18c0a5189c186c18d60418e018e618e258417ab7c2e56b49e2cce62184ce26818e15a8b173164401b5d3bb93ffd6d2b5eb8f6ac0971502ae3dd49d17ec66528164034c912685b8111bc04cdc9ec13dbadd91cc18e418ac'
+```
+
+### Multicodec
+```bash
+ld-cli multicodec --analyze --multibase <<< 'z6MkmM42vxfqZQsv4ehtTjFFxQ4sQKS2w6WR7emozFAn5cxu'
+```
+```bash
+Multibase  [name: base58btc, prefix: z, length: 58 chars]
+Multicodec [name: ed25519-pub, code: [0xED,0x01](237), tag:Key, status: Draft]
+Size: 32 bytes
 ```
 
 ## Contributing

@@ -184,14 +184,19 @@ public final class MultibaseCmd implements Callable<Integer> {
 
     static final void print(PrintWriter printer, Multibase base, byte[] document, byte[] decoded) {
         if (base != null) {
-            printer.print(base.getClass().getSimpleName());
-            printer.print("[name: " + base.name());
-            printer.print(", prefix: " + base.prefix());
-            printer.print(", length: " + base.length());
-            printer.println(" characters]");
+            print(printer, base);
             printer.println("Size: " + (decoded != null ? decoded.length : 0) + " bytes");
             return;
         }
         printer.println("Unrecognized base encoding, prefix " + document[0] + " (" + Hex.toString(document[0]) + ").");
+    }
+
+    static final void print(PrintWriter printer, Multibase base) {
+        printer.print(base.getClass().getSimpleName());
+        printer.print("  [name: " + base.name());
+        printer.print(", prefix: " + base.prefix());
+        printer.print(", length: " + base.length());
+        printer.println(" chars]");
+        return;
     }
 }

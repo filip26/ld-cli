@@ -14,6 +14,9 @@ import com.apicatalog.cli.mixin.ByteInput;
 import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.multibase.Multibase;
 import com.apicatalog.multibase.MultibaseDecoder;
+import com.apicatalog.multicodec.Multicodec;
+import com.apicatalog.multicodec.MulticodecDecoder;
+import com.apicatalog.uvarint.UVarInt;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -28,17 +31,12 @@ public final class MulticodecCmd implements Callable<Integer> {
     static final Map<String, Multibase> BASES = Stream.of(Multibase.provided())
             .collect(Collectors.toUnmodifiableMap(Multibase::name, Function.identity()));
 
-    static final MultibaseDecoder DECODER = MultibaseDecoder.getInstance();
+    static final MulticodecDecoder DECODER = MulticodecDecoder.getInstance();
+    static final MultibaseDecoder MULTIBASE = MultibaseDecoder.getInstance();
 
     static class ModeGroup {
-        @Option(names = { "-e", "--enrich" }, description = "Enrich input as multicodec", paramLabel = "<codec>")
-        String enrich = null;
-
         @Option(names = { "-s", "--strip" }, description = "Strip multicodec (and multibase) and return raw bytes")
         boolean strip;
-
-        @Option(names = { "-l", "--list" }, description = "list supported codecs")
-        boolean list = false;
 
         @Option(names = { "-a", "--analyze" }, description = "validate, detects a codec, byte lenght")
         boolean analyze = false;
@@ -50,7 +48,6 @@ public final class MulticodecCmd implements Callable<Integer> {
     @Option(names = { "-mb", "--multibase" }, description = "Input is multibase encoded.")
     boolean multibase = false;
 
-    
     @Option(names = { "-o", "--output" }, description = "Output file name.", paramLabel = "<file>")
     String output = null;
 
@@ -71,23 +68,10 @@ public final class MulticodecCmd implements Callable<Integer> {
 
         var writer = spec.commandLine().getOut();
 
-        if (mode.list) {
-            writer.println("Supported base encodings:");
-            writer.println();
-            writer.printf("%s %s %s", "Prefix", "Length", "Name");
-            writer.println();
-            writer.println("------ ------ -----------------");
-            for (var base : BASES.values()) {
-                writer.format("%-7s%-7d%s", base.prefix(), base.length(), base.name());
-                writer.println();
-            }
-            return spec.exitCodeOnSuccess();
-        }
-
         if (mode.strip) {
             var document = input.fetch();
 
-            var decoded = DECODER.decode(new String(document, StandardCharsets.UTF_8).strip());
+            var decoded = DECODER.decode(document);
 
             if (output != null) {
                 try (var os = new FileOutputStream(output)) {
@@ -102,52 +86,43 @@ public final class MulticodecCmd implements Callable<Integer> {
             return spec.exitCodeOnSuccess();
         }
 
-        if (mode.enrich != null) {
-
-            Multibase base = BASES.get(mode.enrich);
-
-            if (base == null) {
-                throw new IllegalArgumentException("Unsupported base " + mode.enrich + ". List supported bases with --list.");
-            }
-
-            var encoded = base.encode(input.fetch());
-
-            if (output != null) {
-                try (var os = new FileOutputStream(output)) {
-                    os.write(encoded.getBytes(StandardCharsets.UTF_8));
-                    os.flush();
-                }
-
-            } else {
-                spec.commandLine().getOut().print(encoded);
-                spec.commandLine().getOut().flush();
-            }
-
-            return spec.exitCodeOnSuccess();
-        }
-
-
         if (mode.analyze) {
             var document = input.fetch();
 
-            var base = DECODER.getBase((char) document[0]);
+            if (multibase) {
+                var based = new String(document, StandardCharsets.UTF_8).strip();
+
+                var base = MULTIBASE.getBase(based);
+                byte[] decoded = null;
+
+                if (base.isPresent()) {
+                    var encoded = new String(document, StandardCharsets.UTF_8).strip();
+                    decoded = base.get().decode(encoded);
+                    MultibaseCmd.print(writer, base.get());
+
+                } else {
+                    MultibaseCmd.print(writer, null, document, decoded);
+                }
+
+                document = decoded;
+            }
+
+            var codec = DECODER.getCodec(document);
+
             byte[] decoded = null;
 
-            if (base.isPresent()) {
-
-                var encoded = new String(document, StandardCharsets.UTF_8).strip();
-
-                decoded = base.get().decode(encoded);
+            if (codec.isPresent()) {
+                decoded = codec.get().decode(document);
             }
 
             if (output != null) {
                 try (var printer = new PrintWriter(new FileOutputStream(output))) {
-                    print(printer, base.orElse(null), document, decoded);
+                    print(printer, codec.orElse(null), document, decoded);
                     printer.flush();
                 }
 
             } else {
-                print(spec.commandLine().getOut(), base.orElse(null), document, decoded);
+                print(spec.commandLine().getOut(), codec.orElse(null), document, decoded);
             }
 
             return spec.exitCodeOnSuccess();
@@ -157,16 +132,17 @@ public final class MulticodecCmd implements Callable<Integer> {
         return spec.exitCodeOnUsageHelp();
     }
 
-    static final void print(PrintWriter printer, Multibase base, byte[] document, byte[] decoded) {
-        if (base != null) {
-            printer.print(base.getClass().getSimpleName());
-            printer.print("[name: " + base.name());
-            printer.print(", prefix: " + base.prefix());
-            printer.print(", length: " + base.length());
-            printer.println(" characters]");
+    static final void print(PrintWriter printer, Multicodec codec, byte[] document, byte[] decoded) {
+        if (codec != null) {
+            printer.print(codec.getClass().getSimpleName());
+            printer.print(" [name: " + codec.name());
+            printer.print(", code: " + Hex.toString(codec.varint()) + "(" + codec.code() + ")");
+            printer.print(", tag:" + codec.tag());
+            printer.print(", status: " + codec.status());
+            printer.println("]");
             printer.println("Size: " + (decoded != null ? decoded.length : 0) + " bytes");
             return;
         }
-        printer.println("Unrecognized base encoding, prefix " + document[0] + " (" + Hex.toString(document[0]) + ").");
+        printer.println("Unrecognized codec " + Hex.toString(decoded) + "(" + UVarInt.decode(decoded) + ").");
     }
 }
