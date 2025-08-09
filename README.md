@@ -12,8 +12,8 @@ Built with GraalVM, `ld-cli` delivers native executables for Ubuntu, macOS, and 
 * [W3C CBOR-LD 1.0](https://json-ld.github.io/cbor-ld-spec/)
 * [W3C Standard RDF Dataset Canonicalization Algorithm](https://www.w3.org/TR/rdf-canon/)
 * [RFC 8785 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785)
-* [W3C CCG Multibase](https://github.com/w3c-ccg/multibase)
-* [Multicodec](https://github.com/multiformats/multicodec)
+* [W3C CCG Multibase - Base-encoding format with self-describing prefixes](https://github.com/w3c-ccg/multibase)
+* [Multicodec - Self-describing content type identifiers](https://github.com/multiformats/multicodec)
 * [Multihash](https://github.com/multiformats/multihash)
 
 ## Status
