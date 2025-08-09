@@ -22,7 +22,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "multibase", mixinStandardHelpOptions = false, description = " Detect, encode, decode, or list multibase encodings.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "multibase", mixinStandardHelpOptions = false, description = "Encode, decode, detect,  or list multibase encodings.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class MultibaseCmd implements Callable<Integer> {
 
     static final Map<String, Multibase> BASES = Stream.of(Multibase.provided())

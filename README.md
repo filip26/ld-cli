@@ -1,8 +1,10 @@
 # Linked Data CLI
 
-A simple command-line utility designed to process JSON-LD, RDF, CBOR-LD, and multiformats documents. Built with GraalVM, `ld-cli` delivers native executables for Ubuntu, macOS, and Windows - eliminating JVM dependencies.
+A simple command-line utility designed to process JSON-LD, RDF, CBOR-LD, and multiformats documents. 
     
 Supports batch workflows, canonicalization, serialization, encoding, decoding, and format conversion for linked data resources, binary identifiers, and content addressing formats in knowledge graphs, decentralized identifiers (DIDs), and semantic web applications.
+
+Built with GraalVM, `ld-cli` delivers native executables for Ubuntu, macOS, and Windows - eliminating JVM dependencies.
 
 ## Features
 
@@ -32,7 +34,7 @@ sudo snap install ld-cli
 
 ### 📁 Manual Download
 
-Download the latest release from the [GitHub Releases page](https://github.com/filip26/ld-cli/releases/).
+Download the latest release from the [GitHub Releases page](https://github.com/filip26/ld-cli/releases/). Click Assets to see the available downloads.
 
 After downloading, extract the archive and make the binary executable:
 
@@ -67,8 +69,8 @@ Commands:
   rdfc        Canonize an RDF N-Quads document using the RDFC-1.0 algorithm.
   jcs         Canonize a JSON document using the JSON Canonicalization Scheme
                 (JCS).
-  multibase   Detect, encode, decode, or list multibase encodings.
-  multicodec  Detect, add, remove, or list multicodec headers.
+  multibase   Encode, decode, detect, or list multibase encodings.
+  multicodec  Add, remove, detect, or list multicodec headers.
 
 > ld-cli expand -h
 Usage: ld-cli expand [-op] [--debug] [-b=<uri>] [-c=<uri>] [-i=<uri|file>]

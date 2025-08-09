@@ -26,7 +26,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "multicodec", mixinStandardHelpOptions = false, description = "Detect, add, remove, or list multicodec headers.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "multicodec", mixinStandardHelpOptions = false, description = "Add, remove, detect, or list multicodec headers.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class MulticodecCmd implements Callable<Integer> {
 
     static final MulticodecDecoder DECODER = MulticodecDecoder.getInstance();
