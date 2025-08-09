@@ -4,7 +4,11 @@ on:
   workflow_dispatch:
 
 jobs:
+  build:
+    uses: ./.github/workflows/snap-build.yml
+    
   publish:
+    needs: build    
     name: Publish
     runs-on: ubuntu-latest
 
