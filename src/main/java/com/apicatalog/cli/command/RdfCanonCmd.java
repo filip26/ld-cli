@@ -1,15 +1,14 @@
 package com.apicatalog.cli.command;
 
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
+import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.http.media.MediaType;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
@@ -24,27 +23,25 @@ import com.apicatalog.rdf.nquads.NQuadsReader;
 import com.apicatalog.rdf.nquads.NQuadsWriter;
 
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "rdfc", mixinStandardHelpOptions = false, description = "Canonize an RDF N-Quads document with RDFC-1.0", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "rdfc", mixinStandardHelpOptions = false, description = "Canonize an RDF N-Quads document using the RDFC-1.0 algorithm.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class RdfCanonCmd implements Callable<Integer> {
 
-    @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
-    boolean help = false;
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri|file>")
+    public URI input = null;
 
-    @Option(names = { "-i", "--input" }, description = "input document IRI or filepath")
-    URI input = null;
-
-//    @Option(names = { "-o", "--output" }, description = "output document filename")
-//    String output = null;
-
-    @Option(names = { "-t", "--timeout" }, description = "terminates after the specified time in milliseconds (default: 10s)")
+    @Option(names = { "-t", "--timeout" }, description = "Timeout in milliseconds (default: 10000 = 10s). Terminates processing after the specified time.", paramLabel = "<milliseconds>")
     long timeout = 10 * 1000;
 
-    @Option(names = { "-d", "--digest" }, description = "the name of the hash algorithm to use", paramLabel = "SHA256|SHA384")
+    @Option(names = { "-d", "--digest" }, description = "Digest algorithm to use.", paramLabel = "SHA256|SHA384")
     String digest = "SHA256";
+
+    @Mixin
+    CommandOptions options;
 
     @Spec
     CommandSpec spec;
@@ -68,9 +65,9 @@ public final class RdfCanonCmd implements Callable<Integer> {
 
         if (input != null) {
             if (input.isAbsolute()) {
-                
+
                 ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
-                
+
                 var loader = SchemeRouter.defaultInstance();
                 Document document = loader.loadDocument(input, new DocumentLoaderOptions());
                 document.getRdfContent()
@@ -129,13 +126,8 @@ public final class RdfCanonCmd implements Callable<Integer> {
             }
         }
 
-        try (final Writer writer = new OutputStreamWriter(System.out, StandardCharsets.UTF_8)) {
-            canon.provide(new NQuadsWriter(writer));
-            writer.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return spec.exitCodeOnExecutionException();
-        }
+        canon.provide(new NQuadsWriter(spec.commandLine().getOut()));
+        spec.commandLine().getOut().flush();
 
         return spec.exitCodeOnSuccess();
     }

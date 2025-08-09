@@ -45,9 +45,14 @@ public class JsonCborDictionary {
             switch (item.getKey()) {
             case "code":
                 continue;
+
             case "context":
                 item.getValue().asJsonObject().entrySet()
                         .forEach(e -> builder.context(e.getKey(),
+                                ((JsonNumber) e.getValue()).intValue()));
+            case "uri":
+                item.getValue().asJsonObject().entrySet()
+                        .forEach(e -> builder.uri(e.getKey(),
                                 ((JsonNumber) e.getValue()).intValue()));
             default:
                 item.getValue().asJsonObject().entrySet()

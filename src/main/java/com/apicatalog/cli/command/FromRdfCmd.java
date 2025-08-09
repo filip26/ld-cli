@@ -3,7 +3,8 @@ package com.apicatalog.cli.command;
 import java.net.URI;
 import java.util.concurrent.Callable;
 
-import com.apicatalog.cli.JsonOutput;
+import com.apicatalog.cli.mixin.CommandOptions;
+import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FromRdfApi;
@@ -13,52 +14,44 @@ import com.apicatalog.jsonld.loader.HttpLoader;
 
 import jakarta.json.JsonStructure;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(
-        name = "fromrdf", 
-        mixinStandardHelpOptions = false, 
-        description = "Transform N-Quads document into a JSON-LD document in an expanded form", 
-        sortOptions = true,
-        descriptionHeading = "%n",
-        parameterListHeading = "%nParameters:%n",
-        optionListHeading = "%nOptions:%n"
-        )
+@Command(name = "fromrdf", mixinStandardHelpOptions = false, description = "Transform an N-Quads document into a JSON-LD document in expanded form.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class FromRdfCmd implements Callable<Integer> {
 
-    @Option(names = { "-h", "--help" }, hidden = true, usageHelp = true)
-    boolean help = false;
+    @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri|file>")
+    public URI input = null;
+    
+    @Mixin
+    JsonOutput output;
 
-    @Option(names = { "-p", "--pretty" }, description = "pretty print output JSON")
-    boolean pretty = false;
-
-    @Option(names = { "-i", "--input" }, description = "input document IRI")
-    URI input = null;
-
-    @Option(names = { "-c", "--context" }, description = "context IRI")
+    @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
     URI context = null;
 
-    @Option(names = { "-b", "--base" }, description = "input document base IRI")
+    @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
     URI base = null;
 
-    @Option(names = { "-m", "--mode" }, description = "processing mode", paramLabel = "1.0|1.1")
+    @Option(names = { "-m", "--mode" }, description = "Processing mode.", paramLabel = "1.0|1.1")
     String mode = "1.1";
 
-    @Option(names = { "-o", "--ordered" }, 
-            description = "certain algorithm processing steps are ordered lexicographically")
+    @Option(names = { "-o",
+            "--ordered" }, description = "Order certain algorithm steps lexicographically.")
     boolean ordered = false;
 
-    @Option(names = { "-n", "--native-types" }, 
-            description = "use native types"
-            )
-    boolean nativeTypes = false;  
+    @Option(names = { "-n", "--native-types" }, description = "Use native types for numbers and booleans when possible.")
+    boolean nativeTypes = false;
+
+    @Mixin
+    CommandOptions options;
 
     @Spec
     CommandSpec spec;
 
-    private FromRdfCmd() {}
+    private FromRdfCmd() {
+    }
 
     @Override
     public Integer call() throws Exception {
@@ -80,10 +73,10 @@ public final class FromRdfCmd implements Callable<Integer> {
         api.base(base);
         api.ordered(ordered);
         api.nativeTypes(nativeTypes);
-        
-        final JsonStructure output = api.get();
 
-        JsonOutput.print(output, pretty);
+        final JsonStructure jsonld = api.get();
+
+        output.print(spec.commandLine().getOut(), jsonld);
 
         return spec.exitCodeOnSuccess();
     }
