@@ -2,7 +2,7 @@ name: ld-cli
 title: Linked Data CLI
 version: 1.0.0
 license: Apache-2.0
-summary: Command-line tool for JSON-LD, RDF, RDFC, JCS, CBOR-LD, multibase, and multicodec processing processing
+summary: Command-line tool for JSON-LD, RDF, RDFC, JCS, CBOR-LD, semantic processing
 description: |
   Linked Data CLI (`ld-cli`) is a command-line tool for processing and transforming linked data formats, including:
 
