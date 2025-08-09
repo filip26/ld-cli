@@ -123,7 +123,7 @@ Length:     32 bytes
 
 ### Multihash
 ```bash
-ld-cli multicodec --multibase --analyze <<< 'MEiCcvAfD+ZFyWDajqipYHKICkZiqQgudmbwOEx2fPiy+Rw=='
+ld-cli multicodec --analyze --multibase <<< 'MEiCcvAfD+ZFyWDajqipYHKICkZiqQgudmbwOEx2fPiy+Rw=='
 ```
 ```bash
 Multibase:  name=base64pad, prefix=M, length=64 chars
