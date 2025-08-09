@@ -111,6 +111,7 @@ public final class MultibaseCmd implements Callable<Integer> {
 
         if (mode.encode != null) {
 
+            //TODO improve when fixed https://github.com/filip26/copper-multibase/issues/97
             Multibase base = BASES.get(mode.encode);
 
             if (base == null) {

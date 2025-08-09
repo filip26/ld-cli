@@ -1,13 +1,11 @@
 package com.apicatalog.cli.command;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.apicatalog.cborld.hex.Hex;
@@ -17,8 +15,8 @@ import com.apicatalog.multibase.Multibase;
 import com.apicatalog.multibase.MultibaseDecoder;
 import com.apicatalog.multicodec.Multicodec;
 import com.apicatalog.multicodec.Multicodec.Tag;
-import com.apicatalog.multicodec.codec.MulticodecRegistry;
 import com.apicatalog.multicodec.MulticodecDecoder;
+import com.apicatalog.multicodec.codec.MulticodecRegistry;
 import com.apicatalog.uvarint.UVarInt;
 
 import picocli.CommandLine.ArgGroup;
@@ -30,9 +28,6 @@ import picocli.CommandLine.Spec;
 
 @Command(name = "multicodec", mixinStandardHelpOptions = false, description = "", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class MulticodecCmd implements Callable<Integer> {
-
-    static final Map<String, Multibase> BASES = Stream.of(Multibase.provided())
-            .collect(Collectors.toUnmodifiableMap(Multibase::name, Function.identity()));
 
     static final MulticodecDecoder DECODER = MulticodecDecoder.getInstance();
     static final MultibaseDecoder MULTIBASE = MultibaseDecoder.getInstance();
@@ -122,39 +117,23 @@ public final class MulticodecCmd implements Callable<Integer> {
         }
 
         var document = input.fetch();
-        String encoded = null;
+        String based = null;
         Optional<Multibase> base = Optional.empty();
 
         if (multibase) {
-            encoded = new String(document, StandardCharsets.UTF_8).strip();
+            based = new String(document, StandardCharsets.UTF_8).strip();
 
-            base = MULTIBASE.getBase(encoded);
+            base = MULTIBASE.getBase(based);
 
             if (base.isPresent()) {
-                encoded = new String(document, StandardCharsets.UTF_8).strip();
-                document = base.get().decode(encoded);
+                based = new String(document, StandardCharsets.UTF_8).strip();
+                document = base.get().decode(based);
             } else {
                 MultibaseCmd.print(spec.commandLine().getErr(), null, document, null);
-                return mode.analyze 
+                return mode.analyze
                         ? spec.exitCodeOnSuccess()
                         : spec.exitCodeOnExecutionException();
             }
-        }
-
-        if (mode.strip) {
-            var decoded = DECODER.decode(document);
-
-            if (output != null) {
-                try (var os = new FileOutputStream(output)) {
-                    os.write(decoded);
-                    os.flush();
-                }
-
-            } else {
-                System.out.write(decoded);
-            }
-
-            return spec.exitCodeOnSuccess();
         }
 
         if (mode.analyze) {
@@ -169,20 +148,63 @@ public final class MulticodecCmd implements Callable<Integer> {
             if (output != null) {
                 try (var printer = new PrintWriter(new FileOutputStream(output))) {
                     base.ifPresent(b -> MultibaseCmd.print(printer, b));
-                    print(printer, codec.orElse(null), base.orElse(null), encoded, document, decoded);
+                    print(printer, codec.orElse(null), base.orElse(null), based, document, decoded);
                     printer.flush();
                 }
 
             } else {
                 base.ifPresent(b -> MultibaseCmd.print(spec.commandLine().getOut(), b));
-                print(spec.commandLine().getOut(), codec.orElse(null), base.orElse(null), encoded, document, decoded);
+                print(spec.commandLine().getOut(), codec.orElse(null), base.orElse(null), based, document, decoded);
             }
 
             return spec.exitCodeOnSuccess();
         }
 
+        if (mode.strip) {
+            output(DECODER.decode(document));
+            return spec.exitCodeOnSuccess();
+        }
+
+        if (mode.enrich != null) {
+            // TODO improve when fixed
+            // https://github.com/filip26/copper-multicodec/issues/107
+            var codec = DECODER.getRegistry().codecs().values().stream()
+                    .filter(c -> c.name().equals(mode.enrich))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Unsupported codec " + mode.enrich + ". List supported codecs with multicodec --list."));
+
+            output(codec.encode(document));
+            
+            return spec.exitCodeOnSuccess();
+        }
+
         spec.commandLine().usage(spec.commandLine().getOut());
         return spec.exitCodeOnUsageHelp();
+    }
+
+    void output(byte[] encoded) throws IOException {
+        if (outputBase != null) {
+            // TODO improve when fixed https://github.com/filip26/copper-multibase/issues/97
+            print(Stream.of(Multibase.provided())
+                    .filter(b -> b.name().equals(outputBase))
+                    .findFirst()
+                    .map(b -> b.encode(encoded).getBytes(StandardCharsets.UTF_8))
+                    .orElseThrow(() -> new IllegalArgumentException("Unsupported base " + mode.enrich + ". List supported bases with multibase --list.")));
+            return;
+        }
+        print(encoded);
+    }
+
+    void print(byte[] result) throws IOException {
+        if (output != null) {
+            try (var os = new FileOutputStream(output)) {
+                os.write(result);
+                os.flush();
+            }
+
+        } else {
+            System.out.write(result);
+        }
     }
 
     static final void print(PrintWriter printer, Multicodec codec, Multibase base, String encoded, byte[] document, byte[] decoded) {
@@ -193,10 +215,6 @@ public final class MulticodecCmd implements Callable<Integer> {
             printer.print(", varint=" + Hex.toString(codec.varint()));
             printer.print(", tag=" + codec.tag());
             printer.println(", status=" + codec.status());
-//            if (encoded != null && base != null) {
-//                printer.printf("%-12s%s", "Prefix:",  encoded.substring(0, 1 + codec.varint().length) + " (" + base.name() + " encoded)");
-//                printer.println();
-//            }
             printer.printf("%-12s%d bytes", "Length:", (decoded != null ? decoded.length : 0));
             printer.println();
             return;
