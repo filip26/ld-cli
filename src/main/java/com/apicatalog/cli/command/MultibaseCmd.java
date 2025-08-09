@@ -85,7 +85,7 @@ public final class MultibaseCmd implements Callable<Integer> {
                         return c;
                     })
                     .forEach(base -> {
-                        writer.format("%6s %6d %s", base.prefix(), base.length(), base.name());
+                        writer.printf("%6s %6d %s", base.prefix(), base.length(), base.name());
                         writer.println();
                     });
             return spec.exitCodeOnSuccess();
@@ -193,18 +193,19 @@ public final class MultibaseCmd implements Callable<Integer> {
     static final void print(PrintWriter printer, Multibase base, byte[] document, byte[] decoded) {
         if (base != null) {
             print(printer, base);
-            printer.println("Size: " + (decoded != null ? decoded.length : 0) + " bytes");
+            printer.printf("%-12s%d bytes", "Size:", (decoded != null ? decoded.length : 0));
+            printer.println();
             return;
         }
         printer.println("Unrecognized base encoding, prefix: " + (char) document[0] + " (" + Hex.toString(document[0]) + ").");
     }
 
     static final void print(PrintWriter printer, Multibase base) {
-        printer.print(base.getClass().getSimpleName());
-        printer.print("  [name: " + base.name());
-        printer.print(", prefix: " + base.prefix());
-        printer.print(", length: " + base.length());
-        printer.println(" chars]");
+        printer.printf("%-12s", base.getClass().getSimpleName() + ":");
+        printer.print("name=" + base.name());
+        printer.print(", prefix=" + base.prefix());
+        printer.print(", length=" + base.length());
+        printer.println(" chars");
         return;
     }
 }

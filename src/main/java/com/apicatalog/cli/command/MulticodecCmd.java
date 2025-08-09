@@ -38,6 +38,9 @@ public final class MulticodecCmd implements Callable<Integer> {
     static final MultibaseDecoder MULTIBASE = MultibaseDecoder.getInstance();
 
     static class ModeGroup {
+        @Option(names = { "-e", "--enrich" }, description = "Enrich raw input of a codec", paramLabel = "<codec>")
+        String enrich;
+
         @Option(names = { "-s", "--strip" }, description = "Strip multicodec (+ multibase) and return raw bytes.")
         boolean strip;
 
@@ -55,8 +58,11 @@ public final class MulticodecCmd implements Callable<Integer> {
     @ArgGroup(exclusive = true, multiplicity = "1")
     ModeGroup mode;
 
-    @Option(names = { "-m", "--multibase" }, description = "Input is multibase encoded.")
+    @Option(names = { "--multibase" }, description = "Input is multibase encoded.")
     boolean multibase = false;
+
+    @Option(names = { "--output-multibase" }, description = "Output is multibase encoded with the provided base.", paramLabel = "<base>")
+    String outputBase = null;
 
     @Option(names = { "-o", "--output" }, description = "Output file name.", paramLabel = "<file>")
     String output = null;
@@ -83,7 +89,7 @@ public final class MulticodecCmd implements Callable<Integer> {
             writer.println();
             writer.printf("%-9s%-32s%-14s%s", "Code", "Name", "Tag", "Status");
             writer.println();
-            writer.println("-------- ------------------------------- ------------- --------");
+            writer.println("-------- ------------------------------- ------------- ----------");
             DECODER.getRegistry().codecs().values()
                     .stream().sorted((a, b) -> (int) (a.code() - b.code()))
                     .forEach(codec -> {
@@ -104,7 +110,7 @@ public final class MulticodecCmd implements Callable<Integer> {
             writer.println();
             writer.println("------------- ------");
             Stream.of(Tag.values())
-                    .sorted()
+                    .sorted((a, b) -> a.name().compareTo(b.name()))
                     .forEach(tag -> {
                         writer.format("%-13s %6d",
                                 tag,
@@ -181,16 +187,18 @@ public final class MulticodecCmd implements Callable<Integer> {
 
     static final void print(PrintWriter printer, Multicodec codec, Multibase base, String encoded, byte[] document, byte[] decoded) {
         if (codec != null) {
-            printer.print(codec.getClass().getSimpleName());
-            printer.print(" [name: " + codec.name());
-            printer.print(", code: " + codec.code() + " " + Hex.toString(codec.varint()));
-            printer.print(", tag: " + codec.tag());
-            printer.print(", status: " + codec.status());
-            printer.println("]");
-            if (encoded != null && base != null) {
-                printer.println("Prefix: " + encoded.substring(0, 1 + codec.varint().length) + " (" + base.name() + " encoded)");
-            }
-            printer.println("Size:   " + (decoded != null ? decoded.length : 0) + " bytes");
+            printer.printf("%-12s", codec.getClass().getSimpleName() + ":");
+            printer.print("name=" + codec.name());
+            printer.print(", code=" + codec.code());
+            printer.print(", varint=" + Hex.toString(codec.varint()));
+            printer.print(", tag=" + codec.tag());
+            printer.println(", status=" + codec.status());
+//            if (encoded != null && base != null) {
+//                printer.printf("%-12s%s", "Prefix:",  encoded.substring(0, 1 + codec.varint().length) + " (" + base.name() + " encoded)");
+//                printer.println();
+//            }
+            printer.printf("%-12s%d bytes", "Size:", (decoded != null ? decoded.length : 0));
+            printer.println();
             return;
         }
         printer.println("Unrecognized codec " + Hex.toString(decoded) + "(" + UVarInt.decode(decoded) + ").");

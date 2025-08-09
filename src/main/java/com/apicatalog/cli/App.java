@@ -41,7 +41,7 @@ import picocli.CommandLine.ParseResult;
         "titanium-jcs      1.0.0   https://github.com/filip26/titanium-jcs",
         "iridium-cbor-ld   0.7.0   https://github.com/filip26/iridium-cbor-ld",
         "copper-multibase  4.0.0   https://github.com/filip26/copper-multibase",
-        "copper-multicodec 2.0.0   https://github.com/filip26/copper-multicodec",
+        "copper-multicodec 2.1.0   https://github.com/filip26/copper-multicodec",
 })
 public final class App {
 

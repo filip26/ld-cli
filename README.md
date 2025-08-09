@@ -109,10 +109,21 @@ ld-cli decompress --pretty --dictionary ./utopia-barcodes-dictionary-example.jso
 ld-cli multicodec --analyze --multibase <<< 'z6MkmM42vxfqZQsv4ehtTjFFxQ4sQKS2w6WR7emozFAn5cxu'
 ```
 ```bash
-Multibase  [name: base58btc, prefix: z, length: 58 chars]
-Multicodec [name: ed25519-pub, code: 237 [0xED,0x01], tag: Key, status: Draft]
-Prefix: z6M (base58btc encoded)
-Size:   32 bytes
+Multibase:  name=base58btc, prefix=z, length=58 chars
+Multicodec: name=ed25519-pub, code=237, varint=[0xED,0x01], tag=Key, status=Draft
+Prefix:     z6M (base58btc encoded)
+Size:       32 bytes
+```
+
+### Multihash
+```bash
+ld-cli multicodec --multibase --analyze <<< 'MEiCcvAfD+ZFyWDajqipYHKICkZiqQgudmbwOEx2fPiy+Rw=='
+```
+```bash
+Multibase:  name=base64pad, prefix=M, length=64 chars
+Multihash:  name=sha2-256, code=18, varint=[0x12], tag=Multihash, status=Permanent
+Prefix:     ME (base64pad encoded)
+Size:       32 bytes
 ```
 
 ## Contributing
