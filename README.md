@@ -111,8 +111,7 @@ ld-cli multicodec --analyze --multibase <<< 'z6MkmM42vxfqZQsv4ehtTjFFxQ4sQKS2w6W
 ```bash
 Multibase:  name=base58btc, prefix=z, length=58 chars
 Multicodec: name=ed25519-pub, code=237, varint=[0xED,0x01], tag=Key, status=Draft
-Prefix:     z6M (base58btc encoded)
-Size:       32 bytes
+Length:       32 bytes
 ```
 
 ### Multihash
@@ -122,8 +121,7 @@ ld-cli multicodec --multibase --analyze <<< 'MEiCcvAfD+ZFyWDajqipYHKICkZiqQgudmb
 ```bash
 Multibase:  name=base64pad, prefix=M, length=64 chars
 Multihash:  name=sha2-256, code=18, varint=[0x12], tag=Multihash, status=Permanent
-Prefix:     ME (base64pad encoded)
-Size:       32 bytes
+Length:       32 bytes
 ```
 
 ## Contributing

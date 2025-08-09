@@ -193,7 +193,7 @@ public final class MultibaseCmd implements Callable<Integer> {
     static final void print(PrintWriter printer, Multibase base, byte[] document, byte[] decoded) {
         if (base != null) {
             print(printer, base);
-            printer.printf("%-12s%d bytes", "Size:", (decoded != null ? decoded.length : 0));
+            printer.printf("%-12s%d bytes", "Length:", (decoded != null ? decoded.length : 0));
             printer.println();
             return;
         }

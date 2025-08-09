@@ -121,9 +121,27 @@ public final class MulticodecCmd implements Callable<Integer> {
             return spec.exitCodeOnSuccess();
         }
 
-        if (mode.strip) {
-            var document = input.fetch();
+        var document = input.fetch();
+        String encoded = null;
+        Optional<Multibase> base = Optional.empty();
 
+        if (multibase) {
+            encoded = new String(document, StandardCharsets.UTF_8).strip();
+
+            base = MULTIBASE.getBase(encoded);
+
+            if (base.isPresent()) {
+                encoded = new String(document, StandardCharsets.UTF_8).strip();
+                document = base.get().decode(encoded);
+            } else {
+                MultibaseCmd.print(spec.commandLine().getErr(), null, document, null);
+                return mode.analyze 
+                        ? spec.exitCodeOnSuccess()
+                        : spec.exitCodeOnExecutionException();
+            }
+        }
+
+        if (mode.strip) {
             var decoded = DECODER.decode(document);
 
             if (output != null) {
@@ -140,26 +158,6 @@ public final class MulticodecCmd implements Callable<Integer> {
         }
 
         if (mode.analyze) {
-            var document = input.fetch();
-            String encoded = null;
-            Optional<Multibase> base = Optional.empty();
-
-            if (multibase) {
-                encoded = new String(document, StandardCharsets.UTF_8).strip();
-
-                base = MULTIBASE.getBase(encoded);
-
-                if (base.isPresent()) {
-                    encoded = new String(document, StandardCharsets.UTF_8).strip();
-                    document = base.get().decode(encoded);
-                    MultibaseCmd.print(writer, base.get());
-
-                } else {
-                    MultibaseCmd.print(writer, null, document, null);
-                    return spec.exitCodeOnSuccess();
-                }
-            }
-
             var codec = DECODER.getCodec(document);
 
             byte[] decoded = null;
@@ -170,11 +168,13 @@ public final class MulticodecCmd implements Callable<Integer> {
 
             if (output != null) {
                 try (var printer = new PrintWriter(new FileOutputStream(output))) {
+                    base.ifPresent(b -> MultibaseCmd.print(printer, b));
                     print(printer, codec.orElse(null), base.orElse(null), encoded, document, decoded);
                     printer.flush();
                 }
 
             } else {
+                base.ifPresent(b -> MultibaseCmd.print(spec.commandLine().getOut(), b));
                 print(spec.commandLine().getOut(), codec.orElse(null), base.orElse(null), encoded, document, decoded);
             }
 
@@ -197,7 +197,7 @@ public final class MulticodecCmd implements Callable<Integer> {
 //                printer.printf("%-12s%s", "Prefix:",  encoded.substring(0, 1 + codec.varint().length) + " (" + base.name() + " encoded)");
 //                printer.println();
 //            }
-            printer.printf("%-12s%d bytes", "Size:", (decoded != null ? decoded.length : 0));
+            printer.printf("%-12s%d bytes", "Length:", (decoded != null ? decoded.length : 0));
             printer.println();
             return;
         }
