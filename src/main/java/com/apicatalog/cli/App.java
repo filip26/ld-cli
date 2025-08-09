@@ -35,7 +35,7 @@ import picocli.CommandLine.ParseResult;
         MultibaseCmd.class,
         MulticodecCmd.class,
 }, mixinStandardHelpOptions = false, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n", commandListHeading = "%nCommands:%n", version = {
-        "ld-cli            0.11.0  https://github.com/filip26/ld-cli",
+        "ld-cli            1.0.0  https://github.com/filip26/ld-cli",
         "titanium-json-ld  1.6.0   https://github.com/filip26/titanium-json-ld",
         "titanium-rdfc     2.0.0   https://github.com/filip26/titanium-rdf-canon",
         "titanium-jcs      1.0.0   https://github.com/filip26/titanium-jcs",
