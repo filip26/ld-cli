@@ -71,15 +71,23 @@ public final class MultibaseCmd implements Callable<Integer> {
         var writer = spec.commandLine().getOut();
 
         if (mode.list) {
-            writer.println("Supported base encodings:");
+            writer.println("Supported base encodings: " + BASES.size() + " total");
             writer.println();
             writer.printf("%s %s %s", "Prefix", "Length", "Name");
             writer.println();
             writer.println("------ ------ -----------------");
-            for (var base : BASES.values()) {
-                writer.format("%-7s%-7d%s", base.prefix(), base.length(), base.name());
-                writer.println();
-            }
+            BASES.values().stream()
+                    .sorted((a, b) -> {
+                        var c = a.length() - b.length();
+                        if (c == 0) {
+                            c = a.name().compareTo(b.name());
+                        }
+                        return c;
+                    })
+                    .forEach(base -> {
+                        writer.format("%6s %6d %s", base.prefix(), base.length(), base.name());
+                        writer.println();
+                    });
             return spec.exitCodeOnSuccess();
         }
 
@@ -188,7 +196,7 @@ public final class MultibaseCmd implements Callable<Integer> {
             printer.println("Size: " + (decoded != null ? decoded.length : 0) + " bytes");
             return;
         }
-        printer.println("Unrecognized base encoding, prefix: " + (char)document[0] + " (" + Hex.toString(document[0]) + ").");
+        printer.println("Unrecognized base encoding, prefix: " + (char) document[0] + " (" + Hex.toString(document[0]) + ").");
     }
 
     static final void print(PrintWriter printer, Multibase base) {

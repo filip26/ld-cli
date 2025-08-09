@@ -111,7 +111,8 @@ ld-cli multicodec --analyze --multibase <<< 'z6MkmM42vxfqZQsv4ehtTjFFxQ4sQKS2w6W
 ```bash
 Multibase  [name: base58btc, prefix: z, length: 58 chars]
 Multicodec [name: ed25519-pub, code: 237 [0xED,0x01], tag: Key, status: Draft]
-Size: 32 bytes
+Prefix: z6M (base58btc encoded)
+Size:   32 bytes
 ```
 
 ## Contributing
