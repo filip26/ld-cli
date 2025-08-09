@@ -1,8 +1,8 @@
 # Linked Data CLI
 
-A simple command-line utility designed to process JSON-LD, RDF, and CBOR-LD documents. Built with GraalVM, `ld-cli` delivers native executables for Ubuntu, macOS, and Windows - eliminating JVM dependencies and runtime overhead.
-
-It's ideal for batch workflows, automated validation, canonicalization, and serialization of linked data resources in knowledge graphs, decentralized identifiers (DIDs), multiformats, and semantic web applications.
+A simple command-line utility designed to process JSON-LD, RDF, CBOR-LD, and multiformats documents. Built with GraalVM, `ld-cli` delivers native executables for Ubuntu, macOS, and Windows - eliminating JVM dependencies.
+    
+Supports batch workflows, canonicalization, serialization, encoding, decoding, and format conversion for linked data resources, binary identifiers, and content addressing formats in knowledge graphs, decentralized identifiers (DIDs), and semantic web applications.
 
 ## Features
 
@@ -50,20 +50,25 @@ Usage: ld-cli [-hv] [COMMAND]
 Linked Data Command Line Processor
 
 Options:
-  -h, --help      display help message
-  -v, --version   display a version
+  -h, --help      Display help message.
+  -v, --version   Display version information.
 
 Commands:
-  expand      Expand JSON-LD document
-  compact     Compact JSON-LD document using the context
-  flatten     Flatten JSON-LD document and optionally compact using a context
-  frame       Frame JSON-LD document using the frame
-  fromrdf     Transform N-Quads document into a JSON-LD document in an expanded form
-  tordf       Transform JSON-LD document into N-Quads document
-  compress    Compress JSON-LD document into CBOR-LD  
-  decompress  Decompress CBOR-LD document into JSON-LD
-  rdfc        Canonize an RDF N-Quads document with RDFC-1.0
-  jcs         Canonize a JSON document using the JSON Canonicalization Scheme (JCS)
+  expand      Expand a JSON-LD document.
+  compact     Compact a JSON-LD document using the provided context.
+  flatten     Flatten a JSON-LD document and optionally compact it using a
+                context.
+  frame       Frame a JSON-LD document using the provided frame.
+  fromrdf     Transform an N-Quads document into a JSON-LD document in expanded
+                form.
+  tordf       Transform a JSON-LD document into an RDF N-Quads document.
+  compress    Compress JSON-LD document into CBOR-LD.
+  decompress  Decompress CBOR-LD document into JSON-LD.
+  rdfc        Canonize an RDF N-Quads document using the RDFC-1.0 algorithm.
+  jcs         Canonize a JSON document using the JSON Canonicalization Scheme
+                (JCS).
+  multibase   Detect, encode, decode, or list multibase encodings.
+  multicodec  Detect, add, remove, or list multicodec headers.
 
 > ld-cli expand -h
 Usage: ld-cli expand [-op] [--debug] [-b=<uri>] [-c=<uri>] [-i=<uri|file>]
@@ -111,7 +116,7 @@ ld-cli multicodec --analyze --multibase <<< 'z6MkmM42vxfqZQsv4ehtTjFFxQ4sQKS2w6W
 ```bash
 Multibase:  name=base58btc, prefix=z, length=58 chars
 Multicodec: name=ed25519-pub, code=237, varint=[0xED,0x01], tag=Key, status=Draft
-Length:       32 bytes
+Length:     32 bytes
 ```
 
 ### Multihash
@@ -121,7 +126,7 @@ ld-cli multicodec --multibase --analyze <<< 'MEiCcvAfD+ZFyWDajqipYHKICkZiqQgudmb
 ```bash
 Multibase:  name=base64pad, prefix=M, length=64 chars
 Multihash:  name=sha2-256, code=18, varint=[0x12], tag=Multihash, status=Permanent
-Length:       32 bytes
+Length:     32 bytes
 ```
 
 ## Contributing

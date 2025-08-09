@@ -1,25 +1,21 @@
 name: ld-cli
 title: Linked Data CLI
-version: 0.10.0
+version: 1.0.0
 license: Apache-2.0
-summary: Command-line tool for JSON-LD, RDF, RDFC, JCS, and CBOR-LD processing
+summary: Command-line tool for JSON-LD, RDF, RDFC, JCS, CBOR-LD, multibase, and multicodec processing processing
 description: |
-  Linked Data CLI (`ld-cli`) is a command-line tool for processing and transforming linked data formats,
-  including:
+  Linked Data CLI (`ld-cli`) is a command-line tool for processing and transforming linked data formats, including:
 
     • JSON-LD (JavaScript Object Notation for Linked Data)
     • RDF (Resource Description Framework)
     • RDFC (RDF Canonicalization)
     • JCS (JSON Canonicalization Scheme)
     • CBOR-LD (Concise Binary Object Representation for Linked Data)
-
-  Built with GraalVM, `ld-cli` provides native execution with zero JVM startup overhead.
-  It's ideal for batch workflows, automated validation, canonicalization, and serialization of
-  linked data resources in knowledge graphs, decentralized identifiers (DIDs), and semantic web applications.
-
-  This Snap includes a precompiled native executable built with GraalVM for optimal performance
-  on modern Ubuntu systems.
-
+    • multibase (Base-encoding format with self-describing prefixes)
+    • multicodec (Self-describing content type identifiers)
+    
+  Supports batch workflows, canonicalization, serialization, encoding, decoding, and format conversion for linked data resources, binary identifiers, and content addressing formats in knowledge graphs, decentralized identifiers (DIDs), and semantic web applications.
+    
 source-code: https://github.com/filip26/ld-cli
 issues: https://github.com/filip26/ld-cli/issues
 contact: filip26@gmail.com
@@ -30,7 +26,7 @@ grade: stable
 parts:
   graalvm:
     plugin: nil
-    source: https://download.oracle.com/graalvm/21/latest/graalvm-jdk-21_linux-x64_bin.tar.gz
+    source: https://download.oracle.com/graalvm/24/latest/graalvm-jdk-24_linux-x64_bin.tar.gz
     build-packages:
       - wget
       - tar 
