@@ -26,40 +26,39 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "multicodec", mixinStandardHelpOptions = false, description = "", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "multicodec", mixinStandardHelpOptions = false, description = "Detect, add, remove, or list multicodec headers.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class MulticodecCmd implements Callable<Integer> {
 
     static final MulticodecDecoder DECODER = MulticodecDecoder.getInstance();
     static final MultibaseDecoder MULTIBASE = MultibaseDecoder.getInstance();
 
     static class ModeGroup {
-        @Option(names = { "-e", "--enrich" }, description = "Enrich raw input of a codec", paramLabel = "<codec>")
+        @Option(names = { "-e", "--enrich" }, description = "Prepend multicodec header to raw input.", paramLabel = "<codec>")
         String enrich;
 
-        @Option(names = { "-s", "--strip" }, description = "Strip multicodec (+ multibase) and return raw bytes.")
+        @Option(names = { "-s", "--strip" }, description = "Remove multicodec (and optional multibase) header.")
         boolean strip;
 
-        @Option(names = { "-a", "--analyze" }, description = "validate, detects a codec, byte lenght.")
+        @Option(names = { "-a", "--analyze" }, description = "Validate input; detect codec and multibase; report byte length.")
         boolean analyze = false;
 
-        @Option(names = { "-l", "--list" }, description = "list of all codecs.")
+        @Option(names = { "-l", "--list" }, description = "List all codecs.")
         boolean list = false;
 
-        @Option(names = { "--tags" }, description = "list of all tags.")
+        @Option(names = { "--tags" }, description = "List all codec tags.")
         boolean tags = false;
-
     }
 
     @ArgGroup(exclusive = true, multiplicity = "1")
     ModeGroup mode;
 
-    @Option(names = { "--multibase" }, description = "Input is multibase encoded.")
+    @Option(names = { "--multibase" }, description = "Treat input as multibase-encoded.")
     boolean multibase = false;
 
-    @Option(names = { "--output-multibase" }, description = "Output is multibase encoded with the provided base.", paramLabel = "<base>")
+    @Option(names = { "--output-multibase" }, description = "Encode output using multibase.", paramLabel = "<base>")
     String outputBase = null;
 
-    @Option(names = { "-o", "--output" }, description = "Output file name.", paramLabel = "<file>")
+    @Option(names = { "-o", "--output" }, description = "Output file.", paramLabel = "<file>")
     String output = null;
 
     @Mixin
@@ -174,7 +173,7 @@ public final class MulticodecCmd implements Callable<Integer> {
                     .orElseThrow(() -> new IllegalArgumentException("Unsupported codec " + mode.enrich + ". List supported codecs with multicodec --list."));
 
             output(codec.encode(document));
-            
+
             return spec.exitCodeOnSuccess();
         }
 

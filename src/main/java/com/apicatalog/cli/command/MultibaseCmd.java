@@ -22,7 +22,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(name = "multibase", mixinStandardHelpOptions = false, description = "", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
+@Command(name = "multibase", mixinStandardHelpOptions = false, description = " Detect, add, remove, or list multibase encodings.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class MultibaseCmd implements Callable<Integer> {
 
     static final Map<String, Multibase> BASES = Stream.of(Multibase.provided())
@@ -31,26 +31,26 @@ public final class MultibaseCmd implements Callable<Integer> {
     static final MultibaseDecoder DECODER = MultibaseDecoder.getInstance();
 
     static class ModeGroup {
-        @Option(names = { "-e", "--encode" }, description = "Encode input with base", paramLabel = "<base>")
+        @Option(names = { "-e", "--encode" }, description = "Encode input using multibase.", paramLabel = "<base>")
         String encode = null;
 
-        @Option(names = { "-d", "--decode" }, description = "Decode mutibase input to raw bytes.")
+        @Option(names = { "-d", "--decode" }, description = "Decode multibase input to raw bytes.")
         boolean decode;
 
-        @Option(names = { "-r", "--rebase" }, description = "", paramLabel = "<base>")
+        @Option(names = { "-r", "--rebase" }, description = "Re-base input using multibase.", paramLabel = "<base>")
         String rebase = null;
 
-        @Option(names = { "-l", "--list" }, description = "list supported base encodings.")
+        @Option(names = { "-l", "--list" }, description = "List supported base encodings.")
         boolean list = false;
 
-        @Option(names = { "-a", "--analyze" }, description = "validate, detects encoding, byte lenght")
+        @Option(names = { "-a", "--analyze" }, description = "Validate input, detect encoding, and report raw byte length.")
         boolean analyze = false;
     }
 
     @ArgGroup(exclusive = true, multiplicity = "1")
     ModeGroup mode;
 
-    @Option(names = { "-o", "--output" }, description = "Output file name.", paramLabel = "<file>")
+    @Option(names = { "-o", "--output" }, description = "Output file.", paramLabel = "<file>")
     String output = null;
 
     @Mixin
