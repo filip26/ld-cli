@@ -10,9 +10,7 @@ import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdOptions;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FlatteningApi;
-import com.apicatalog.jsonld.document.JsonDocument;
 
-import jakarta.json.JsonStructure;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
@@ -28,10 +26,10 @@ public final class FlattenCmd implements Callable<Integer> {
     @Mixin
     JsonOutput output;
 
-    @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
+    @Option(names = { "-c", "--context" }, description = "Context URI or file path.", paramLabel = "<uri|file>")
     URI context = null;
 
-    @Option(names = { "-e", "--expand-context" }, description = "Context URI to expand the document before flattening.", paramLabel = "<uri>")
+    @Option(names = { "-e", "--expand-context" }, description = "Context to expand the document before flattening.", paramLabel = "<uri|file>")
     URI expandContext = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
@@ -59,32 +57,27 @@ public final class FlattenCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        final FlatteningApi api;
-
-        if (input.input != null) {
-            api = JsonLd.flatten(input.input);
-
-        } else {
-            api = JsonLd.flatten(JsonDocument.of(System.in));
-        }
+        final FlatteningApi api = JsonLd.flatten(input.fetch());
 
         final JsonLdOptions options = new JsonLdOptions();
-        options.setExpandContext(expandContext);
+        if (expandContext != null) {
+            options.setExpandContext(JsonInput.fetch(expandContext));
+        }
 
-        api.options(options);
+        api.options(options)
+                .base(base)
+                .ordered(ordered)
+                .compactArrays(compactArrays);
 
         if (mode != null) {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
         }
 
-        api.context(context);
-        api.base(base);
-        api.ordered(ordered);
-        api.compactArrays(compactArrays);
+        if (context != null) {
+            api.context(JsonInput.fetch(context));
+        }
 
-        final JsonStructure flattened = api.get();
-
-        output.print(spec.commandLine().getOut(), flattened);
+        output.print(spec.commandLine().getOut(), api.get());
 
         return spec.exitCodeOnSuccess();
     }

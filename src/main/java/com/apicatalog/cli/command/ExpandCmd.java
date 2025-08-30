@@ -9,9 +9,7 @@ import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.ExpansionApi;
-import com.apicatalog.jsonld.document.JsonDocument;
 
-import jakarta.json.JsonArray;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
@@ -27,7 +25,7 @@ public final class ExpandCmd implements Callable<Integer> {
     @Mixin
     JsonOutput output;
 
-    @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
+    @Option(names = { "-c", "--context" }, description = "Context URI or file path.", paramLabel = "<uri|file>")
     URI context = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
@@ -52,26 +50,20 @@ public final class ExpandCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        final ExpansionApi api;
-
-        if (input.input != null) {
-            api = JsonLd.expand(input.input);
-
-        } else {
-            api = JsonLd.expand(JsonDocument.of(System.in));
-        }
+        final ExpansionApi api = JsonLd
+                .expand(input.fetch())
+                .ordered(ordered)
+                .base(base);
 
         if (mode != null) {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
         }
 
-        api.context(context);
-        api.base(base);
-        api.ordered(ordered);
+        if (context != null) {
+            api.context(JsonInput.fetch(context));
+        }
 
-        final JsonArray expanded = api.get();
-
-        output.print(spec.commandLine().getOut(), expanded);
+        output.print(spec.commandLine().getOut(), api.get());
 
         return spec.exitCodeOnSuccess();
     }

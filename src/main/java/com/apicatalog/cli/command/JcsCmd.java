@@ -1,14 +1,11 @@
 package com.apicatalog.cli.command;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.cli.mixin.JsonInput;
 import com.apicatalog.jcs.JsonCanonicalizer;
 import com.apicatalog.jsonld.document.Document;
-import com.apicatalog.jsonld.document.JsonDocument;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -33,16 +30,7 @@ public final class JcsCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        final Document document;
-
-        if (input.input != null) {
-            document = input.fetch();
-
-        } else {
-            try (final Reader reader = new InputStreamReader(System.in)) {
-                document = JsonDocument.of(reader);
-            }
-        }
+        final Document document = input.fetch();
 
         JsonCanonicalizer.canonize(
                 document.getJsonContent()

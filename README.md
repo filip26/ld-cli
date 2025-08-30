@@ -72,14 +72,14 @@ Commands:
   multicodec  Add, remove, detect, or list multicodec headers.
 
 > ld-cli expand -h
-Usage: ld-cli expand [-op] [--debug] [-b=<uri>] [-c=<uri>] [-i=<uri|file>]
+Usage: ld-cli expand [-op] [--debug] [-b=<uri>] [-c=<uri|file>] [-i=<uri|file>]
                      [-m=1.0|1.1]
 
 Expand a JSON-LD document.
 
 Options:
   -b, --base=<uri>         Base URI of the input document.
-  -c, --context=<uri>      Context URI.
+  -c, --context=<uri|file> Context URI or file path.
       --debug              Print detailed error information.
   -i, --input=<uri|file>   Input document URI or file path.
   -m, --mode=1.0|1.1       Processing mode.
@@ -139,7 +139,7 @@ All PR's welcome!
 1. [Install GraalVM and Native Image](https://www.graalvm.org/latest/docs/)
    - download and unpack ```graalvm-jdk-....tar.gz```
    - set ```GRAALVM_HOME``` env variable
-3. ```mvn clean package -Pnative```
+3. ```mvn package -Pnative```
 4. ```./target/ld-cli```
 
 

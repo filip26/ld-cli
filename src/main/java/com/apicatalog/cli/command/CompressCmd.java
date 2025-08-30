@@ -11,7 +11,6 @@ import com.apicatalog.cborld.CborLdVersion;
 import com.apicatalog.cli.JsonCborDictionary;
 import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.cli.mixin.JsonInput;
-import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.json.JsonUtils;
 
@@ -57,14 +56,7 @@ public final class CompressCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        final Document document;
-
-        if (input.input != null) {
-            document = input.fetch();
-
-        } else {
-            document = JsonDocument.of(System.in);
-        }
+        final JsonDocument document = input.fetch();
 
         var json = document.getJsonContent()
                 .orElseThrow(() -> new IllegalArgumentException("Invalid input document. JSON document expected but got [" + document.getContentType() + "]."));

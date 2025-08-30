@@ -1,6 +1,9 @@
 package com.apicatalog.cli.command;
 
+import java.io.ByteArrayInputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.mixin.CommandOptions;
@@ -8,7 +11,7 @@ import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FromRdfApi;
-import com.apicatalog.jsonld.document.JsonDocument;
+import com.apicatalog.jsonld.document.RdfDocument;
 import com.apicatalog.jsonld.http.media.MediaType;
 import com.apicatalog.jsonld.loader.HttpLoader;
 
@@ -24,12 +27,9 @@ public final class FromRdfCmd implements Callable<Integer> {
 
     @Option(names = { "-i", "--input" }, description = "Input document URI or file path.", paramLabel = "<uri|file>")
     public URI input = null;
-    
+
     @Mixin
     JsonOutput output;
-
-    @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
-    URI context = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
     URI base = null;
@@ -59,11 +59,15 @@ public final class FromRdfCmd implements Callable<Integer> {
         final FromRdfApi api;
 
         if (input != null) {
-            ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
-            api = JsonLd.fromRdf(input);
+            if (input.isAbsolute()) {
+                ((HttpLoader) HttpLoader.defaultInstance()).fallbackContentType(MediaType.N_QUADS);
+                api = JsonLd.fromRdf(input);
+            } else {
+                api = JsonLd.fromRdf(RdfDocument.of(new ByteArrayInputStream(Files.readAllBytes(Path.of(input.toString())))));
+            }
 
         } else {
-            api = JsonLd.fromRdf(JsonDocument.of(System.in));
+            api = JsonLd.fromRdf(RdfDocument.of(System.in));
         }
 
         if (mode != null) {

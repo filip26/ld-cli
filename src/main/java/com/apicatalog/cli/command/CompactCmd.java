@@ -9,7 +9,6 @@ import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.CompactionApi;
-import com.apicatalog.jsonld.document.JsonDocument;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -45,7 +44,7 @@ public final class CompactCmd implements Callable<Integer> {
 
     @Option(names = { "-r", "--keep-uris" }, description = "Preserve absolute  absolute URIs.")
     boolean keepAbsoluteURI = false;
-    
+
     @Mixin
     CommandOptions options;
 
@@ -58,23 +57,15 @@ public final class CompactCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        final CompactionApi api;
-
-        if (input.input != null) {
-            api = JsonLd.compact(input.input, context);
-
-        } else {
-            api = JsonLd.compact(JsonDocument.of(System.in), context);
-        }
+        final CompactionApi api = JsonLd.compact(input.fetch(), JsonInput.fetch(context))
+                .base(base)
+                .ordered(ordered)
+                .compactArrays(!keepArrays)
+                .compactToRelative(!keepAbsoluteURI);
 
         if (mode != null) {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
         }
-
-        api.base(base);
-        api.ordered(ordered);
-        api.compactArrays(!keepArrays);
-        api.compactToRelative(!keepAbsoluteURI);
 
         output.print(spec.commandLine().getOut(), api.get());
 
