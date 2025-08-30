@@ -10,9 +10,7 @@ import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdEmbed;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.FramingApi;
-import com.apicatalog.jsonld.document.JsonDocument;
 
-import jakarta.json.JsonObject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
@@ -29,10 +27,10 @@ public final class FrameCmd implements Callable<Integer> {
     @Mixin
     JsonOutput output;
 
-    @Parameters(index = "0", arity = "1", description = "Frame URI.", paramLabel = "<uri>")
+    @Parameters(index = "0", arity = "1", description = "Frame URI or file path.", paramLabel = "<uri|file>")
     URI frame = null;
 
-    @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
+    @Option(names = { "-c", "--context" }, description = "Context URI or file path.", paramLabel = "<uri|file>")
     URI context = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
@@ -72,31 +70,24 @@ public final class FrameCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        final FramingApi api;
-
-        if (input.input != null) {
-            api = JsonLd.frame(input.input, frame);
-
-        } else {
-            api = JsonLd.frame(JsonDocument.of(System.in), frame);
-        }
+        final FramingApi api = JsonLd.frame(input.fetch(), JsonInput.fetch(frame))
+                .base(base)
+                .ordered(ordered)
+                .explicit(explicit)
+                .omitDefault(omitDefault)
+                .omitGraph(omitGraph)
+                .requiredAll(requiredAll)
+                .embed(JsonLdEmbed.valueOf(embed.toUpperCase()));
 
         if (mode != null) {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
         }
 
-        api.context(context);
-        api.base(base);
-        api.ordered(ordered);
-        api.explicit(explicit);
-        api.omitDefault(omitDefault);
-        api.omitGraph(omitGraph);
-        api.requiredAll(requiredAll);
-        api.embed(JsonLdEmbed.valueOf(embed.toUpperCase()));
+        if (context != null) {
+            api.context(JsonInput.fetch(context));
+        }
 
-        final JsonObject framed = api.get();
-
-        output.print(spec.commandLine().getOut(), framed);
+        output.print(spec.commandLine().getOut(), api.get());
 
         return spec.exitCodeOnSuccess();
     }

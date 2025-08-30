@@ -9,7 +9,6 @@ import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdOptions.RdfDirection;
 import com.apicatalog.jsonld.JsonLdVersion;
 import com.apicatalog.jsonld.api.ToRdfApi;
-import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.http.media.MediaType;
 import com.apicatalog.rdf.Rdf;
 import com.apicatalog.rdf.RdfDataset;
@@ -27,7 +26,7 @@ public final class ToRdfCmd implements Callable<Integer> {
     @Mixin
     JsonInput input;
 
-    @Option(names = { "-c", "--context" }, description = "Context URI.", paramLabel = "<uri>")
+    @Option(names = { "-c", "--context" }, description = "Context URI or file path.", paramLabel = "<uri|file>")
     URI context = null;
 
     @Option(names = { "-b", "--base" }, description = "Base URI of the input document.", paramLabel = "<uri>")
@@ -58,23 +57,18 @@ public final class ToRdfCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        final ToRdfApi api;
-
-        if (input.input != null) {
-            api = JsonLd.toRdf(input.input);
-
-        } else {
-            api = JsonLd.toRdf(JsonDocument.of(System.in));
-        }
+        final ToRdfApi api = JsonLd.toRdf(input.fetch())
+                .base(base)
+                .ordered(ordered)
+                .produceGeneralizedRdf(generalizedRdf);
 
         if (mode != null) {
             api.mode(JsonLdVersion.of("json-ld-" + mode));
         }
 
-        api.context(context);
-        api.base(base);
-        api.ordered(ordered);
-        api.produceGeneralizedRdf(generalizedRdf);
+        if (context != null) {
+            api.context(JsonInput.fetch(context));
+        }
 
         if (rdfDirection != null) {
             api.rdfDirection(RdfDirection.valueOf(rdfDirection.toUpperCase()));

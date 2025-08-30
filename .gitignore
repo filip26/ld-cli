@@ -19,3 +19,4 @@ buildNumber.properties
 /ex.jsonld
 /ld-cli
 squashfs-root/
+/*.jsonld
