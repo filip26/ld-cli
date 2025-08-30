@@ -6,7 +6,12 @@ Supports batch workflows, canonicalization, serialization, encoding, decoding, a
 
 Built with GraalVM, `ld-cli` delivers native executables for Ubuntu, macOS, and Windows - eliminating JVM dependencies.
 
-## Features
+
+[![Snap Status](https://snapcraft.io/ld-cli/badge.svg)](https://snapcraft.io/ld-cli)
+[![Downloads](https://img.shields.io/github/downloads/filip26/ld-cli/total)](https://github.com/filip26/ld-cli/releases)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/filip26/ld-cli?include_prereleases)](https://github.com/filip26/ld-cli/releases)
+
+## ✨ Features
 
 * [W3C JSON-LD 1.1](https://www.w3.org/TR/json-ld/) 
 * [W3C CBOR-LD 1.0](https://json-ld.github.io/cbor-ld-spec/)
@@ -15,12 +20,6 @@ Built with GraalVM, `ld-cli` delivers native executables for Ubuntu, macOS, and 
 * [W3C CCG Multibase - Base-encoding format with self-describing prefixes](https://github.com/w3c-ccg/multibase)
 * [Multicodec - Self-describing content type identifiers](https://github.com/multiformats/multicodec)
 * [Multihash](https://github.com/multiformats/multihash)
-
-## Status
-
-[![Snap Status](https://snapcraft.io/ld-cli/badge.svg)](https://snapcraft.io/ld-cli)
-[![Downloads](https://img.shields.io/github/downloads/filip26/ld-cli/total)](https://github.com/filip26/ld-cli/releases)
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/filip26/ld-cli?include_prereleases)](https://github.com/filip26/ld-cli/releases)
 
 ## Installation
 
@@ -160,4 +159,6 @@ All PR's welcome!
 </a> 
 
 ## Commercial Support
-Commercial support is available at filip26@gmail.com
+
+Commercial support and consulting are available.  
+For inquiries, please contact: filip26@gmail.com
