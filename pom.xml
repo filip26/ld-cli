@@ -36,9 +36,10 @@
 
         <titanium.version>1.6.0</titanium.version>
         <titanium.rdfc.version>2.0.0</titanium.rdfc.version>
-        <iridium.version>0.7.2</iridium.version>
+
+        <iridium.version>0.7.3</iridium.version>
         <multibase.version>4.1.0</multibase.version>
-        <multicodec.version>2.2.0</multicodec.version>
+        <multicodec.version>2.3.0</multicodec.version>
 
         <jakarta.json.version>2.0.1</jakarta.json.version>
 
