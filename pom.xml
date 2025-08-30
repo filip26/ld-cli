@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.apicatalog</groupId>
     <artifactId>ld-cli</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>A Command Line Processor for Linked Data Processing</name>
@@ -36,7 +36,10 @@
 
         <titanium.version>1.6.0</titanium.version>
         <titanium.rdfc.version>2.0.0</titanium.rdfc.version>
+
         <iridium.version>0.7.3</iridium.version>
+        <multibase.version>4.1.0</multibase.version>
+        <multicodec.version>2.3.0</multicodec.version>
 
         <jakarta.json.version>2.0.1</jakarta.json.version>
 
@@ -66,6 +69,18 @@
             <groupId>com.apicatalog</groupId>
             <artifactId>iridium-cbor-ld</artifactId>
             <version>${iridium.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>copper-multibase</artifactId>
+            <version>${multibase.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>copper-multicodec</artifactId>
+            <version>${multicodec.version}</version>
         </dependency>
 
         <dependency>

@@ -3,11 +3,7 @@ package com.apicatalog.cli.command;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.apicatalog.cborld.hex.Hex;
 import com.apicatalog.cli.mixin.ByteInput;
@@ -24,9 +20,6 @@ import picocli.CommandLine.Spec;
 
 @Command(name = "multibase", mixinStandardHelpOptions = false, description = "Encode, decode, detect,  or list multibase encodings.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class MultibaseCmd implements Callable<Integer> {
-
-    static final Map<String, Multibase> BASES = Stream.of(Multibase.provided())
-            .collect(Collectors.toUnmodifiableMap(Multibase::name, Function.identity()));
 
     static final MultibaseDecoder DECODER = MultibaseDecoder.getInstance();
 
@@ -71,12 +64,12 @@ public final class MultibaseCmd implements Callable<Integer> {
         var writer = spec.commandLine().getOut();
 
         if (mode.list) {
-            writer.println("Supported base encodings: " + BASES.size() + " total");
+            writer.println("Supported base encodings: " + DECODER.size() + " total");
             writer.println();
             writer.printf("%s %s %s", "Prefix", "Length", "Name");
             writer.println();
             writer.println("------ ------ -----------------");
-            BASES.values().stream()
+            DECODER.bases().values().stream()
                     .sorted((a, b) -> {
                         var c = a.length() - b.length();
                         if (c == 0) {
@@ -111,15 +104,11 @@ public final class MultibaseCmd implements Callable<Integer> {
 
         if (mode.encode != null) {
 
-            //TODO improve when fixed https://github.com/filip26/copper-multibase/issues/97
-            Multibase base = BASES.get(mode.encode);
-
-            if (base == null) {
-                throw new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list.");
-            }
+            final Multibase base = DECODER.findBase(mode.encode)
+                    .orElseThrow(() -> new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list."));
 
             var encoded = base.encode(input.fetch());
-
+            
             if (output != null) {
                 try (var os = new FileOutputStream(output)) {
                     os.write(encoded.getBytes(StandardCharsets.UTF_8));
@@ -135,11 +124,8 @@ public final class MultibaseCmd implements Callable<Integer> {
         }
 
         if (mode.rebase != null) {
-            Multibase base = BASES.get(mode.rebase);
-
-            if (base == null) {
-                throw new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list.");
-            }
+            final Multibase base =  DECODER.findBase(mode.rebase)
+                    .orElseThrow(() -> new IllegalArgumentException("Unsupported base " + mode.rebase + ". List supported bases with --list."));
 
             var document = input.fetch();
 
