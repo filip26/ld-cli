@@ -104,7 +104,7 @@ public final class MultibaseCmd implements Callable<Integer> {
 
         if (mode.encode != null) {
 
-            final Multibase base = DECODER.getBase(mode.encode)
+            final Multibase base = DECODER.findBase(mode.encode)
                     .orElseThrow(() -> new IllegalArgumentException("Unsupported base " + mode.encode + ". List supported bases with --list."));
 
             var encoded = base.encode(input.fetch());
@@ -124,7 +124,7 @@ public final class MultibaseCmd implements Callable<Integer> {
         }
 
         if (mode.rebase != null) {
-            final Multibase base =  DECODER.getBase(mode.rebase)
+            final Multibase base =  DECODER.findBase(mode.rebase)
                     .orElseThrow(() -> new IllegalArgumentException("Unsupported base " + mode.rebase + ". List supported bases with --list."));
 
             var document = input.fetch();
