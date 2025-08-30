@@ -1,6 +1,6 @@
 name: ld-cli
 title: Linked Data CLI
-version: 1.0.0
+version: 1.0.1
 license: Apache-2.0
 summary: Command-line tool for JSON-LD, RDF, RDFC, JCS, CBOR-LD, semantic processing
 description: |
