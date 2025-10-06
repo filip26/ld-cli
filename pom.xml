@@ -34,7 +34,7 @@
         <mainClass>com.apicatalog.cli.App</mainClass>
         <command.name>ld-cli</command.name>
 
-        <titanium.version>1.6.0</titanium.version>
+        <titanium.version>1.7.0</titanium.version>
         <titanium.rdfc.version>2.0.0</titanium.rdfc.version>
 
         <iridium.version>0.7.3</iridium.version>
