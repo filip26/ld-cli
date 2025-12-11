@@ -1,8 +1,8 @@
 package com.apicatalog.cli.command;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
 import com.apicatalog.base.Base16;
@@ -41,7 +41,7 @@ public final class CompressCmd implements Callable<Integer> {
     @Option(names = { "-d", "--dictionary" }, description = "Custom dictionary location (JSON).", paramLabel = "<uri|file>")
     URI dictionary = null;
 
-    @Option(names = { "-x", "--hex" }, description = "Output result as hexadecimal-encoded.")
+    @Option(names = { "-x", "--hex" }, description = "Output result as hexadecimal-encoded. Automatically enabled for stdout.")
     boolean hex = false;
 
     @Mixin
@@ -85,22 +85,21 @@ public final class CompressCmd implements Callable<Integer> {
                 .encode(json.asJsonObject());
 
         if (output == null) {
-            spec.commandLine().getOut().print(encode(encoded, hex));
+            spec.commandLine().getOut().print(Base16.encode(encoded, Base16.ALPHABET_LOWER));
             spec.commandLine().getOut().flush();
 
         } else {
             try (var os = new FileOutputStream(output)) {
-                os.write(encode(encoded, hex));
+                if (hex) {
+                    os.write(Base16.encode(encoded, Base16.ALPHABET_LOWER).getBytes(StandardCharsets.UTF_8));
+                } else {
+                    os.write(encoded);
+                }
+
                 os.flush();
             }
         }
 
         return spec.exitCodeOnSuccess();
-    }
-
-    static byte[] encode(byte[] encoded, boolean hex) throws IOException {
-        return hex
-                ? Base16.encode(encoded, Base16.ALPHABET_LOWER).getBytes()
-                : encoded;
     }
 }
