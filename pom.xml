@@ -21,8 +21,8 @@
     <url>https://github.com/filip26/ld-cli</url>
 
     <properties>
-        <maven.compiler.target>24</maven.compiler.target>
-        <maven.compiler.source>24</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
