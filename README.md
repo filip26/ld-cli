@@ -151,12 +151,6 @@ All PR's welcome!
 * [Copper Multibase](https://github.com/filip26/copper-multibase)
 * [Copper Multicodec](https://github.com/filip26/copper-multicodec)
 
-## Sponsors
-
-<a href="https://github.com/thadguidry">
-  <img src="https://avatars.githubusercontent.com/u/986438?v=4" width="40" />
-</a> 
-
 ## Commercial Support
 
 Commercial support and consulting are available.  

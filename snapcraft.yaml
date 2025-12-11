@@ -1,6 +1,6 @@
 name: ld-cli
 title: Linked Data CLI
-version: 1.0.1
+version: 1.0.2
 license: Apache-2.0
 summary: Command-line tool for JSON-LD, RDF, RDFC, JCS, CBOR-LD, semantic processing
 description: |
@@ -26,14 +26,14 @@ grade: stable
 parts:
   graalvm:
     plugin: nil
-    source: https://download.oracle.com/graalvm/24/latest/graalvm-jdk-24_linux-x64_bin.tar.gz
+    source: https://download.oracle.com/graalvm/25/latest/graalvm-jdk-25_linux-x64_bin.tar.gz
     build-packages:
       - wget
       - tar 
     override-build: |
       echo "=== Entering GraalVM override-build ==="
       mkdir -p $SNAPCRAFT_STAGE/opt
-      wget -qO- https://download.oracle.com/graalvm/24/latest/graalvm-jdk-24_linux-x64_bin.tar.gz | tar xz -C $SNAPCRAFT_STAGE/opt
+      wget -qO- https://download.oracle.com/graalvm/25/latest/graalvm-jdk-25_linux-x64_bin.tar.gz | tar xz -C $SNAPCRAFT_STAGE/opt
       GRAALVM_DIR=$(find $SNAPCRAFT_STAGE/opt -maxdepth 1 -type d -name "graalvm-*")
       
       if [ -z "$GRAALVM_DIR" ]; then
@@ -59,7 +59,7 @@ parts:
       export PATH=$JAVA_HOME/bin:$PATH
       echo "JAVA_HOME is set to: $JAVA_HOME"  # For debugging purposes
       echo "PATH is set to: $PATH"  # For debugging purposes
-      mvn clean package -Pnative
+      mvn package -Pnative
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
       cp target/ld-cli $SNAPCRAFT_PART_INSTALL/bin/
 
