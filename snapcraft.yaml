@@ -18,6 +18,8 @@ description: |
     
 source-code: https://github.com/filip26/ld-cli
 issues: https://github.com/filip26/ld-cli/issues
+website: https://github.com/filip26/ld-cli
+donation: https://wise.com/pay/me/filipk558
 contact: filip26@gmail.com
 confinement: strict
 base: core24

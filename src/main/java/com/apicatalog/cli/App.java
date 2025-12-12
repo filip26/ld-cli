@@ -97,5 +97,5 @@ public final class App {
             return;
         }
         cli.usage(cli.getOut());
-    }    
+    }
 }
