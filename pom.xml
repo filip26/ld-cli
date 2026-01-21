@@ -43,7 +43,7 @@
 
         <jakarta.json.version>2.0.1</jakarta.json.version>
 
-        <graal.version>25.0.1</graal.version>
+        <graal.version>25.0.2</graal.version>
         <picocli.version>4.7.7</picocli.version>
         <picocli-jansi-graalvm.version>1.2.0</picocli-jansi-graalvm.version>
 
