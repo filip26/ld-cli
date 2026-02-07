@@ -8,7 +8,8 @@ import picocli.CommandLine.ParseResult;
 
 public class ErrorHandler implements IExecutionExceptionHandler {
     @Override
-    public int handleExecutionException(Exception ex,
+    public int handleExecutionException(
+            Exception ex,
             CommandLine cmd,
             ParseResult parseResult) {
 

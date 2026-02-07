@@ -78,7 +78,7 @@ public final class FromRdfCmd implements Callable<Integer> {
         api.ordered(ordered);
         api.nativeTypes(nativeTypes);
 
-        final JsonStructure jsonld = api.get();
+        final var jsonld = api.get();
 
         output.print(spec.commandLine().getOut(), jsonld);
 

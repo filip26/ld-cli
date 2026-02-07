@@ -31,7 +31,9 @@ public class JsonCborDictionary {
     }
 
     public static DocumentDictionary of(Document doc) {
-        return of(doc.getJsonContent().orElseThrow(() -> new IllegalArgumentException("Invalid dictionary")).asJsonObject());
+        return of(doc.getJsonContent()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid dictionary"))
+                .asJsonObject());
     }
 
     public static DocumentDictionary of(InputStream is) {

@@ -4,7 +4,7 @@ import java.util.concurrent.Callable;
 
 import com.apicatalog.cli.mixin.CommandOptions;
 import com.apicatalog.cli.mixin.JsonInput;
-import com.apicatalog.jcs.JsonCanonicalizer;
+import com.apicatalog.jcs.Jcs;
 import com.apicatalog.jsonld.document.Document;
 
 import picocli.CommandLine.Command;
@@ -32,7 +32,7 @@ public final class JcsCmd implements Callable<Integer> {
 
         final Document document = input.fetch();
 
-        JsonCanonicalizer.canonize(
+        Jcs.canonize(
                 document.getJsonContent()
                         .orElseThrow(() -> new IllegalArgumentException("Invalid input document. JSON document expected but got [" + document.getContentType() + "].")),
                 spec.commandLine().getOut());
