@@ -10,7 +10,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build-image:
-    name: 'Compile'
+    name: Compile on $${ matrix.os }}
     needs: get-version
     runs-on: ${{ matrix.os }}
     strategy:
@@ -26,15 +26,16 @@ jobs:
             ld-binary: target/ld-cli
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: 'Setup GraalVM Environment'
         uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
           java-version: 25
-          components: 'native-image'
+          distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+#          components: 'native-image'
 
       - name: 'Build Native Image'
         run: mvn package -P native
@@ -63,4 +64,6 @@ jobs:
       - id: extraction
         name: 'Extract Version'
         run: |
-          echo "::set-output name=BUILD_VERSION::$( grep '<version>' pom.xml | head -1 | sed 's/[[:alpha:]|<|>|/|[:space:]]//g' | awk -F- '{print $1}')"
+          echo "BUILD_VERSION=$( grep '<version>' pom.xml | head -1 | sed 's/[[:alpha:]|<|>|/|[:space:]]//g' | awk -F- '{print $1}')" >> $GITHUB_OUTPUT
+          echo "Extracted version=$BUILD_VERSION"
+          echo "Extracted version=$GITHUB_OUTPUT"
