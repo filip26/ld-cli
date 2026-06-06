@@ -65,5 +65,3 @@ jobs:
         name: 'Extract Version'
         run: |
           echo "BUILD_VERSION=$( grep '<version>' pom.xml | head -1 | sed 's/[[:alpha:]|<|>|/|[:space:]]//g' | awk -F- '{print $1}')" >> $GITHUB_OUTPUT
-          echo "Extracted version=$BUILD_VERSION"
-          echo "Extracted version=$GITHUB_OUTPUT"
