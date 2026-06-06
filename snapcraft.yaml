@@ -18,7 +18,11 @@ description: |
     
 source-code: https://github.com/filip26/ld-cli
 issues: https://github.com/filip26/ld-cli/issues
+website: https://apicatalog.com/
 contact: filip26@gmail.com
+donation:
+    - https://wise.com/share/filipk558  
+    - https://paypal.me/FilipKolarik
 confinement: strict
 base: core24
 grade: stable
