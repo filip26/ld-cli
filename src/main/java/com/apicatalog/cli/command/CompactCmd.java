@@ -8,7 +8,6 @@ import com.apicatalog.cli.mixin.JsonInput;
 import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
-import com.apicatalog.jsonld.api.CompactionApi;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -57,17 +56,17 @@ public final class CompactCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        final CompactionApi api = JsonLd.compact(input.fetch(), JsonInput.fetch(context))
+        final var compact = JsonLd.compact(input.fetch(), JsonInput.fetch(context))
                 .base(base)
                 .ordered(ordered)
                 .compactArrays(!keepArrays)
                 .compactToRelative(!keepAbsoluteURI);
 
         if (mode != null) {
-            api.mode(JsonLdVersion.of("json-ld-" + mode));
+            compact.mode(JsonLdVersion.of("json-ld-" + mode));
         }
 
-        output.print(spec.commandLine().getOut(), api.get());
+        output.print(spec.commandLine().getOut(), compact.get());
 
         return spec.exitCodeOnSuccess();
     }

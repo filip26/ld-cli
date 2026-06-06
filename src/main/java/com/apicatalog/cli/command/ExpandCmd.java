@@ -8,7 +8,6 @@ import com.apicatalog.cli.mixin.JsonInput;
 import com.apicatalog.cli.mixin.JsonOutput;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdVersion;
-import com.apicatalog.jsonld.api.ExpansionApi;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -50,20 +49,20 @@ public final class ExpandCmd implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        final ExpansionApi api = JsonLd
+        final var expanded = JsonLd
                 .expand(input.fetch())
                 .ordered(ordered)
                 .base(base);
 
         if (mode != null) {
-            api.mode(JsonLdVersion.of("json-ld-" + mode));
+            expanded.mode(JsonLdVersion.of("json-ld-" + mode));
         }
 
         if (context != null) {
-            api.context(JsonInput.fetch(context));
+            expanded.context(JsonInput.fetch(context));
         }
 
-        output.print(spec.commandLine().getOut(), api.get());
+        output.print(spec.commandLine().getOut(), expanded.get());
 
         return spec.exitCodeOnSuccess();
     }
