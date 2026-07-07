@@ -29,7 +29,7 @@ import picocli.CommandLine.Spec;
 @Command(name = "multicodec", mixinStandardHelpOptions = false, description = "Add, remove, detect, or list multicodec headers.", sortOptions = true, descriptionHeading = "%n", parameterListHeading = "%nParameters:%n", optionListHeading = "%nOptions:%n")
 public final class MulticodecCmd implements Callable<Integer> {
 
-    static final MulticodecDecoder DECODER = MulticodecDecoder.getInstance();
+    static final MulticodecDecoder DECODER = MulticodecDecoder.newInstance();
     static final MultibaseDecoder MULTIBASE = MultibaseDecoder.getInstance();
 
     static class ModeGroup {
